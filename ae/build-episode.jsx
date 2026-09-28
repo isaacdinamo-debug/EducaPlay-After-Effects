@@ -127,8 +127,11 @@ function buildEpisode() {
   M.theme.rainbow = [WEB.cian, WEB.rojo, WEB.amarillo, WEB.verde];
   var F3 = {};
   for (var fk in FONTS) F3[fk] = FONTS[fk];
-  F3.heading = 'MuseoSansRounded-900';
-  F3.headingLight = 'MuseoSansRounded-300';
+  F3.heading = 'MuseoSans-900';
+  F3.headingLight = 'MuseoSans-300';
+  F3.body = 'MuseoSans-700';
+  F3.bodyBold = 'MuseoSans-900';
+  F3.bodyLight = 'MuseoSans-300';
   FONTS = F3;
   log('▶ ' + MAIN + ' · ' + M.blocks.length + ' bloques · ' + M.captions.length + ' subtítulos');
 
@@ -311,12 +314,32 @@ function buildEpisode() {
   }
 
   // ───────────────────────────────────────────────────────────────── texto
+  function resolvePostScriptFont(fontName) {
+    if (!fontName) return 'MuseoSans-700';
+    var map = {
+      'MuseoSansRounded-1000': 'MuseoSans-900',
+      'MuseoSansRounded-900': 'MuseoSans-900',
+      'MuseoSansRounded-700': 'MuseoSans-700',
+      'MuseoSansRounded-500': 'MuseoSans-500',
+      'MuseoSansRounded-300': 'MuseoSans-300',
+      'MuseoSansRounded-100': 'MuseoSans-100',
+      'MuseoSansRounded700': 'MuseoSans-700',
+      'Museo Sans Rounded': 'MuseoSans-700',
+      'Museo Sans 900': 'MuseoSans-900',
+      'Museo Sans 700': 'MuseoSans-700',
+      'Museo Sans 500': 'MuseoSans-500',
+      'Museo Sans 300': 'MuseoSans-300',
+      'Museo Sans 100': 'MuseoSans-100'
+    };
+    return map[fontName] || fontName;
+  }
+
   function styleText(layer, o) {
     var p = layer.property('ADBE Text Properties').property('ADBE Text Document');
     var td = p.value;
     td.resetCharStyle();
     td.resetParagraphStyle();
-    td.font = o.font;
+    td.font = resolvePostScriptFont(o.font);
     td.fontSize = o.size;
     td.applyFill = true;
     td.fillColor = o.color;
@@ -620,7 +643,7 @@ function buildEpisode() {
   function numberTile(comp, n, word, x, y, S, t0) {
     var tile = newShapeLayer(comp, 'BALDOSA · ' + word + ' ' + n);
     linkFill(addRect(tile, x, y, S, S, 12, hex(WEB.gris), 'gris'), 'Papel');
-    var num = text(comp, String(n), 0, 0, {name: 'NÚMERO', font: 'MuseoSansRounded-1000', size: S * 0.66, color: hex(WEB.tinta)});
+    var num = text(comp, String(n), 0, 0, {name: 'NÚMERO', font: 'MuseoSans-900', size: S * 0.66, color: hex(WEB.tinta)});
     var nx = x + S * 0.12, ny = y + (S - num.h) / 2 + S * 0.02;
     num.layer.property('ADBE Transform Group').property('ADBE Position').setValue([nx, ny]);
     var ringD = S * 0.2, rx = nx + num.w + S * 0.04 + ringD / 2, ry = ny + ringD / 2 + S * 0.02;
@@ -1180,7 +1203,7 @@ function buildEpisode() {
 
     var educa = text(ap, 'Educa', 0, 0, {name: 'EDUCA', font: 'Museo-700', size: 104, color: [1, 1, 1]});
     var play = text(ap, 'play', 0, 0, {name: 'PLAY', font: 'Museo-300', size: 104, color: [1, 1, 1]});
-    var nivel = text(ap, 'Nivel Secundario', 0, 0, {name: 'NIVEL', font: 'MuseoSansRounded-500', size: 46, color: [1, 1, 1]});
+    var nivel = text(ap, 'Nivel Secundario', 0, 0, {name: 'NIVEL', font: 'MuseoSans-500', size: 46, color: [1, 1, 1]});
     var gapBar = 34;
     var lockW = educa.w + play.w + gapBar * 2 + nivel.w;
     var lx = W / 2 - lockW / 2, ly = cy0 - 150;

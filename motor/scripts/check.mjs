@@ -23,11 +23,13 @@ const run = (cmd, args, opts = {}) =>
     p.on('close', (c) => (c === 0 ? resolve() : reject(new Error(`${path.basename(args[args.length - 2] ?? cmd)} salió con ${c}`))));
   });
 
+const tscBin = path.join(ROOT, 'node_modules', 'typescript', 'bin', 'tsc');
+
 const main = async () => {
   const {code} = parseArgs();
   if (!code) throw new Error('Uso: npm run check -- <CODE>');
 
-  await run('npx', ['tsc', '--noEmit']);
+  await run(process.execPath, [tscBin, '--noEmit']);
   await run(process.execPath, ['--experimental-strip-types', path.join(here, 'check-layout.mjs'), code]);
   await run(process.execPath, [path.join(here, 'check-contrast.mjs'), code]);
   console.log('\n✓ todos los verificadores en verde.');

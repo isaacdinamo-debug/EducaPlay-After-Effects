@@ -125,8 +125,20 @@ const decodeFrames = async (master, onFrame) => {
   return idx;
 };
 
+const isBgPixel = (r, g, b, isLila) => {
+  if (isLila) {
+    if (Math.min(r, b) - g > 30) return true;                    // fondo lila (Leo)
+  } else {
+    const mx = r > b ? r : b;
+    if (g - mx > GREEN_MARGIN) return true;                     // fondo verde (Ambiente)
+  }
+  const lo = Math.min(r, g, b), hi = Math.max(r, g, b);
+  if (lo > WHITE_MIN && hi - lo < WHITE_SPREAD) return true;    // papel
+  return false;
+};
+
 /** Histograma de columnas de píxeles "sujeto" en un frame RGB crudo. */
-const columnHistogram = (px, wmRect) => {
+const columnHistogram = (px, wmRect, isLila) => {
   const cols = new Int32Array(AW);
   for (let y = 0; y < AH; y++) {
     const rowOff = y * AW * 3;
@@ -134,11 +146,7 @@ const columnHistogram = (px, wmRect) => {
     for (let x = 0; x < AW; x++) {
       if (inWmRows && x >= wmRect[0] && x < wmRect[0] + wmRect[2]) continue;
       const i = rowOff + x * 3;
-      const r = px[i], g = px[i + 1], b = px[i + 2];
-      const mx = r > b ? r : b;
-      if (g - mx > GREEN_MARGIN) continue;                    // fondo verde
-      const lo = Math.min(r, g, b), hi = Math.max(r, g, b);
-      if (lo > WHITE_MIN && hi - lo < WHITE_SPREAD) continue; // papel
+      if (isBgPixel(px[i], px[i + 1], px[i + 2], isLila)) continue;
       cols[x]++;
     }
   }
@@ -203,8 +211,11 @@ const main = async () => {
    */
   const optsFile = path.join(episodeDir(code), 'tracker.json');
   const epOpts = fs.existsSync(optsFile) ? JSON.parse(fs.readFileSync(optsFile, 'utf8')) : {};
-  const WM = epOpts.watermark ?? WATERMARK;
+  const isLila = code.startsWith('LEO') || epOpts.studio === 'lila' || flags.lila;
+  const defaultWm = isLila ? [1400, 35, 420, 140] : WATERMARK;
+  const WM = epOpts.watermark ?? defaultWm;
   if (epOpts.watermark) console.log(`marca de agua del episodio: [${WM.join(', ')}]`);
+  if (isLila) console.log(`plató: lila (serie Leo)`);
   const wmRect = [
     Math.floor(WM[0] / sx), Math.floor(WM[1] / sy),
     Math.ceil(WM[2] / sx), Math.ceil(WM[3] / sy),
@@ -221,7 +232,7 @@ const main = async () => {
   const probeOut = [];
 
   await decodeFrames(master, (px, i) => {
-    const cols = columnHistogram(px, wmRect);
+    const cols = columnHistogram(px, wmRect, isLila);
     const thr = AH * COL_MIN_RATIO;
     const occ = openColumns(cols.map ? Array.from(cols, (c) => (c >= thr ? 1 : 0)) : []);
 
@@ -254,11 +265,7 @@ const main = async () => {
       let n = 0;
       for (let x = first; x <= last; x++) {
         const idx = y * AW * 3 + x * 3;
-        const r = px[idx], g = px[idx + 1], b = px[idx + 2];
-        const mx = r > b ? r : b;
-        if (g - mx > GREEN_MARGIN) continue;
-        const lo = Math.min(r, g, b), hi = Math.max(r, g, b);
-        if (lo > WHITE_MIN && hi - lo < WHITE_SPREAD) continue;
+        if (isBgPixel(px[idx], px[idx + 1], px[idx + 2], isLila)) continue;
         n++;
       }
       if (n > (last - first) * 0.10) { y0 = y; break; }
@@ -278,11 +285,7 @@ const main = async () => {
           // y la banda libre derecha se vuelve negativa.
           if (wmX(x) && y >= wmRect[1] && y < wmRect[1] + wmRect[3]) continue;
           const idx = y * AW * 3 + x * 3;
-          const r2 = px[idx], g2 = px[idx + 1], b2 = px[idx + 2];
-          const mx2 = r2 > b2 ? r2 : b2;
-          if (g2 - mx2 > GREEN_MARGIN) continue;
-          const lo2 = Math.min(r2, g2, b2), hi2 = Math.max(r2, g2, b2);
-          if (lo2 > WHITE_MIN && hi2 - lo2 < WHITE_SPREAD) continue;
+          if (isBgPixel(px[idx], px[idx + 1], px[idx + 2], isLila)) continue;
           n++;
         }
         if (n > (yB - yA) * 0.12) { if (bf < 0) bf = x; bl = x; }

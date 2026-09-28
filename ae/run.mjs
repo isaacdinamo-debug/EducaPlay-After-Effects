@@ -26,12 +26,24 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import {execFileSync} from 'node:child_process';
+import {execFileSync, spawn} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const AE_DIR = path.join(REPO, 'ae');
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+const isAERunning = () => {
+  if (process.platform === 'win32') {
+    try {
+      const out = execFileSync('tasklist', ['/FI', 'IMAGENAME eq AfterFX.exe', '/NH'], {encoding: 'utf8'});
+      return out.toLowerCase().includes('afterfx.exe');
+    } catch {
+      return false;
+    }
+  }
+  return true;
+};
 
 const args = (() => {
   const out = {flags: {}, code: null};
@@ -50,6 +62,20 @@ const args = (() => {
 /** La versión de After Effects más nueva instalada, o AE_APP. */
 const aeApp = () => {
   if (process.env.AE_APP) return process.env.AE_APP;
+  if (process.platform === 'win32') {
+    const winDefault = 'C:\\Program Files\\Adobe\\Adobe After Effects 2026\\Support Files\\AfterFX.exe';
+    if (fs.existsSync(winDefault)) return winDefault;
+    const adobeDir = 'C:\\Program Files\\Adobe';
+    if (fs.existsSync(adobeDir)) {
+      for (const d of fs.readdirSync(adobeDir)) {
+        if (/Adobe After Effects 20\d\d/i.test(d)) {
+          const candidate = path.join(adobeDir, d, 'Support Files', 'AfterFX.exe');
+          if (fs.existsSync(candidate)) return candidate;
+        }
+      }
+    }
+    throw new Error('No encontré AfterFX.exe en C:\\Program Files\\Adobe (definí AE_APP).');
+  }
   const apps = fs.readdirSync('/Applications').filter((f) => /^Adobe After Effects 20\d\d$/.test(f)).sort();
   if (!apps.length) throw new Error('No encontré After Effects en /Applications (definí AE_APP).');
   return apps[apps.length - 1];
@@ -62,34 +88,41 @@ const runJsx = (app, code, tmpDir) => {
   const f = path.join(tmpDir, `tmp-${Date.now()}-${Math.random().toString(36).slice(2)}.jsx`);
   fs.writeFileSync(f, code, 'utf8');
   try {
-    // DoScript + $.evalFile, NO DoScriptFile: con DoScriptFile, AE no deja que
-    // el script escriba archivos (quedan en 0 bytes); evaluado desde DoScript sí.
-    const call = `$.evalFile(File(${JSON.stringify(f)}))`;
-    execFileSync('osascript', ['-e', `tell application ${applescriptStr(app)} to DoScript ${applescriptStr(call)}`], {stdio: 'pipe'});
+    if (process.platform === 'win32') {
+      execFileSync(app, ['-r', f], {stdio: 'pipe', timeout: 120000});
+    } else {
+      const call = `$.evalFile(File(${JSON.stringify(f)}))`;
+      execFileSync('osascript', ['-e', `tell application ${applescriptStr(app)} to DoScript ${applescriptStr(call)}`], {stdio: 'pipe'});
+    }
   } finally {
     fs.rmSync(f, {force: true});
   }
 };
 
-const js = (v) => JSON.stringify(v);
+const js = (v) => JSON.stringify(typeof v === 'string' ? v.replace(/\\/g, '/') : v);
 
 /** Espera a que AE acepte scripts; lo abre si hace falta. */
 const ensureAE = async (app, tmpDir) => {
   const probe = path.join(tmpDir, 'ae-ok.txt');
   fs.rmSync(probe, {force: true});
   const ping = `var f=new File(${js(probe)});f.open('w');f.write(app.version);f.close();`;
-  try {
-    runJsx(app, ping, tmpDir);
-  } catch {
+
+  if (!isAERunning()) {
     console.log(`· abriendo ${app}…`);
-    execFileSync('open', ['-a', app]);
-    for (let i = 0; i < 60; i++) {
-      await sleep(3000);
-      try {
-        runJsx(app, ping, tmpDir);
-        break;
-      } catch { /* todavía arrancando */ }
+    if (process.platform === 'win32') {
+      spawn(app, [], {detached: true, stdio: 'ignore'}).unref();
+      await sleep(10000);
+    } else {
+      execFileSync('open', ['-a', app]);
     }
+  }
+
+  for (let i = 0; i < 60; i++) {
+    try {
+      runJsx(app, ping, tmpDir);
+      if (fs.existsSync(probe)) break;
+    } catch { /* todavía arrancando */ }
+    await sleep(3000);
   }
   if (!fs.existsSync(probe)) throw new Error(`${app} no responde a scripts.`);
   console.log(`· ${app} ${fs.readFileSync(probe, 'utf8')} listo`);
@@ -194,8 +227,18 @@ const build = async (app, code, M, frames, revDir, tmpDir, force) => {
       var c=null;
       for (var i=1;i<=app.project.numItems;i++){var it=app.project.item(i);
         if (it instanceof CompItem && it.name===${js(code)}) c=it;}
-      var fr=${js(frames)}, out=${js(pngs)};
-      for (var k=0;k<fr.length;k++) c.saveFrameToPng(fr[k]/c.frameRate, new File(out[k]));`, tmpDir);
+      if (!c) {
+        var pf = new File(${js(aep)});
+        if (pf.exists) {
+          app.open(pf);
+          for (var i=1;i<=app.project.numItems;i++){var it=app.project.item(i);
+            if (it instanceof CompItem && it.name===${js(code)}) c=it;}
+        }
+      }
+      if (c) {
+        var fr=${js(frames)}, out=${js(pngs)};
+        for (var k=0;k<fr.length;k++) c.saveFrameToPng(fr[k]/c.frameRate, new File(out[k]));
+      }`, tmpDir);
     const ok = await waitFiles(pngs, 30000 + frames.length * 8000);
     const got = pngs.filter((p) => fs.existsSync(p));
     if (!ok) problems.push(`faltan stills: ${pngs.length - got.length} de ${pngs.length}`);
