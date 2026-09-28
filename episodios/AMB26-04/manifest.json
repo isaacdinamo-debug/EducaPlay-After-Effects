@@ -1264,6 +1264,22 @@
    ]
   }
  ],
+ "fontsRequired": [
+  "Museo-300",
+  "Museo-700",
+  "MuseoSansRounded-300",
+  "MuseoSansRounded-500",
+  "MuseoSansRounded-700",
+  "MuseoSansRounded-900",
+  "MuseoSansRounded-1000"
+ ],
+ "masterInfo": {
+  "bytes": 69014258,
+  "width": 1920,
+  "height": 1080,
+  "fps": 25,
+  "frames": 4477
+ },
  "moves": [
   {
    "key": "x0",
