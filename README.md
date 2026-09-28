@@ -10,18 +10,38 @@ Capítulo de referencia: **AMB26-04 · Plan B: protocolo para una inundación**.
 ## Instalación (una vez por máquina)
 
 Requisitos:
-- macOS con **Adobe After Effects 2026**;
-- **Node ≥ 22.6**, `ffmpeg`/`ffprobe` y `whisper-cli` (whisper.cpp);
-- las fuentes **Museo** y **Museo Sans Rounded** instaladas.
+- **Adobe After Effects 2026**, en macOS o Windows;
+- **Node ≥ 22.6**, `ffmpeg`/`ffprobe` en el PATH;
+- `whisper-cli` (whisper.cpp), sólo para medir episodios nuevos;
+- las 7 fuentes **Museo** y **Museo Sans Rounded**: `Museo-300`, `Museo-700` y
+  `MuseoSansRounded-300/500/700/900/1000`.
+
+  **No vienen en el repo, porque tienen licencia.** Sin ellas, After Effects las reemplaza, el texto
+  mide distinto y el cuadro pierde el equilibrio. Por eso el armado se niega a correr si falta
+  alguna. En **Windows**, instalalas con clic derecho → **"Instalar para todos los usuarios"** y
+  reiniciá After Effects.
 
 ```bash
 cd motor
 npm install
-npm run medios -- --modelo --desde "<carpeta con models/ggml-large-v3-turbo.bin>"
+npm run doctor                                   # auditoría de la máquina: tiene que dar 0 problemas
 ```
 
+Para armar un episodio que ya fue medido en otra máquina, traé sus medios (máster, recursos y
+fuentes para el verificador) **sin volver a medirlo**:
+
+```bash
+npm run medios -- AMB26-04 --desde "<carpeta con public/videos/AMB26-04.mp4>"
+npm run doctor -- AMB26-04                       # máster idéntico al aprobado, medición sin cambios
+```
+
+⚠ **No corras `npm run nuevo` sobre un episodio ya aprobado.** Vuelve a medir el encuadre y a
+transcribir con el ffmpeg y el Whisper de esa máquina, y el resultado cambia. Si pasó,
+`npm run doctor` lo detecta, y se vuelve atrás con `git checkout -- motor/src/episodes/<CODE>/`.
+
 Las entregas del montajista (`<CODE>/` con el máster, la escaleta `.docx` y `RECURSOS/`) se leen de
-`EDUCAPLAY_EPISODES`. Por defecto es `~/Documents/EducaPlay/Secundaria /Ambiente`.
+`EDUCAPLAY_EPISODES`. Por defecto es `~/Documents/EducaPlay/Secundaria /Ambiente`. En Windows,
+definila con una ruta sin carpetas que terminen en espacio.
 
 ## Flujo de un capítulo
 

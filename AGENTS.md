@@ -25,6 +25,7 @@ Los criterios y las trampas están en la skill `.agents/skills/educaplay-after-e
 
 ```bash
 npm install                                   # una vez
+npm run doctor -- <CODE>                      # auditoría: máquina, fuentes, máster y medición aprobados
 npm run medios -- <CODE> --desde "<ruta>"     # traer medios de un episodio ya medido (enlaces duros)
 npm run nuevo -- <CODE>                       # episodio nuevo: medir, transcribir, gatillos, borrador
 npm run check -- <CODE>                       # tipos + layout + contraste
@@ -56,5 +57,12 @@ npm run publicar -- <CODE>                    # todo lo anterior y, sólo si pas
 
 ## Requisitos de la máquina
 
-macOS con Adobe After Effects 2026, Node ≥ 22.6, ffmpeg/ffprobe, `whisper-cli` (whisper.cpp) y las
-fuentes Museo y Museo Sans Rounded instaladas en el sistema (AE las busca por nombre PostScript).
+After Effects 2026 en **macOS o Windows**, Node ≥ 22.6, ffmpeg/ffprobe, `whisper-cli` (sólo para medir)
+y las 7 fuentes Museo / Museo Sans Rounded instaladas en el sistema. AE las busca por nombre
+PostScript. En Windows van con "Instalar para todos los usuarios".
+
+**En una máquina nueva, lo primero es `npm run doctor -- <CODE>`.** Tiene que dar 0 problemas. Revisa:
+- fuentes, herramientas y After Effects;
+- que el máster sea el aprobado;
+- que nadie haya vuelto a medir el episodio (`nuevo`/`prep` regeneran encuadre y subtítulos con el
+  ffmpeg y el Whisper de esa máquina, y el resultado cambia).
