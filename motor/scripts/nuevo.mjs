@@ -159,7 +159,7 @@ const main = () => {
 
   7. npm run check -- ${code}              (los verificadores, antes de aprobar)
      npm run export:ae -- ${code}          (manifiesto para After Effects)
-     npm run ae -- ${code} --estilo <e>    (arma el .aep, stills y chequeo)
+     npm run ae -- ${code}                 (arma el .aep, stills y chequeo)
      npm run publicar -- ${code}           (sólo si todo pasó: commit, push y PR)
 `);
 };

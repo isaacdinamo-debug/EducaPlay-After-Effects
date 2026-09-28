@@ -2,8 +2,8 @@
 
 Capítulos de **EducaPlay Secundaria (Corrientes)** armados en Adobe After Effects a partir del
 máster grabado y su escaleta. El motor de medición ubica cada gráfico en la banda libre que deja la
-docente, y un constructor en ExtendScript arma un `.aep` editable en una de tres estéticas:
-**orgánico**, **vidrio** o **plataforma**.
+docente, y un constructor en ExtendScript arma un `.aep` editable con la estética de la
+plataforma EducaPlay.
 
 Capítulo de referencia: **AMB26-04 · Plan B: protocolo para una inundación**.
 
@@ -31,9 +31,9 @@ npm run nuevo      -- AMB26-05                    # 1. medir, transcribir, gatil
 #                                                 # 2. escribir src/episodes/AMB26-05/data.ts
 npm run check      -- AMB26-05                    # 3. tipos, layout, contraste
 npm run export:ae  -- AMB26-05                    # 4. manifiesto para AE
-npm run ae         -- AMB26-05 --estilo plataforma   # 5. armar en AE + stills + chequeo
-#                                                 # 6. mirar episodios/AMB26-05/revision/*.jpg
-npm run publicar   -- AMB26-05 --estilo plataforma   # 7. si todo pasa: commit, push y PR
+npm run ae         -- AMB26-05                    # 5. armar en AE + stills + chequeo
+#                                                 # 6. mirar episodios/AMB26-05/revision/contacto.jpg
+npm run publicar   -- AMB26-05                    # 7. si todo pasa: commit, push y PR
 ```
 
 En **Antigravity**, todo esto es el workflow **`/episodio-ae`**. Gemini lo sigue paso a paso con la
@@ -42,6 +42,6 @@ skill `educaplay-after-effects` y las reglas de `.agents/rules/`.
 ## Documentación
 
 - [`AGENTS.md`](AGENTS.md): mapa del repo y reglas duras (lo lee cualquier agente).
-- [`docs/ESTETICAS.md`](docs/ESTETICAS.md): las tres estéticas y los controles de la capa `CONTROL`.
+- [`docs/ESTETICA.md`](docs/ESTETICA.md): la estética de la plataforma y los controles de la capa `CONTROL`.
 - [`docs/SUBTITULOS.md`](docs/SUBTITULOS.md): estándar de subtitulado de EducaPlay (§1.4).
 - [`docs/MIGRACION.md`](docs/MIGRACION.md): qué se trajo del flujo Remotion y qué se retiró.

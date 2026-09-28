@@ -1,11 +1,11 @@
 /**
  * publicar — chequeo completo de un episodio y, SÓLO si pasa, subida a GitHub.
  *
- *   npm run publicar -- <CODE> [--estilo organico,vidrio,plataforma] [--sin-pr] [--trailer "…"]
+ *   npm run publicar -- <CODE> [--sin-pr] [--trailer "…"]
  *
  * 1. npm run check        tipos, layout (docente, rects, 2 líneas), contraste
  * 2. npm run export:ae    manifiesto para After Effects
- * 3. npm run ae           arma cada estilo, stills, hoja de contacto, chequeo
+ * 3. npm run ae           arma el .aep, stills, hoja de contacto, chequeo
  * 4. git                  rama episodio/<CODE>, commit, push
  * 5. gh                   PR hacia main con las hojas de contacto (si no existe)
  *
@@ -39,14 +39,13 @@ const repoSlug = () => {
 
 const main = () => {
   const {code, flags} = parseArgs();
-  if (!code) throw new Error('Uso: npm run publicar -- <CODE> [--estilo a,b] [--sin-pr]');
-  const estilos = String(flags.estilo ?? 'organico,vidrio,plataforma');
+  if (!code) throw new Error('Uso: npm run publicar -- <CODE> [--sin-pr] [--trailer "…"]');
   if (!gitOk('rev-parse', '--git-dir')) throw new Error(`${REPO} no es un repo git.`);
   const slug = repoSlug();
 
   step('1/3 · verificadores del motor', process.execPath, ['scripts/check.mjs', code]);
   step('2/3 · manifiesto para After Effects', process.execPath, ['--experimental-strip-types', 'scripts/export-ae.mjs', code]);
-  step('3/3 · armado y chequeo en After Effects', process.execPath, [path.join(REPO, 'ae', 'run.mjs'), code, '--estilo', estilos]);
+  step('3/3 · armado y chequeo en After Effects', process.execPath, [path.join(REPO, 'ae', 'run.mjs'), code]);
 
   const estadoPath = path.join(REPO, 'episodios', code, 'revision', 'estado.json');
   const estado = JSON.parse(fs.readFileSync(estadoPath, 'utf8'));
@@ -64,11 +63,10 @@ const main = () => {
   if (nothing) {
     console.log('\n· No hay cambios nuevos para commitear.');
   } else {
-    const lista = Object.keys(estado.estilos).join(', ');
     const msg = [
-      `${code} · ${M.episode.title}: armado en After Effects (${lista})`,
+      `${code} · ${M.episode.title}: armado en After Effects`,
       '',
-      `${M.blocks.length} bloques, ${M.captions.length} subtítulos, ${estado.frames.length} stills por estilo.`,
+      `${M.blocks.length} bloques, ${M.captions.length} subtítulos, ${estado.frames.length} stills.`,
       'Chequeo completo en verde: tipos, layout (docente, rects quemados, ≤2 líneas),',
       'contraste y armado en AE sin advertencias.',
       // --trailer "Co-Authored-By: …" para dejar constancia de quién asistió.
@@ -95,7 +93,9 @@ const main = () => {
     '- `npm run check`: tipos, layout y contraste en verde',
     '- `npm run ae`: armado sin ⚠ ni ✗, tarjetas y subtítulos coinciden con el manifiesto',
     '',
-    ...Object.keys(estado.estilos).flatMap((e) => [`### ${e}`, `![${e}](${img(e)})`, '']),
+    '### Hoja de contacto',
+    `![contacto](${img('contacto')})`,
+    '',
     'Los .aep y los medios no se suben: se regeneran con `npm run export:ae` + `npm run ae`.',
   ].join('\n');
   execFileSync('gh', ['pr', 'create', '--repo', slug, '--base', 'main', '--head', branch,
