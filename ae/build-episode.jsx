@@ -1,18 +1,18 @@
 /**
  * build-episode.jsx — arma un capítulo de Ambiente en After Effects.
  *
- *   npm run export:ae -- <CODE>                     (en motor/)
- *   npm run ae -- <CODE> --estilo <organico|vidrio|plataforma>
+ *   npm run export:ae -- <CODE>          (en motor/)
+ *   npm run ae -- <CODE>
  *
- * `npm run ae` (ae/run.mjs) lo corre a través de build-<estilo>.jsx y le pasa
- * el manifiesto en $.global.EDUCAPLAY_MANIFEST. A mano: AE → File → Scripts →
- * Run Script File… → build-<estilo>.jsx; si hay un solo episodio en
- * episodios/ lo toma, y si hay varios pregunta cuál.
+ * `npm run ae` (ae/run.mjs) lo evalúa y le pasa el manifiesto en
+ * $.global.EDUCAPLAY_MANIFEST. A mano: AE → File → Scripts → Run Script File…
+ * → este archivo; si hay un solo episodio en episodios/ lo toma, y si hay
+ * varios pregunta cuál.
  *
  * Con `episodios/<CODE>/manifest.json` construye un proyecto nuevo:
  *
- *   00_CONTROL     la capa CONTROL de la comp principal: colores de marca,
- *                  entrada/salida, parallax, sombra y subtítulos on/off
+ *   00_CONTROL     la capa CONTROL de la comp principal: colores de la web,
+ *                  entrada/salida, deslizamiento, rebote, sombra y subtítulos
  *   01_MASTER      el máster con la docente
  *   02_GRAFICOS    una precomp por bloque, <kind>_<key>
  *   03_ASSETS      fotos, videos y GIF (llegan como .mov con alfa)
@@ -20,8 +20,8 @@
  *
  * Las cajas NO se deciden acá. Vienen resueltas por la resolveSlot() del motor
  * (la banda libre al costado de la docente), así que un gráfico no la pisa.
- * Lo que este script agrega es la puesta en escena, en una de tres estéticas
- * (orgánico, vidrio, plataforma; ver docs/ESTETICAS.md).
+ * Lo que este script agrega es la puesta en escena, con la estética de la
+ * plataforma EducaPlay (ver docs/ESTETICA.md).
  *
  * Todo lo que se agrega por scripting usa matchNames, no nombres visibles:
  * funciona igual con AE en español o en inglés.
@@ -111,64 +111,28 @@ function buildEpisode() {
   var PAL = M.theme.palette;
   var FONTS = M.theme.fonts;
 
-  // Estilo: 'organico' (papel, 3D, olas) o 'vidrio' (editorial premium).
-  // Lo fijan build-organico.jsx / build-vidrio.jsx antes de evaluar este archivo.
-  var STYLE = $.global.EDUCAPLAY_STYLE || 'organico';
-  $.global.EDUCAPLAY_STYLE = undefined;
-  var VIDRIO = STYLE === 'vidrio';
-  var PLAT = STYLE === 'plataforma';
-
-  // Plataforma: los colores medidos sobre la web de EducaPlay (Corrientes Play).
+  // Estética de la plataforma EducaPlay (Corrientes Play): los colores se
+  // midieron sobre la web y reemplazan a los tokens de la materia.
   var WEB = {
     cian: '#5DCBE1', rojo: '#EA3355', amarillo: '#F5C042', verde: '#54B835',
     oscuro: '#3B3B3E', gris: '#F0F0F0', tinta: '#201D2F', menta: '#6CEACB', meta: '#7A7985',
   };
+  var P3 = {};
+  for (var pk3 in PAL) P3[pk3] = PAL[pk3];
+  P3.paper = WEB.gris; P3.paperWarm = WEB.gris;
+  P3.ink = WEB.tinta; P3.inkSoft = WEB.meta; P3.inkMuted = WEB.meta;
+  P3.accent = WEB.menta; P3.accentDeep = WEB.oscuro;
+  P3.magenta = WEB.rojo; P3.magentaDeep = WEB.rojo;
+  PAL = P3;
+  M.theme.rainbow = [WEB.cian, WEB.rojo, WEB.amarillo, WEB.verde];
+  var F3 = {};
+  for (var fk in FONTS) F3[fk] = FONTS[fk];
+  F3.heading = 'MuseoSansRounded-900';
+  F3.headingLight = 'MuseoSansRounded-300';
+  FONTS = F3;
+  log('▶ ' + MAIN + ' · ' + M.blocks.length + ' bloques · ' + M.captions.length + ' subtítulos');
 
-  // Vidrio: la paleta de la marca, con menos saturación.
-  function refine(hx, k) {
-    var c = hex(hx);
-    var g = 0.3 * c[0] + 0.59 * c[1] + 0.11 * c[2];
-    var out = '#';
-    for (var i = 0; i < 3; i++) {
-      var v = Math.round((c[i] + (g - c[i]) * k) * 255);
-      out += (v < 16 ? '0' : '') + v.toString(16);
-    }
-    return out;
-  }
-  if (PLAT) {
-    var P3 = {};
-    for (var pk3 in PAL) P3[pk3] = PAL[pk3];
-    P3.paper = WEB.gris; P3.paperWarm = WEB.gris;
-    P3.ink = WEB.tinta; P3.inkSoft = WEB.meta; P3.inkMuted = WEB.meta;
-    P3.accent = WEB.menta; P3.accentDeep = WEB.oscuro;
-    P3.magenta = WEB.rojo; P3.magentaDeep = WEB.rojo;
-    P3.yellow = WEB.menta; // la palabra activa de los subtítulos va en menta
-    PAL = P3;
-    M.theme.rainbow = [WEB.cian, WEB.rojo, WEB.amarillo, WEB.verde];
-    var F3 = {};
-    for (var fk in FONTS) F3[fk] = FONTS[fk];
-    F3.heading = 'MuseoSansRounded-900';
-    F3.headingLight = 'MuseoSansRounded-300';
-    FONTS = F3;
-  }
-  if (VIDRIO) {
-    var P2 = {};
-    for (var pk in PAL) P2[pk] = PAL[pk];
-    P2.accent = refine(PAL.accent, 0.35);
-    P2.cyan = refine(PAL.cyan, 0.3);
-    P2.yellow = refine(PAL.yellow, 0.3);
-    P2.magenta = refine(PAL.magenta, 0.2);
-    PAL = P2;
-    var r2 = [];
-    for (var ri = 0; ri < M.theme.rainbow.length; ri++) r2.push(refine(M.theme.rainbow[ri], 0.25));
-    M.theme.rainbow = r2;
-    // Easing exponencial: sale rápido, se asienta largo.
-    EASE_IN = 88;
-    EASE_OUT = 14;
-  }
-  log('▶ ' + MAIN + ' [' + STYLE + '] · ' + M.blocks.length + ' bloques · ' + M.captions.length + ' subtítulos');
-
-  app.beginUndoGroup('EducaPlay · ' + MAIN + ' · ' + STYLE);
+  app.beginUndoGroup('EducaPlay · ' + MAIN);
   if (app.project && app.project.numItems > 0) {
     if (!app.newProject()) return; // el usuario canceló el "¿guardar cambios?"
   }
@@ -213,13 +177,13 @@ function buildEpisode() {
   ctrl.label = 9;
   ctrl.source.parentFolder = F.control;
   var fx = ctrl.property('ADBE Effect Parade');
-  // En plataforma los controles se llaman como en la web; el código sigue
-  // usando los nombres internos y CTL_NAME los traduce.
-  var CTL_NAME = PLAT ? {
+  // Los controles se llaman como en la web; el código usa los nombres internos
+  // y CTL_NAME los traduce.
+  var CTL_NAME = {
     'Papel': 'Gris', 'Papel tibio': 'Gris tibio', 'Tinta': 'Tinta', 'Acento': 'Menta',
     'Acento oscuro': 'Oscuro', 'Alerta': 'Rojo', 'Arcoiris 1': 'Banda cian',
     'Arcoiris 2': 'Banda roja', 'Arcoiris 3': 'Banda amarilla', 'Arcoiris 4': 'Banda verde',
-  } : {};
+  };
   function ctlName(n) { return CTL_NAME[n] || n; }
   function colorCtl(name, hx) {
     var e = fx.addProperty('ADBE Color Control');
@@ -241,20 +205,11 @@ function buildEpisode() {
   colorCtl('Arcoiris 2', M.theme.rainbow[1]);
   colorCtl('Arcoiris 3', M.theme.rainbow[2]);
   colorCtl('Arcoiris 4', M.theme.rainbow[3]);
-  sliderCtl('Entrada (frames)', VIDRIO ? 22 : PLAT ? 18 : 16);
-  sliderCtl('Salida (frames)', VIDRIO ? 14 : 12);
-  if (PLAT) {
-    sliderCtl('Deslizamiento (px)', 60);
-    sliderCtl('Rebote (%)', 8);
-  } else if (VIDRIO) {
-    sliderCtl('Desenfoque vidrio', 38);
-    sliderCtl('Opacidad vidrio (%)', 64);
-    sliderCtl('Subida entrada (px)', 14);
-  } else {
-    sliderCtl('Profundidad entrada (px)', 260);
-    sliderCtl('Parallax (px)', 6);
-  }
-  sliderCtl('Sombra (%)', VIDRIO ? 20 : PLAT ? 14 : 35);
+  sliderCtl('Entrada (frames)', 18);
+  sliderCtl('Salida (frames)', 12);
+  sliderCtl('Deslizamiento (px)', 60);
+  sliderCtl('Rebote (%)', 8);
+  sliderCtl('Sombra (%)', 14);
   var cb = fx.addProperty('ADBE Checkbox Control');
   cb.name = 'Subtítulos';
   cb.property(1).setValue(1);
@@ -420,13 +375,11 @@ function buildEpisode() {
       an.name = 'Revelado';
       var props = an.property('ADBE Text Animator Properties');
       props.addProperty('ADBE Text Opacity').setValue(0);
-      props.addProperty('ADBE Text Position 3D').setValue([0, VIDRIO ? 16 : PLAT ? 22 : 28, 0]);
-      if (!VIDRIO && !PLAT) soft('blur de texto', function () { props.addProperty('ADBE Text Blur').setValue([10, 10]); });
+      props.addProperty('ADBE Text Position 3D').setValue([0, 22, 0]);
       var sel = an.property('ADBE Text Selectors').addProperty('ADBE Text Selector');
       var adv = sel.property('ADBE Text Range Advanced');
       soft('basado en palabras', function () {
-        // En vidrio el título entra por líneas: más editorial que palabra a palabra.
-        if (basedOnWords) adv.property('ADBE Text Range Type2').setValue(VIDRIO ? 4 : 3);
+        if (basedOnWords) adv.property('ADBE Text Range Type2').setValue(3);
       });
       keys(sel.property('ADBE Text Percent Start'), [t0, t0 + dur], [0, 100]);
     });
@@ -443,57 +396,8 @@ function buildEpisode() {
   }
 
   // ────────────────────────────────────────────────────── tarjetas y medios
-  var PAD = VIDRIO ? 36 : PLAT ? 30 : 28;
-  var RADIUS = VIDRIO ? 28 : PLAT ? 16 : 22;
-  var RAIL_W = (VIDRIO || PLAT) ? 0 : 8;
-  var GLASS_SOLID = null;
-
-  /**
-   * Panel de vidrio: tinte de papel translúcido con filete de luz, y detrás un
-   * desenfoque del cuadro recortado a la forma del panel. El desenfoque es una
-   * capa de ajuste DENTRO de la precomp: afecta al máster porque la capa de la
-   * precomp va con «contraer transformaciones».
-   */
-  function glassPanel(comp, x, y, w, h, dark) {
-    var tint = newShapeLayer(comp, 'VIDRIO · tinte');
-    var g = addRect(tint, x, y, w, h, RADIUS, hex(dark ? PAL.ink : PAL.paper), 'tinte');
-    soft('opacidad vidrio', function () {
-      fillOf(g).property('ADBE Vector Fill Opacity').expression = dark ? '45' :
-        CTRL_REF + '.effect("Opacidad vidrio (%)")(1)';
-    });
-    if (!dark) linkFill(g, 'Papel');
-    soft('filete de luz', function () {
-      var e = addRect(tint, x + 0.75, y + 0.75, w - 1.5, h - 1.5, RADIUS - 0.75, null, 'filete de luz');
-      var st = addStroke(e, [1, 1, 1], 1.5);
-      st.property('ADBE Vector Stroke Opacity').setValue(dark ? 22 : 85);
-      toFront(tint, e);
-    });
-    soft('brillo superior', function () {
-      var sh = addPath(tint, [[x + RADIUS, y + 1.5], [x + w - RADIUS, y + 1.5]], false, 'brillo');
-      var st = addStroke(sh, [1, 1, 1], 1);
-      toFront(tint, sh);
-    });
-    soft('desenfoque de vidrio', function () {
-      var adj;
-      if (!GLASS_SOLID) {
-        adj = comp.layers.addSolid([1, 1, 1], 'VIDRIO · desenfoque', W, H, 1);
-        GLASS_SOLID = adj.source;
-      } else adj = comp.layers.add(GLASS_SOLID);
-      adj.name = 'VIDRIO · desenfoque';
-      adj.adjustmentLayer = true;
-      var bl = adj.property('ADBE Effect Parade').addProperty('ADBE Gaussian Blur 2');
-      bl.property(1).expression = CTRL_REF + '.effect("Desenfoque vidrio")(1)';
-      soft('repetir bordes', function () { bl.property(3).setValue(1); });
-      var m = newShapeLayer(comp, 'MATTE · vidrio');
-      addRect(m, x, y, w, h, RADIUS, [1, 1, 1]);
-      tint.moveToEnd();
-      adj.moveToEnd();
-      m.moveToEnd();
-      adj.setTrackMatte(m, TrackMatteType.ALPHA);
-      m.enabled = false;
-    });
-    return tint;
-  }
+  var PAD = 30;
+  var RADIUS = 16;
 
   /** Sube un grupo de shape al frente: AE agrega los grupos nuevos DEBAJO. */
   function toFront(layer, grp) {
@@ -501,134 +405,12 @@ function buildEpisode() {
     return layer.property('ADBE Root Vectors Group').property(1);
   }
 
-  /** Hoja: dos vértices con tangentes, la forma más orgánica que cabe en 2 puntos. */
-  function leafGroup(layer, cx, cy, L, rot, rgb, name) {
-    var grp = layer.property('ADBE Root Vectors Group').addProperty('ADBE Vector Group');
-    grp.name = name;
-    var sh = grp.property('ADBE Vectors Group').addProperty('ADBE Vector Shape - Group');
-    var s = new Shape();
-    var a = L * 0.42, b = L * 0.22;
-    s.vertices = [[0, -L / 2], [0, L / 2]];
-    s.inTangents = [[-a, b], [a, -b]];
-    s.outTangents = [[a, b], [-a, -b]];
-    s.closed = true;
-    sh.property('ADBE Vector Shape').setValue(s);
-    var fill = grp.property('ADBE Vectors Group').addProperty('ADBE Vector Graphic - Fill');
-    fill.property('ADBE Vector Fill Color').setValue(rgb);
-    var tr = grp.property('ADBE Vector Transform Group');
-    tr.property('ADBE Vector Position').setValue([cx, cy]);
-    tr.property('ADBE Vector Rotation').setValue(rot);
-    return grp;
-  }
-
-  /** Dos hojas que brotan en la esquina superior exterior de la tarjeta. */
-  function leaves(comp, rightX, topY, t0) {
-    var l = newShapeLayer(comp, 'HOJAS');
-    var specs = [[rightX - 38, topY + 30, 46, 38, 0], [rightX - 70, topY + 22, 32, -24, 5]];
-    for (var i = 0; i < specs.length; i++) {
-      var sp = specs[i];
-      var g = leafGroup(l, sp[0], sp[1], sp[2], sp[3], hex(PAL.accent), 'hoja ' + (i + 1));
-      linkFill(g, 'Acento');
-      var sc = g.property('ADBE Vector Transform Group').property('ADBE Vector Scale');
-      keys(sc, [t0 + sec(sp[4]), t0 + sec(sp[4] + 16)], [[0, 0], [100, 100]]);
-    }
-    l.property('ADBE Transform Group').property('ADBE Opacity').setValue(22);
-    return l;
-  }
-
-  var PAPER_SOLID = null;
-
-  /** Tarjeta de papel: relleno, filete, grano de papel y hojas si es didáctica. */
-  function card(comp, x, y, w, h, rank) {
-    if (VIDRIO) return glassPanel(comp, x, y, w, h, false);
-    if (PLAT) {
-      // Plataforma: la baldosa gris plana de los botones "1° AÑO".
-      var pl = newShapeLayer(comp, 'TARJETA · gris');
-      linkFill(addRect(pl, x, y, w, h, RADIUS, hex(PAL.paper), 'gris'), 'Papel');
-      pl.moveToEnd();
-      return pl;
-    }
-    var warm = rank === 'refuerzo';
-    var l = newShapeLayer(comp, 'TARJETA');
-    var g = addRect(l, x, y, w, h, RADIUS, hex(warm ? PAL.paperWarm : PAL.paper), 'papel');
-    linkFill(g, warm ? 'Papel tibio' : 'Papel');
-    soft('filete', function () {
-      var e = addRect(l, x + 2, y + 2, w - 4, h - 4, RADIUS - 2, null, 'filete');
-      var st = addStroke(e, hex(PAL.stageLine), 2);
-      st.property('ADBE Vector Stroke Opacity').setValue(30);
-      toFront(l, e);
-    });
-    l.moveToEnd();
-    if (!warm) soft('hojas', function () { leaves(comp, x + w, y, sec(8)).moveBefore(l); });
-    // Grano: Fractal Noise multiplicado al 9 %, recortado por la silueta de la tarjeta.
-    soft('textura de papel', function () {
-      var tex;
-      if (!PAPER_SOLID) {
-        tex = comp.layers.addSolid([1, 1, 1], 'TEXTURA · papel', W, H, 1);
-        PAPER_SOLID = tex.source;
-      } else tex = comp.layers.add(PAPER_SOLID);
-      tex.name = 'TEXTURA · papel';
-      tex.property('ADBE Effect Parade').addProperty('ADBE Fractal Noise');
-      tex.blendingMode = BlendingMode.MULTIPLY;
-      tex.property('ADBE Transform Group').property('ADBE Opacity').setValue(9);
-      var m = l.duplicate();
-      m.name = 'MATTE · textura';
-      tex.moveBefore(l);
-      m.moveBefore(tex);
-      tex.setTrackMatte(m, TrackMatteType.ALPHA);
-      m.enabled = false;
-    });
-    return l;
-  }
-
-  /**
-   * Cuerpo de agua con los dos bordes ondulados, de x=0 a x=bodyW. La capa se
-   * barre en X para hacer la cortina.
-   */
-  function waveBody(layer, bodyW, y0, bodyH, amp, period, rgb, name) {
-    var pts = [], step = 18, yy;
-    for (yy = y0 - 40; yy <= y0 + bodyH + 40; yy += step) {
-      pts.push([bodyW + amp * Math.sin((yy / period) * Math.PI * 2), yy]);
-    }
-    for (yy = y0 + bodyH + 40; yy >= y0 - 40; yy -= step) {
-      pts.push([amp * Math.sin((yy / period) * Math.PI * 2 + 1.7), yy]);
-    }
-    var g = addPath(layer, pts, true, name);
-    var fill = g.property('ADBE Vectors Group').addProperty('ADBE Vector Graphic - Fill');
-    fill.property('ADBE Vector Fill Color').setValue(rgb);
-    return g;
-  }
-
-  /**
-   * Cortina de agua: tres capas (espuma, agua clara, agua profunda) que barren
-   * de izquierda a derecha entre t0 y t1, desfasadas unos cuadros. A mitad de
-   * camino el cuerpo cubre todo el ancho `span`.
-   */
-  function waterCurtain(comp, name, t0, t1, span, y0, h, amp) {
-    var bodyW = span + 2 * amp + 360;
-    var tones = [
-      {n: 'espuma', c: [1, 1, 1], o: 85, lag: 0},
-      {n: 'agua clara', c: hex(PAL.cyan), o: 100, lag: 2},
-      {n: 'agua profunda', c: hex(PAL.stageDeep), o: 100, lag: 4},
-    ];
-    var made = [];
-    for (var i = 0; i < tones.length; i++) {
-      var tn = tones[i];
-      var l = newShapeLayer(comp, name + ' · ' + tn.n);
-      waveBody(l, bodyW, y0, h, amp, 220 + 40 * i, tn.c, tn.n);
-      l.property('ADBE Transform Group').property('ADBE Opacity').setValue(tn.o);
-      var p = l.property('ADBE Transform Group').property('ADBE Position');
-      var mid = (span - bodyW) / 2;
-      keys(p, [t0 + sec(tn.lag), (t0 + t1) / 2 + sec(tn.lag), t1 + sec(tn.lag)],
-        [[-bodyW - amp, 0], [mid, 0], [span + amp, 0]]);
-      l.motionBlur = true;
-      soft('wave warp', function () {
-        var ww = l.property('ADBE Effect Parade').addProperty('ADBE Wave Warp');
-        ww.property(2).setValue(14); // altura de onda
-      });
-      made.push(l);
-    }
-    return made;
+  /** Tarjeta clara: la baldosa gris plana de los botones "1° AÑO" de la web. */
+  function card(comp, x, y, w, h) {
+    var pl = newShapeLayer(comp, 'TARJETA · gris');
+    linkFill(addRect(pl, x, y, w, h, RADIUS, hex(PAL.paper), 'gris'), 'Papel');
+    pl.moveToEnd();
+    return pl;
   }
 
   // Íconos en una caja de 100×100. `f` relleno, `s` trazo, `c` círculo.
@@ -659,16 +441,12 @@ function buildEpisode() {
 
   /** Dibuja un ícono de ICONS centrado en (cx, cy) dentro de un disco de diámetro d. */
   function drawIcon(l, parts, cx, cy, d, fg, hole, t0) {
-    var k = d / 100 * (VIDRIO ? 0.52 : 0.6);
+    var k = d / 100 * 0.6;
     function mp(p) { return [cx + (p[0] - 50) * k, cy + (p[1] - 50) * k]; }
     function mt(p) { return [p[0] * k, p[1] * k]; }
-    var sw = VIDRIO ? Math.max(2, d * 0.04) : Math.max(3, d * 0.07);
+    var sw = Math.max(3, d * 0.07);
     for (var i = 0; i < parts.length; i++) {
       var pt = parts[i], g;
-      // Vidrio: todo en trazo fino. Rellenos → contorno, ruedas → aro, huecos fuera.
-      if (VIDRIO && pt.t === 'h') continue;
-      if (VIDRIO && pt.t === 'c') pt = {t: 'r', c: pt.c, r: pt.r};
-      if (VIDRIO && pt.t === 'f') pt = {t: 'o', v: pt.v, i: pt.i, o: pt.o};
       if (pt.t === 'c' || pt.t === 'r') {
         var c = mp(pt.c);
         g = addEllipse(l, c[0], c[1], pt.r * 2 * k, pt.t === 'c' ? fg : null, 'ícono ' + i);
@@ -687,7 +465,7 @@ function buildEpisode() {
         s.vertices = vs; s.inTangents = ins; s.outTangents = outs;
         s.closed = pt.t !== 's';
         sh.property('ADBE Vector Shape').setValue(s);
-        if (pt.t === 's' || pt.t === 'o') {
+        if (pt.t === 's') {
           var st = addStroke(g, fg, sw);
           soft('unión redonda', function () { st.property('ADBE Vector Stroke Line Join').setValue(2); });
           drawOn(g, t0 + sec(6), t0 + sec(18));
@@ -697,28 +475,11 @@ function buildEpisode() {
         }
       }
       g = toFront(l, g);
-      if (pt.t !== 's' && pt.t !== 'o') {
+      if (pt.t !== 's') {
         keys(g.property('ADBE Vector Transform Group').property('ADBE Vector Group Opacity'),
           [t0 + sec(5), t0 + sec(12)], [0, 100]);
       }
     }
-  }
-
-  /** Barra arcoíris vertical, dibujada tramo por tramo con trim paths. */
-  function rainbowRail(comp, x, y, h, t0) {
-    if (VIDRIO || PLAT) return null; // vidrio y plataforma no llevan barra lateral
-    var l = newShapeLayer(comp, 'BARRA ARCOIRIS');
-    var seg = h / 4;
-    for (var i = 0; i < 4; i++) {
-      var g = addPath(l, [[x, y + seg * i], [x, y + seg * (i + 1)]], false, 'tramo ' + (i + 1));
-      var st = addStroke(g, hex(M.theme.rainbow[i]), RAIL_W);
-      soft('color arcoíris', function () {
-        st.property('ADBE Vector Stroke Color').expression = colorExpr('Arcoiris ' + (i + 1));
-      });
-      soft('cap plano', function () { st.property('ADBE Vector Stroke Line Cap').setValue(1); });
-      drawOn(g, t0 + sec(4 * i), t0 + sec(4 * i + 12));
-    }
-    return l;
   }
 
   /** Medio (foto/video/gif) recortado en un rect redondeado con track matte. */
@@ -737,12 +498,12 @@ function buildEpisode() {
     var s = fit === 'contain' ? contain : cover;
     var t = l.property('ADBE Transform Group');
     t.property('ADBE Position').setValue([x + w / 2, y + h / 2]);
-    var kb0 = VIDRIO ? 1.0 : 1.02, kb1 = VIDRIO ? 1.05 : 1.08;
+    var kb0 = 1.02, kb1 = 1.08;
     if (kenBurns) keys(t.property('ADBE Scale'), [t0, comp.duration], [[s * kb0, s * kb0], [s * kb1, s * kb1]]);
     else t.property('ADBE Scale').setValue([s, s]);
 
     var matte = newShapeLayer(comp, 'MATTE · ' + l.name);
-    addRect(matte, x, y, w, h, RADIUS - (VIDRIO ? 12 : 8), [1, 1, 1]);
+    addRect(matte, x, y, w, h, RADIUS - 6, [1, 1, 1]);
     matte.moveBefore(l);
     var ok = soft('track matte', function () {
       l.setTrackMatte(matte, TrackMatteType.ALPHA);
@@ -769,76 +530,7 @@ function buildEpisode() {
   // ─────────────────────────────────────────────────── constructores por tipo
   var BUILD = {};
 
-  BUILD.titular = function (comp, b, box) {
-    var wide = box.width >= 800;
-    var x0 = PAD + RAIL_W + 14;
-    var innerW = box.width - x0 - PAD;
-    var y = PAD;
-    var hasStep = b.step !== undefined;
-
-    var numW = 0;
-    if (hasStep) {
-      numW = wide ? 96 : 76;
-      var badge = newShapeLayer(comp, 'NUMERAL · círculo');
-      var cgrp = addEllipse(badge, x0 + numW / 2, 0, numW, hex(PAL.accentDeep), 'círculo');
-      linkFill(cgrp, 'Acento oscuro');
-      var num = text(comp, String(b.step), 0, 0, {name: 'NUMERAL', font: FONTS.heading, size: wide ? 58 : 46, color: [1, 1, 1]});
-      x0 += numW + 20;
-      innerW -= numW + 20;
-      badge.__num = num;
-      badge.__numW = numW;
-      b.__badge = badge;
-    }
-
-    var kicker = text(comp, hasStep ? b.kicker + ' ' + b.step : b.kicker, x0, y, {
-      name: 'KICKER', font: FONTS.bodyBold, size: wide ? 24 : 20, color: hex(PAL.accentDeep), tracking: 160,
-    });
-    y += kicker.h + 12;
-    var title = text(comp, b.title, x0, y, {
-      name: 'TÍTULO', font: FONTS.heading, size: wide ? 58 : 42, leading: wide ? 64 : 48,
-      color: hex(PAL.ink), maxW: innerW,
-    });
-    y += title.h + PAD;
-    var h = Math.max(y, hasStep ? numW + PAD * 2 : 0);
-
-    if (hasStep) {
-      var cy = h / 2;
-      var bg = b.__badge;
-      bg.property('ADBE Root Vectors Group').property(1).property('ADBE Vectors Group')
-        .property('ADBE Vector Shape - Ellipse').property('ADBE Vector Ellipse Position')
-        .setValue([PAD + RAIL_W + 14 + bg.__numW / 2, cy]);
-      var nl = bg.__num.layer;
-      var nr = rectOf(nl);
-      nl.property('ADBE Transform Group').property('ADBE Anchor Point').setValue([nr.left + nr.width / 2, nr.top + nr.height / 2]);
-      nl.property('ADBE Transform Group').property('ADBE Position').setValue([PAD + RAIL_W + 14 + bg.__numW / 2, cy]);
-      // El numeral entra con un pop de escala: 0 → 108 → 100.
-      soft('pop numeral', function () {
-        var s = bg.property('ADBE Transform Group');
-        s.property('ADBE Anchor Point').setValue([PAD + RAIL_W + 14 + bg.__numW / 2, cy]);
-        s.property('ADBE Position').setValue([PAD + RAIL_W + 14 + bg.__numW / 2, cy]);
-        keys(s.property('ADBE Scale'), [sec(4), sec(14), sec(20)], [[0, 0], [108, 108], [100, 100]]);
-        fadeIn(nl, sec(10), sec(8));
-      });
-    }
-
-    card(comp, 0, 0, box.width, h, 'didactico');
-    rainbowRail(comp, PAD, PAD, h - PAD * 2, sec(2));
-    // Cambio de paso: una ola corta barre la tarjeta mientras entra.
-    if (hasStep) soft('ola de paso', function () {
-      var ws = waterCurtain(comp, 'OLA PASO', 0, sec(18), box.width, 0, h, 16);
-      for (var q = 0; q < ws.length; q++) ws[q].moveToBeginning();
-    });
-    revealChars(kicker.layer, sec(4), sec(14), false);
-    revealChars(title.layer, sec(8), sec(20), true);
-    return h;
-  };
-
-  /**
-   * Titular de vidrio: numeral grande y liviano, un arcoíris de 4 trazos como
-   * única nota de color, kicker espaciado, título grande y un filete que se
-   * dibuja al final. Mucho aire.
-   */
-  // ───────────────────────────────────────────── primitivas de plataforma
+  // ─────────────────────────────────────────── primitivas de la plataforma
   var STRIP = [0.14, 0.42, 0.33, 0.11]; // proporciones de la franja de la web
 
   /** Franja de 4 colores que se dibuja de izquierda a derecha. */
@@ -949,10 +641,8 @@ function buildEpisode() {
     return tile;
   }
 
-  var BUILD_P = {};
-
   /** Titular oscuro con franja; los pasos llevan la baldosa del número. */
-  BUILD_P.titular = function (comp, b, box) {
+  BUILD.titular = function (comp, b, box) {
     var wide = box.width >= 800;
     var P = wide ? 30 : 24;
     var top = 8 + P;
@@ -1013,7 +703,7 @@ function buildEpisode() {
     var T = wide ? 200 : 150;
     var w = box.width;
     var h = T + P * 2;
-    card(comp, 0, 0, w, h, 'refuerzo');
+    card(comp, 0, 0, w, h);
     mediaInCard(comp, b.src, P, P, T, T, kind === 'gif' ? 'contain' : 'cover', 0, kind === 'photo');
     var tx = P + T + 24, tw = w - tx - P;
     var ty = P + 6;
@@ -1033,58 +723,10 @@ function buildEpisode() {
     return Math.max(h, ty + P);
   }
 
-  BUILD_P.photo = function (comp, b, box) { return b.rank === 'refuerzo' ? resourceRow(comp, b, box, 'photo') : mediaCard(comp, b, box, 'photo').h; };
-  BUILD_P.gif = function (comp, b, box) { return b.rank === 'refuerzo' ? resourceRow(comp, b, box, 'gif') : mediaCard(comp, b, box, 'gif').h; };
+  BUILD.photo = function (comp, b, box) { return b.rank === 'refuerzo' ? resourceRow(comp, b, box, 'photo') : mediaCard(comp, b, box, 'photo').h; };
+  BUILD.gif = function (comp, b, box) { return b.rank === 'refuerzo' ? resourceRow(comp, b, box, 'gif') : mediaCard(comp, b, box, 'gif').h; };
 
-  var DISC_I = 0; // en plataforma cada ítem toma el siguiente color de banda
-
-  var BUILD_V = {};
-  BUILD_V.titular = function (comp, b, box) {
-    var wide = box.width >= 800;
-    var P = wide ? 44 : 36;
-    var x0 = P, y = P;
-    var hasStep = b.step !== undefined;
-    var num = null;
-    if (hasStep) {
-      num = text(comp, (b.step < 10 ? '0' : '') + b.step, x0, y - 10, {
-        name: 'NUMERAL', font: FONTS.headingLight, size: wide ? 118 : 90, color: hex(PAL.accentDeep),
-      });
-      fadeIn(num.layer, sec(4), sec(22), 12);
-      x0 += num.w + (wide ? 34 : 24);
-    }
-    var innerW = box.width - x0 - P;
-
-    var mini = newShapeLayer(comp, 'ARCOÍRIS · detalle');
-    for (var i = 0; i < 4; i++) {
-      linkFill(addRect(mini, x0 + i * 11, y + 8, 11, 3, 0, hex(M.theme.rainbow[i]), 'trazo ' + (i + 1)), 'Arcoiris ' + (i + 1));
-    }
-    var mt = mini.property('ADBE Transform Group');
-    mt.property('ADBE Anchor Point').setValue([x0, y + 9]);
-    mt.property('ADBE Position').setValue([x0, y + 9]);
-    keys(mt.property('ADBE Scale'), [sec(2), sec(20)], [[0, 100], [100, 100]]);
-
-    var kicker = text(comp, b.kicker.toUpperCase(), x0 + 58, y, {
-      name: 'KICKER', font: FONTS.body, size: wide ? 18 : 16, color: hex(PAL.accentDeep), tracking: 320,
-    });
-    y += kicker.h + (wide ? 20 : 16);
-    var title = text(comp, b.title, x0, y, {
-      name: 'TÍTULO', font: FONTS.heading, size: wide ? 62 : 44, leading: wide ? 70 : 52,
-      color: hex(PAL.ink), maxW: innerW,
-    });
-    y += title.h + (wide ? 22 : 18);
-    var rule = newShapeLayer(comp, 'FILETE');
-    var rg = addPath(rule, [[x0, y], [x0 + 72, y]], false, 'filete');
-    var rs = addStroke(rg, hex(PAL.accent), 2);
-    soft('color filete', function () { rs.property('ADBE Vector Stroke Color').expression = colorExpr('Acento'); });
-    drawOn(rg, sec(16), sec(38));
-    y += 2 + P;
-    var h = Math.max(y, num ? num.h + P * 2 - 20 : 0);
-
-    card(comp, 0, 0, box.width, h, 'didactico');
-    revealChars(kicker.layer, sec(4), sec(18), false);
-    revealChars(title.layer, sec(8), sec(26), true);
-    return h;
-  };
+  var DISC_I = 0; // cada ítem de una lista toma el siguiente color de banda
 
   function mediaCard(comp, b, box, kind) {
     var didactico = b.rank === 'didactico';
@@ -1093,18 +735,17 @@ function buildEpisode() {
     var x = didactico ? 0 : (box.x + box.width / 2 > W / 2 ? box.width - w : 0);
     var capText = b.caption || b.label || '';
     var capH = capText ? 64 : 0;
-    var inner = VIDRIO ? 12 : 14;
-    var mw = w - inner * 2 - (didactico ? RAIL_W + 10 : 0);
-    var mx = x + inner + (didactico ? RAIL_W + 10 : 0);
+    var inner = 14;
+    var mw = w - inner * 2;
+    var mx = x + inner;
     var mh = Math.min(box.height - inner * 2 - capH, Math.round(mw * 0.62));
     var h = inner + mh + (capText ? capH : inner);
 
-    card(comp, x, 0, w, h, b.rank);
+    card(comp, x, 0, w, h);
     mediaInCard(comp, b.src, mx, inner, mw, mh, b.fit, 0, kind === 'photo');
-    if (didactico) rainbowRail(comp, x + inner + RAIL_W / 2, inner, h - inner * 2, sec(2));
     if (capText) {
-      var cap = text(comp, capText, mx, inner + mh + (VIDRIO ? 18 : 16), {
-        name: 'PIE', font: VIDRIO ? FONTS.heading : FONTS.body, size: VIDRIO ? 25 : 26, color: hex(PAL.ink), maxW: mw,
+      var cap = text(comp, capText, mx, inner + mh + 16, {
+        name: 'PIE', font: FONTS.body, size: 26, color: hex(PAL.ink), maxW: mw,
       });
       revealChars(cap.layer, sec(10), sec(14), true);
     }
@@ -1112,56 +753,45 @@ function buildEpisode() {
     return {h: h, x: x, w: w};
   }
 
-  BUILD.photo = function (comp, b, box) { return mediaCard(comp, b, box, 'photo').h; };
   BUILD.video = function (comp, b, box) { return mediaCard(comp, b, box, 'video').h; };
-  BUILD.gif = function (comp, b, box) { return mediaCard(comp, b, box, 'gif').h; };
 
   /**
-   * Ícono del ítem en un disco. A favor: disco de acento y pictograma blanco.
-   * Prohibido: pictograma en tinta con aro y tachado de alerta. Sin ícono
+   * Ícono del ítem en un disco de color de banda, con el pictograma en blanco.
+   * Prohibido: pictograma en tinta con aro y tachado rojos. Sin ícono
    * declarado, un tilde que se dibuja.
    */
   function itemIcon(comp, it, cx, cy, d, t0) {
     var l = newShapeLayer(comp, 'ÍCONO · ' + it.term);
     var bad = !!it.forbidden;
-    if (PLAT && !bad) {
+    if (!bad) {
       // Cian, amarillo, verde y recién después rojo: un tilde sobre rojo se lee como error.
       var di = [0, 2, 3, 1][(DISC_I++) % 4];
       linkFill(addEllipse(l, cx, cy, d, hex(M.theme.rainbow[di]), 'disco'), 'Arcoiris ' + (di + 1));
-    } else if (VIDRIO) {
-      var ringG = addEllipse(l, cx, cy, d - 2, null, 'aro fino');
-      var rst = addStroke(ringG, hex(bad ? PAL.magenta : PAL.accent), 2);
-      soft('color aro', function () { rst.property('ADBE Vector Stroke Color').expression = colorExpr(bad ? 'Alerta' : 'Acento'); });
-      drawOn(ringG, t0, t0 + sec(16));
-    } else if (!bad) linkFill(addEllipse(l, cx, cy, d, hex(PAL.accentDeep), 'disco'), 'Acento oscuro');
+    }
     var tr = l.property('ADBE Transform Group');
     tr.property('ADBE Anchor Point').setValue([cx, cy]);
     tr.property('ADBE Position').setValue([cx, cy]);
-    if (VIDRIO) keys(tr.property('ADBE Scale'), [t0, t0 + sec(14)], [[92, 92], [100, 100]]);
-    else keys(tr.property('ADBE Scale'), [t0, t0 + sec(8), t0 + sec(13)], [[0, 0], [110, 110], [100, 100]]);
+    keys(tr.property('ADBE Scale'), [t0, t0 + sec(8), t0 + sec(13)], [[0, 0], [110, 110], [100, 100]]);
 
     var parts = it.icon && ICONS[it.icon];
     if (parts) {
       soft('ícono ' + it.icon, function () {
-        var fgc = VIDRIO ? hex(bad ? PAL.ink : PAL.accentDeep) : (bad ? hex(PAL.ink) : [1, 1, 1]);
-        drawIcon(l, parts, cx, cy, d, fgc, bad ? hex(PAL.paper) : hex(PAL.accentDeep), t0);
+        drawIcon(l, parts, cx, cy, d, bad ? hex(PAL.ink) : [1, 1, 1], bad ? hex(PAL.paper) : hex(PAL.accentDeep), t0);
       });
     } else if (!bad) {
       var k = d * 0.22;
       var tick = addPath(l, [[cx - k * 1.1, cy + k * 0.05], [cx - k * 0.25, cy + k * 0.9], [cx + k * 1.2, cy - k * 0.8]], false, 'tilde');
-      addStroke(tick, VIDRIO ? hex(PAL.accentDeep) : [1, 1, 1], VIDRIO ? 3 : 6);
+      addStroke(tick, [1, 1, 1], 6);
       drawOn(toFront(l, tick), t0 + sec(6), t0 + sec(16));
     }
-    if (bad && !VIDRIO) {
+    if (bad) {
       var ring = addEllipse(l, cx, cy, d - 6, null, 'aro');
       var st = addStroke(ring, hex(PAL.magenta), 6);
       soft('color alerta', function () { st.property('ADBE Vector Stroke Color').expression = colorExpr('Alerta'); });
       toFront(l, ring);
-    }
-    if (bad) {
       var r = (d - 6) / 2 * 0.72;
       var slash = addPath(l, [[cx - r, cy - r], [cx + r, cy + r]], false, 'tachado');
-      var st2 = addStroke(slash, hex(PAL.magenta), VIDRIO ? 3 : 7);
+      var st2 = addStroke(slash, hex(PAL.magenta), 7);
       soft('color alerta', function () { st2.property('ADBE Vector Stroke Color').expression = colorExpr('Alerta'); });
       drawOn(toFront(l, slash), t0 + sec(10), t0 + sec(18));
     }
@@ -1169,7 +799,7 @@ function buildEpisode() {
 
   BUILD.checklist = function (comp, b, box) {
     var wide = box.width >= 800;
-    var x0 = PAD + RAIL_W + 18;
+    var x0 = PAD;
     var innerW = box.width - x0 - PAD;
     var y = PAD;
     if (b.kicker) {
@@ -1241,8 +871,7 @@ function buildEpisode() {
       y += note.h + 8;
     }
     var h = y + PAD - 16;
-    card(comp, 0, 0, box.width, h, 'didactico');
-    rainbowRail(comp, PAD, PAD, h - PAD * 2, sec(2));
+    card(comp, 0, 0, box.width, h);
     return h;
   };
 
@@ -1296,12 +925,11 @@ function buildEpisode() {
   for (var ob = 0; ob < M.blocks.length; ob++) {
     if (M.blocks[ob].kind === 'titular') { OPEN_TO = M.blocks[ob].from - 4; break; }
   }
-  if (VIDRIO) OPEN_TO = OPEN_FROM; // en vidrio no hay placa de apertura: nada se retrasa
   var built = 0;
   for (var bi = 0; bi < M.blocks.length; bi++) {
     var b = M.blocks[bi];
     var box = b.boxes[0];
-    var builder = (VIDRIO && BUILD_V[b.kind]) || (PLAT && BUILD_P[b.kind]) || BUILD[b.kind];
+    var builder = BUILD[b.kind];
     DISC_I = 0;
     if (!builder) { log('· sin constructor para ' + b.kind + ' (' + b.key + '), se omite'); continue; }
     var dur = sec(b.to - b.from);
@@ -1325,8 +953,6 @@ function buildEpisode() {
       L.startTime = sec(b.from + OPEN_HOLD);
       L.outPoint = sec(b.to);
     }
-    L.threeDLayer = !VIDRIO && !PLAT;
-    if (VIDRIO) L.collapseTransformation = true; // deja pasar el desenfoque del vidrio al máster
     L.motionBlur = true;
     L.label = b.kind === 'titular' ? 11 : b.kind === 'checklist' ? 14 : 13;
     var tr = L.property('ADBE Transform Group');
@@ -1335,66 +961,42 @@ function buildEpisode() {
     var toRight = box.x + box.width / 2 > W / 2;
     var ax = toRight ? box.width : 0;
     var ay = offY + contentH / 2;
-    tr.property('ADBE Anchor Point').setValue([ax, ay, 0]);
-    tr.property('ADBE Position').setValue([box.x + ax, box.y + ay, 0]);
+    tr.property('ADBE Anchor Point').setValue([ax, ay]);
+    tr.property('ADBE Position').setValue([box.x + ax, box.y + ay]);
 
     if (b.boxes.length > 1) {
       var ts = [], vs = [];
       for (var kb = 0; kb < b.boxes.length; kb++) {
         var bx = b.boxes[kb];
         ts.push(sec(bx.f - b.from) + L.startTime);
-        vs.push([bx.x + ax, bx.y + ay, 0]);
+        vs.push([bx.x + ax, bx.y + ay]);
       }
       keys(tr.property('ADBE Position'), ts, vs);
     }
 
-    // Entrada y salida gobernadas por CONTROL: la tarjeta llega desde atrás,
-    // girando sobre su borde exterior, y se va con un fundido corto.
+    // Entrada y salida gobernadas por CONTROL. easeOutBack: la tarjeta se
+    // desliza desde el borde exterior y se pasa apenas; `Rebote (%)` en 0 lo
+    // vuelve un ease out cúbico sin sobrepaso (el sistema de Ambiente lo
+    // desaconseja, por eso es un control y no una constante).
     var common = 'var c=thisComp.layer("CONTROL");' +
       'var fi=Math.max(1,c.effect("Entrada (frames)")(1))*thisComp.frameDuration;' +
       'var fo=Math.max(1,c.effect("Salida (frames)")(1))*thisComp.frameDuration;' +
-      'var e=easeOut(time-inPoint,0,fi,0,1);var x=ease(outPoint-time,0,fo,0,1);';
-    if (VIDRIO) {
-      // Expo out: sale rápido y se asienta largo. Sólo fundido y una subida corta.
-      common = 'var c=thisComp.layer("CONTROL");' +
-        'var fi=Math.max(1,c.effect("Entrada (frames)")(1))*thisComp.frameDuration;' +
-        'var fo=Math.max(1,c.effect("Salida (frames)")(1))*thisComp.frameDuration;' +
-        'var t=Math.max(0,(time-inPoint)/fi);var e=t>=1?1:1-Math.pow(2,-10*t);' +
-        'var x=ease(outPoint-time,0,fo,0,1);';
-    }
-    if (PLAT) {
-      // easeOutBack: la tarjeta se desliza desde el borde exterior y se pasa
-      // apenas; `Rebote (%)` en 0 lo vuelve un ease out cúbico sin sobrepaso.
-      common = 'var c=thisComp.layer("CONTROL");' +
-        'var fi=Math.max(1,c.effect("Entrada (frames)")(1))*thisComp.frameDuration;' +
-        'var fo=Math.max(1,c.effect("Salida (frames)")(1))*thisComp.frameDuration;' +
-        'var t=Math.min(1,Math.max(0,(time-inPoint)/fi));' +
-        'var s=1.70158*c.effect("Rebote (%)")(1)/8;' +
-        'var e=1+(s+1)*Math.pow(t-1,3)+s*Math.pow(t-1,2);' +
-        'var x=ease(outPoint-time,0,fo,0,1);';
-      var dir = toRight ? 1 : -1;
-      soft('expresiones de tarjeta', function () {
-        tr.property('ADBE Opacity').expression = common + 'Math.min(Math.min(1,t*2.5),x)*100;';
-        tr.property('ADBE Position').expression = common +
-          'var d=c.effect("Deslizamiento (px)")(1);value+[' + dir + '*((1-e)*d+(1-x)*d*0.35),0];';
-      });
-    } else if (VIDRIO) soft('expresiones de tarjeta', function () {
-      tr.property('ADBE Opacity').expression = common + 'Math.min(e,x)*100;';
+      'var t=Math.min(1,Math.max(0,(time-inPoint)/fi));' +
+      'var s=1.70158*c.effect("Rebote (%)")(1)/8;' +
+      'var e=1+(s+1)*Math.pow(t-1,3)+s*Math.pow(t-1,2);' +
+      'var x=ease(outPoint-time,0,fo,0,1);';
+    var dir = toRight ? 1 : -1;
+    soft('expresiones de tarjeta', function () {
+      tr.property('ADBE Opacity').expression = common + 'Math.min(Math.min(1,t*2.5),x)*100;';
       tr.property('ADBE Position').expression = common +
-        'var r=c.effect("Subida entrada (px)")(1);value+[0,(1-e)*r];';
-    });
-    else soft('expresiones de tarjeta', function () {
-      tr.property('ADBE Opacity').expression = common + 'Math.min(e,x)*100;';
-      tr.property('ADBE Position').expression = common +
-        'var z=c.effect("Profundidad entrada (px)")(1);value+[0,(1-e)*24,(1-e)*z+(1-x)*z*0.4];';
-      tr.property('ADBE Rotate Y').expression = common + '(1-e)*' + (toRight ? '-14' : '14') + ';';
+        'var d=c.effect("Deslizamiento (px)")(1);value+[' + dir + '*((1-e)*d+(1-x)*d*0.35),0];';
     });
     soft('sombra', function () {
       var ds = L.property('ADBE Effect Parade').addProperty('ADBE Drop Shadow');
       ds.property('ADBE Drop Shadow-0001').setValue(hex(PAL.ink, 1));
       ds.property('ADBE Drop Shadow-0003').setValue(180);
-      ds.property('ADBE Drop Shadow-0004').setValue(VIDRIO ? 22 : PLAT ? 8 : 14);
-      ds.property('ADBE Drop Shadow-0005').setValue(VIDRIO ? 80 : PLAT ? 24 : 36);
+      ds.property('ADBE Drop Shadow-0004').setValue(8);
+      ds.property('ADBE Drop Shadow-0005').setValue(24);
       ds.property('ADBE Drop Shadow-0002').expression = 'thisComp.layer("CONTROL").effect("Sombra (%)")(1)*2.55;';
     });
     built++;
@@ -1403,7 +1005,7 @@ function buildEpisode() {
 
   // ───────────────────────────────────────────────────────────── subtítulos
   // Estándar de subtitulado EducaPlay (subtitulos/EDUCAPLAY_MOTION_GRAPHICS_
-  // ACTUALIZADO.md §1.4), IGUAL en las tres estéticas:
+  // ACTUALIZADO.md §1.4):
   //   · pastilla esmerilada: scrim plano al 55 % (negro: la tinta #07202C del
   //     documento no llega a 4,5:1, ver THEME.captions), 10 px de desenfoque
   //     detrás, radio 20, borde de 1 px al 16 %, filete interior y sombra suave;
@@ -1564,7 +1166,7 @@ function buildEpisode() {
   // Plataforma: portada como la web. Bandas diagonales, el lockup
   // "Educaplay | Nivel Secundario" y una baldosa gris con el título; todo sube
   // a una banda superior cuando entran las alertas y el recurso 1.
-  if (PLAT) soft('apertura plataforma', function () {
+  soft('apertura', function () {
     var dur = OPEN_TO - OPEN_FROM;
     var ap = proj.items.addComp('APERTURA', W, H, 1, sec(dur), FPS);
     ap.parentFolder = F.graficos;
@@ -1632,81 +1234,11 @@ function buildEpisode() {
     log('· portada f' + OPEN_FROM + '–' + OPEN_TO);
   });
 
-  if (!VIDRIO && !PLAT) soft('apertura', function () {
-    var dur = OPEN_TO - OPEN_FROM;
-    var ap = proj.items.addComp('APERTURA', W, H, 1, sec(dur), FPS);
-    ap.parentFolder = F.graficos;
-    var ep = M.episode;
-    var parts = ep.title.split(':');
-    var big = parts[0];
-    var rest = parts.length > 1 ? parts.slice(1).join(':').replace(/^\s+/, '') : '';
-
-    var ctl = ap.layers.addNull(sec(dur));
-    ctl.name = 'TÍTULO · control';
-    var ct = ctl.property('ADBE Transform Group');
-    // Ancla y posición en el centro del título ANTES de emparentar: así el
-    // null arranca como identidad y los hijos quedan donde se los puso.
-    var cy0 = H / 2, cyBand = 124, sBand = 48;
-    ct.property('ADBE Anchor Point').setValue([W / 2, cy0]);
-    ct.property('ADBE Position').setValue([W / 2, cy0]);
-
-    var serie = text(ap, ep.series.toUpperCase(), 0, 0, {name: 'SERIE', font: FONTS.bodyBold, size: 28, color: [1, 1, 1], tracking: 240});
-    var t1 = text(ap, big, 0, 0, {name: 'TÍTULO', font: FONTS.heading, size: 170, color: [1, 1, 1]});
-    var t2 = rest ? text(ap, rest, 0, 0, {name: 'BAJADA', font: FONTS.headingLight, size: 66, color: [1, 1, 1]}) : null;
-    var gap = 14;
-    var blockH = serie.h + gap + t1.h + (t2 ? gap + t2.h : 0);
-    var yy = H / 2 - blockH / 2 - 30;
-    var rows = [serie, t1];
-    if (t2) rows.push(t2);
-    for (var i = 0; i < rows.length; i++) {
-      rows[i].layer.property('ADBE Transform Group').property('ADBE Position').setValue([W / 2 - rows[i].w / 2, yy]);
-      rows[i].layer.parent = ctl;
-      yy += rows[i].h + gap;
-    }
-    // Ola subrayada: se dibuja bajo el título.
-    var ul = newShapeLayer(ap, 'SUBRAYADO · ola');
-    var uw = Math.max(t1.w, t2 ? t2.w : 0);
-    var upts = [];
-    for (var ux = 0; ux <= uw; ux += 12) upts.push([W / 2 - uw / 2 + ux, yy + 10 + 8 * Math.sin(ux / 60 * Math.PI)]);
-    var ug = addPath(ul, upts, false, 'ola');
-    var ust = addStroke(ug, hex(PAL.yellow), 7);
-    drawOn(ug, sec(8), sec(22));
-    ul.parent = ctl;
-
-    revealChars(serie.layer, 0, sec(10), false);
-    revealChars(t1.layer, sec(2), sec(12), false);
-    if (t2) revealChars(t2.layer, sec(6), sec(14), true);
-    // Sube y se achica a la banda superior mientras entran las tarjetas.
-    keys(ct.property('ADBE Position'), [sec(OPEN_HOLD - 8), sec(OPEN_HOLD + 6)], [[W / 2, cy0], [W / 2, cyBand]]);
-    keys(ct.property('ADBE Scale'), [sec(OPEN_HOLD - 8), sec(OPEN_HOLD + 6)], [[100, 100], [sBand, sBand]]);
-    var shadowTargets = [serie.layer, t1.layer];
-    if (t2) shadowTargets.push(t2.layer);
-    for (var s2 = 0; s2 < shadowTargets.length; s2++) {
-      soft('sombra título', function () {
-        var ds = shadowTargets[s2].property('ADBE Effect Parade').addProperty('ADBE Drop Shadow');
-        ds.property('ADBE Drop Shadow-0001').setValue(hex(PAL.stageDeep, 1));
-        ds.property('ADBE Drop Shadow-0002').setValue(160);
-        ds.property('ADBE Drop Shadow-0004').setValue(6);
-        ds.property('ADBE Drop Shadow-0005').setValue(20);
-      });
-    }
-
-    var AL = main.layers.add(ap);
-    AL.name = 'APERTURA · título';
-    AL.startTime = sec(OPEN_FROM);
-    AL.label = 11;
-    AL.motionBlur = true;
-    AL.property('ADBE Transform Group').property('ADBE Opacity').expression =
-      'var fo=thisComp.layer("CONTROL").effect("Salida (frames)")(1)*thisComp.frameDuration;' +
-      'ease(outPoint-time,0,fo,0,100);';
-    log('· apertura f' + OPEN_FROM + '–' + OPEN_TO);
-  });
-
   // ─────────────────────────────────────────────────────────────── cortinas
-  // En cada traslado de cámara del montajista una ola barre el cuadro y
-  // disimula el salto. Sólo los traslados con la docente en cuadro: el último
+  // En cada traslado de cámara del montajista, un barrido de bandas diagonales
+  // (como el encabezado de la web) disimula el salto. Sólo los traslados con la docente en cuadro: el último
   // lleva a la placa institucional y ahí manda el máster.
-  if (PLAT) soft('bandas de traslado', function () {
+  soft('bandas de traslado', function () {
     var lastTo = 0;
     for (var i = 0; i < M.blocks.length; i++) lastTo = Math.max(lastTo, M.blocks[i].to);
     var n = 0;
@@ -1723,66 +1255,18 @@ function buildEpisode() {
     log('· ' + n + ' barridos de bandas');
   });
 
-  if (!VIDRIO && !PLAT) soft('cortinas', function () {
-    var lastTo = 0;
-    for (var i = 0; i < M.blocks.length; i++) lastTo = Math.max(lastTo, M.blocks[i].to);
-    var n = 0;
-    for (var j = 0; j < (M.moves || []).length; j++) {
-      var mv = M.moves[j];
-      if (mv.from >= lastTo) continue;
-      var ls = waterCurtain(main, 'CORTINA ' + mv.key, sec(mv.from - 6), sec(mv.to + 6), W, 0, H, 60);
-      for (var q = 0; q < ls.length; q++) {
-        ls[q].label = 8;
-        ls[q].moveToBeginning();
-      }
-      n++;
-    }
-    log('· ' + n + ' cortinas de agua');
-  });
-
-  // ─────────────────────────────────────────────────────────────── cámara
-  var TRANS_BLUR = [];
-  if (VIDRIO) soft('desenfoque de traslados', function () {
-    // Vidrio: el salto de cámara se disimula con un desenfoque que va y vuelve.
-    var lastTo = 0;
-    for (var i = 0; i < M.blocks.length; i++) lastTo = Math.max(lastTo, M.blocks[i].to);
-    for (var j = 0; j < (M.moves || []).length; j++) {
-      var mv = M.moves[j];
-      if (mv.from >= lastTo) continue;
-      var a = main.layers.addSolid([1, 1, 1], 'DESENFOQUE · traslado ' + mv.key, W, H, 1);
-      a.adjustmentLayer = true;
-      a.label = 8;
-      a.inPoint = sec(mv.from - 8);
-      a.outPoint = sec(mv.to + 8);
-      var bl = a.property('ADBE Effect Parade').addProperty('ADBE Gaussian Blur 2');
-      soft('repetir bordes', function () { bl.property(3).setValue(1); });
-      keys(bl.property(1), [sec(mv.from - 8), sec((mv.from + mv.to) / 2), sec(mv.to + 8)], [0, 30, 0]);
-      TRANS_BLUR.push(a);
-    }
-    log('· ' + TRANS_BLUR.length + ' desenfoques de traslado');
-  });
-
-  if (!VIDRIO && !PLAT) soft('cámara', function () {
-    var cam = main.layers.addCamera('CÁMARA', [W / 2, H / 2]);
-    // Deriva lenta: las tarjetas 3D respiran, el máster (2D) queda quieto.
-    cam.property('ADBE Transform Group').property('ADBE Position').expression =
-      'var p=thisComp.layer("CONTROL").effect("Parallax (px)")(1);' +
-      'value+[Math.sin(time*0.31)*p,Math.cos(time*0.23)*p*0.6,0];';
-    cam.moveToBeginning();
-  });
   ctrl.moveToBeginning();
   masterLayer.moveToEnd();
-  for (var tb = 0; tb < TRANS_BLUR.length; tb++) TRANS_BLUR[tb].moveBefore(masterLayer);
   masterLayer.locked = true;
 
   // ─────────────────────────────────────────────────────────────── guardar
-  var out = File(ROOTDIR.fsName + '/' + MAIN + '-' + STYLE + '.aep');
+  var out = File(ROOTDIR.fsName + '/' + MAIN + '.aep');
   proj.save(out);
   main.openInViewer();
   app.endUndoGroup();
 
   log('✓ guardado en ' + out.fsName);
-  // El LOG lo lee y lo guarda ae/run.mjs (revision/log-<estilo>.txt).
+  // El LOG lo lee y lo guarda ae/run.mjs (revision/log.txt).
 }
 
 try {

@@ -1,7 +1,7 @@
 ---
 name: educaplay-after-effects
 description: |
-  Capítulos de EducaPlay Secundaria (Corrientes) en Adobe After Effects: medir el máster con el motor (encuadre de la docente, Whisper, palabras-gatillo), escribir el data.ts del episodio, exportar el manifiesto, armar el .aep editable en una de tres estéticas (orgánico, vidrio, plataforma), verificar con stills y publicar en GitHub. Usar para cualquier código de episodio (AMB26-XX, LEO0XX…), para tocar ae/build-episode.jsx, o para diagnosticar por qué un gráfico pisa a la docente, un subtítulo pasa de dos líneas o el armado en AE deja advertencias.
+  Capítulos de EducaPlay Secundaria (Corrientes) en Adobe After Effects: medir el máster con el motor (encuadre de la docente, Whisper, palabras-gatillo), escribir el data.ts del episodio, exportar el manifiesto, armar el .aep editable con la estética de la plataforma EducaPlay, verificar con stills y publicar en GitHub. Usar para cualquier código de episodio (AMB26-XX, LEO0XX…), para tocar ae/build-episode.jsx, o para diagnosticar por qué un gráfico pisa a la docente, un subtítulo pasa de dos líneas o el armado en AE deja advertencias.
 ---
 
 # EducaPlay en After Effects
@@ -52,26 +52,41 @@ vuelca esas cajas al manifiesto y el `.jsx` sólo pone en escena.
 4. Leé los subtítulos generados. Whisper cambia palabras por otras que existen; se corrigen con
    `CAPTION_FIX`.
 
-## Estéticas (`ae/build-<estilo>.jsx`)
+## Estética: la plataforma EducaPlay (`docs/ESTETICA.md`)
 
-Las tres comparten las cajas, los tiempos y los subtítulos. Cambia la puesta en escena. Detalle en
-`docs/ESTETICAS.md`.
+Es la única. Toma los colores medidos sobre la web de Corrientes Play:
 
-| Estilo | En una línea | Controles propios en `CONTROL` |
-|---|---|---|
-| `organico` | Papel con grano, capas 3D con cámara, hojas, olas de agua en los traslados, título de apertura | Profundidad entrada, Parallax |
-| `vidrio` | Paneles translúcidos con el plató desenfocado detrás, numeral liviano, easing exponencial, sin apertura | Desenfoque vidrio, Opacidad vidrio, Subida entrada |
-| `plataforma` | Como la web de EducaPlay: tarjeta oscura con franja de 4 colores, baldosa "2° PASO", filas con miniatura, bandas diagonales | Deslizamiento, Rebote (%) (0 = sin rebote) |
+| Uso | Color |
+|---|---|
+| Bandas | cian `#5DCBE1`, rojo `#EA3355`, amarillo `#F5C042`, verde `#54B835` |
+| Tarjeta oscura | `#3B3B3E` |
+| Gris | `#F0F0F0` |
+| Tinta | `#201D2F` |
+| Menta | `#6CEACB` |
 
-La capa `CONTROL` de la comp principal gobierna todo el capítulo: colores, entrada, salida, sombra
-y subtítulos on/off. Las precomps la leen por expresión. Un cambio de marca se hace ahí, no capa
-por capa.
+Y sus piezas:
+- titulares en tarjeta oscura con franja de 4 colores y subrayado menta con flecha ↓;
+- baldosa "2° PASO";
+- recursos de refuerzo como filas con miniatura;
+- checklists en baldosa gris con discos de color;
+- portada "Educaplay | Nivel Secundario";
+- barridos de bandas diagonales en los traslados.
+
+**Movimiento:** `easeOutBack` regulado por `Rebote (%)`; con 0 no hay sobrepaso, que el sistema de
+Ambiente desaconseja.
+
+La capa `CONTROL` de la comp principal gobierna todo el capítulo:
+- colores: Gris, Oscuro, Tinta, Menta y Banda cian/roja/amarilla/verde;
+- `Entrada`, `Salida`, `Deslizamiento`, `Rebote` y `Sombra`;
+- `Subtítulos` on/off.
+
+Las precomps la leen por expresión. Un cambio de marca se hace ahí, no capa por capa.
 
 ## Subtítulos (`docs/SUBTITULOS.md` §1.4)
 
 - **Sin resaltado por palabra.** Una capa de texto por subtítulo: se edita con doble clic y el
   timing se ajusta con los bordes de la capa.
-- **Pastilla canónica, igual en las tres estéticas:**
+- **Pastilla canónica:**
   - scrim plano negro al 55 %, con 10 px de desenfoque detrás;
   - radio 20, borde blanco al 16 %, filete interior y sombra.
   - Es negro y no la tinta del documento, porque la tinta da 3,84:1 y el piso es 4,5:1.
@@ -101,7 +116,7 @@ por capa.
    - con `DoScriptFile`, esas escrituras quedan en 0 bytes: se usa `DoScript "$.evalFile(…)"`;
    - ExtendScript en Mac escribe `\r` salvo `lineFeed = 'Unix'`.
 8. **Una capa de ajuste dentro de una precomp alcanza al máster** sólo si la capa de la precomp va
-   con «contraer transformaciones». Así se hace el vidrio y el esmerilado de los subtítulos.
+   con «contraer transformaciones». Así se hace el esmerilado de los subtítulos.
 9. **AE importa un GIF como cuadro fijo.** El export los transcodifica a `.mov` (Animation, con
    alfa) y el `.jsx` los loopea.
 10. **Nombres visibles cambian con el idioma de AE.** Siempre matchNames, y efectos por índice en
@@ -111,7 +126,7 @@ por capa.
 
 - `npm run check -- <CODE>`: tipos, layout (docente, rects, 2 líneas con la fuente real) y
   contraste.
-- `npm run ae -- <CODE> --estilo …`: falla ante cualquier ⚠ o ✗ del LOG, si faltan tarjetas,
+- `npm run ae -- <CODE>`: falla ante cualquier ⚠ o ✗ del LOG, si faltan tarjetas,
   subtítulos o stills, o si no se guardó el `.aep`.
 - **Mirar las hojas de contacto** de `episodios/<CODE>/revision/`. Los scripts no ven un texto
   cortado ni un gráfico feo.

@@ -14,9 +14,9 @@ Los criterios y las trampas están en la skill `.agents/skills/educaplay-after-e
 | `motor/` | Medición: encuadre de la docente, transcripción con timing por palabra, palabras-gatillo, cajas libres (`resolveSlot`), verificadores y export del manifiesto. Node ≥ 22.6, sin Remotion ni React. |
 | `motor/src/episodes/<CODE>/` | Datos de cada episodio. **El único archivo escrito a mano es `data.ts`**; el resto lo generan los scripts. |
 | `motor/plantillas/data.molde.ts` | Molde de `data.ts` para un capítulo nuevo. |
-| `ae/` | `build-episode.jsx` (constructor), `build-<estilo>.jsx` (las tres estéticas) y `run.mjs` (driver que maneja AE desde la terminal). |
-| `episodios/<CODE>/` | Salida: `manifest.json` y `revision/` (hojas de contacto, logs, `estado.json`) se versionan. Los `.aep` y `assets/` no. |
-| `docs/` | `SUBTITULOS.md` (estándar), `ESTETICAS.md` (orgánico, vidrio y plataforma), `MIGRACION.md` (qué se retiró de Remotion). |
+| `ae/` | `build-episode.jsx` (constructor, estética de la plataforma EducaPlay) y `run.mjs` (driver que maneja AE desde la terminal). |
+| `episodios/<CODE>/` | Salida: `manifest.json` y `revision/` (`contacto.jpg`, `log.txt`, `estado.json`) se versionan. El `.aep` y `assets/` no. |
+| `docs/` | `SUBTITULOS.md` (estándar), `ESTETICA.md` (la estética de la plataforma), `MIGRACION.md` (qué se retiró de Remotion). |
 
 **El capítulo de referencia es `AMB26-04`**, "Plan B: protocolo para una inundación" (179 s,
 25 bloques, 27 subtítulos). Antes de escribir uno nuevo, leé su `data.ts`.
@@ -29,7 +29,7 @@ npm run medios -- <CODE> --desde "<ruta>"     # traer medios de un episodio ya m
 npm run nuevo -- <CODE>                       # episodio nuevo: medir, transcribir, gatillos, borrador
 npm run check -- <CODE>                       # tipos + layout + contraste
 npm run export:ae -- <CODE>                   # manifiesto para After Effects
-npm run ae -- <CODE> --estilo plataforma      # armar en AE + stills + hoja de contacto + chequeo
+npm run ae -- <CODE>                          # armar en AE + stills + hoja de contacto + chequeo
 npm run publicar -- <CODE>                    # todo lo anterior y, sólo si pasa: commit, push y PR
 ```
 

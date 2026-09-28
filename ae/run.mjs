@@ -1,22 +1,22 @@
 /**
  * ae/run.mjs — arma un episodio en After Effects, saca stills y lo verifica.
  *
- *   npm run ae -- <CODE> --estilo plataforma            (desde motor/)
- *   npm run ae -- <CODE> --estilo organico,vidrio,plataforma --frames 420,1620
- *   npm run ae -- <CODE> --estilo vidrio --forzar       (cierra aunque haya otro proyecto)
+ *   npm run ae -- <CODE>                          (desde motor/)
+ *   npm run ae -- <CODE> --frames 420,1620        (stills en esos frames)
+ *   npm run ae -- <CODE> --forzar                 (cierra aunque haya otro proyecto)
  *
- * Por estilo:
  *   1. abre After Effects si no está corriendo y espera a que acepte scripts;
  *   2. cierra el proyecto abierto SIN guardar sólo si lo generó este flujo
- *      (su archivo empieza con <CODE>-); si hay otro trabajo abierto, aborta;
- *   3. evalúa ae/build-<estilo>.jsx con el manifiesto de episodios/<CODE>/;
- *   4. vuelca el LOG del armado a episodios/<CODE>/revision/log-<estilo>.txt;
+ *      (su archivo empieza con <CODE>); si hay otro trabajo abierto, aborta;
+ *   3. evalúa ae/build-episode.jsx con el manifiesto de episodios/<CODE>/ y
+ *      guarda episodios/<CODE>/<CODE>.aep;
+ *   4. vuelca el LOG del armado a episodios/<CODE>/revision/log.txt;
  *   5. pide los stills (saveFrameToPng es ASÍNCRONO: se espera a que existan)
- *      y arma la hoja de contacto revision/<estilo>.jpg;
+ *      y arma la hoja de contacto revision/contacto.jpg;
  *   6. chequea: sin ⚠ ni ✗ en el LOG, .aep guardado, cantidad de tarjetas y de
  *      subtítulos igual a la del manifiesto, todos los stills presentes.
  *
- * Sale con código 1 si algún estilo no pasa. `npm run publicar` depende de eso.
+ * Sale con código 1 si algo no pasa. `npm run publicar` depende de eso.
  *
  * AE se maneja con AppleScript: `DoScript "$.evalFile(…)"`. `DoScript` siempre
  * devuelve "0", así que lo que hay que leer de vuelta se escribe a un archivo
@@ -31,7 +31,6 @@ import {fileURLToPath} from 'node:url';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const AE_DIR = path.join(REPO, 'ae');
-const ESTILOS = ['organico', 'vidrio', 'plataforma'];
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const args = (() => {
@@ -104,7 +103,7 @@ const closeOwnProject = (app, code, tmpDir, force) => {
     var r='VACIO';
     if (app.project) {
       var f=app.project.file;
-      if (f && f.name.indexOf(${js(code + '-')})===0) r='PROPIO';
+      if (f && f.name.indexOf(${js(code)})===0) r='PROPIO';
       else if (app.project.numItems>0) r='AJENO:'+(f?f.fsName:'(sin guardar)');
     }
     var o=new File(${js(st)});o.encoding='UTF-8';o.open('w');o.write(r);o.close();
@@ -156,32 +155,30 @@ const contactSheet = (pngs, out) => {
   execFileSync('ffmpeg', ['-y', '-loglevel', 'error', ...inputs, '-filter_complex', filter, '-frames:v', '1', '-q:v', '4', out]);
 };
 
-const buildOne = async (app, code, estilo, M, frames, revDir, tmpDir, force) => {
+const build = async (app, code, M, frames, revDir, tmpDir, force) => {
   const problems = [];
-  const aep = path.join(REPO, 'episodios', code, `${code}-${estilo}.aep`);
-  const logFile = path.join(tmpDir, `log-${estilo}.txt`);
-  const stillDir = path.join(revDir, estilo);
+  const aep = path.join(REPO, 'episodios', code, `${code}.aep`);
+  const logFile = path.join(tmpDir, 'log.txt');
+  const stillDir = path.join(revDir, 'stills');
   fs.rmSync(aep, {force: true});
   fs.rmSync(stillDir, {recursive: true, force: true});
   fs.mkdirSync(stillDir, {recursive: true});
 
   closeOwnProject(app, code, tmpDir, force);
 
-  console.log(`\n▶ ${code} · ${estilo}`);
+  console.log(`\n▶ ${code}`);
   runJsx(app, `
     $.global.EDUCAPLAY_MANIFEST = ${js(path.join(REPO, 'episodios', code, 'manifest.json'))};
-    $.evalFile(File(${js(path.join(AE_DIR, `build-${estilo}.jsx`))}));
+    $.evalFile(File(${js(path.join(AE_DIR, 'build-episode.jsx'))}));
     var o=new File(${js(logFile)});o.encoding='UTF-8';o.lineFeed='Unix';o.open('w');
     o.write((typeof LOG!=='undefined'?LOG:['✗ el constructor no dejó LOG']).join('\\n'));o.close();`, tmpDir);
 
   // ExtendScript en Mac escribe \r como fin de línea si no se le pide Unix.
   const log = fs.existsSync(logFile) ? fs.readFileSync(logFile, 'utf8').replace(/\r\n?/g, '\n') : '';
-  fs.writeFileSync(path.join(revDir, `log-${estilo}.txt`), log);
+  fs.writeFileSync(path.join(revDir, 'log.txt'), log);
   if (!log) problems.push('no hay LOG del armado');
-  // build.log lo intenta escribir el propio .jsx; que la preferencia de AE lo
-  // impida no es un problema del capítulo.
   for (const line of log.split('\n')) {
-    if (/[⚠✗]/.test(line) && !/build\.log/.test(line)) problems.push(line.trim());
+    if (/[⚠✗]/.test(line)) problems.push(line.trim());
   }
   const cards = Number((/· (\d+) tarjetas armadas/.exec(log) ?? [])[1]);
   const subs = Number((/· (\d+) subtítulos/.exec(log) ?? [])[1]);
@@ -191,6 +188,7 @@ const buildOne = async (app, code, estilo, M, frames, revDir, tmpDir, force) => 
 
   // Stills desde la comp principal. saveFrameToPng vuelve antes de escribir.
   const pngs = frames.map((f) => path.join(stillDir, `f${String(f).padStart(5, '0')}.png`));
+  const sheet = path.join(revDir, 'contacto.jpg');
   if (fs.existsSync(aep)) {
     runJsx(app, `
       var c=null;
@@ -201,24 +199,21 @@ const buildOne = async (app, code, estilo, M, frames, revDir, tmpDir, force) => 
     const ok = await waitFiles(pngs, 30000 + frames.length * 8000);
     const got = pngs.filter((p) => fs.existsSync(p));
     if (!ok) problems.push(`faltan stills: ${pngs.length - got.length} de ${pngs.length}`);
-    if (got.length) contactSheet(got, path.join(revDir, `${estilo}.jpg`));
+    if (got.length) contactSheet(got, sheet);
   }
 
   if (problems.length) {
-    console.log(`✗ ${estilo}: NO pasa`);
+    console.log('✗ NO pasa');
     for (const p of problems) console.log(`   · ${p}`);
   } else {
-    console.log(`✓ ${estilo}: ${cards} tarjetas, ${subs} subtítulos, ${pngs.length} stills → ` +
-      path.relative(REPO, path.join(revDir, `${estilo}.jpg`)));
+    console.log(`✓ ${cards} tarjetas, ${subs} subtítulos, ${pngs.length} stills → ${path.relative(REPO, sheet)}`);
   }
   return problems;
 };
 
 const main = async () => {
   const {code, flags} = args;
-  if (!code) throw new Error('Uso: npm run ae -- <CODE> --estilo <organico|vidrio|plataforma>[,…] [--frames 420,1620] [--forzar]');
-  const estilos = String(flags.estilo ?? ESTILOS.join(',')).split(',').map((s) => s.trim()).filter(Boolean);
-  for (const e of estilos) if (!ESTILOS.includes(e)) throw new Error(`Estilo desconocido: ${e} (${ESTILOS.join(', ')})`);
+  if (!code) throw new Error('Uso: npm run ae -- <CODE> [--frames 420,1620] [--forzar]');
 
   const manifestPath = path.join(REPO, 'episodios', code, 'manifest.json');
   if (!fs.existsSync(manifestPath)) throw new Error(`Falta ${path.relative(REPO, manifestPath)}: corré npm run export:ae -- ${code}`);
@@ -229,25 +224,23 @@ const main = async () => {
 
   const app = aeApp();
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'educaplay-ae-'));
-  await ensureAE(app, tmpDir);
-
-  const results = {};
+  let problems;
   try {
-    for (const e of estilos) results[e] = await buildOne(app, code, e, M, frames, revDir, tmpDir, !!flags.forzar);
+    await ensureAE(app, tmpDir);
+    problems = await build(app, code, M, frames, revDir, tmpDir, !!flags.forzar);
   } finally {
     fs.rmSync(tmpDir, {recursive: true, force: true});
   }
 
-  const failed = Object.entries(results).filter(([, p]) => p.length);
   fs.writeFileSync(path.join(revDir, 'estado.json'), JSON.stringify({
     code, fecha: new Date().toISOString(), frames,
-    estilos: Object.fromEntries(Object.entries(results).map(([e, p]) => [e, p.length ? {ok: false, problemas: p} : {ok: true}])),
+    ok: problems.length === 0, problemas: problems,
   }, null, 1));
-  if (failed.length) {
-    console.log(`\n✗ ${failed.length} de ${estilos.length} estilo(s) no pasan. Mirá revision/log-<estilo>.txt.`);
+  if (problems.length) {
+    console.log('\n✗ No pasa. Mirá revision/log.txt.');
     process.exit(1);
   }
-  console.log(`\n✓ ${code}: ${estilos.join(', ')} armados y verificados. Revisá las hojas de contacto en episodios/${code}/revision/.`);
+  console.log(`\n✓ ${code} armado y verificado. Revisá episodios/${code}/revision/contacto.jpg.`);
 };
 
 main().catch((e) => {

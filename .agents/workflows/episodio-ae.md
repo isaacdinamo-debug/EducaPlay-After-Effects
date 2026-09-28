@@ -4,9 +4,8 @@ description: Armar un capítulo de EducaPlay en After Effects, verificarlo y sub
 
 # /episodio-ae — capítulo de EducaPlay en After Effects
 
-Pedile al usuario el **código del episodio** (por ejemplo `AMB26-05`) y qué **estilo** quiere:
-`organico`, `vidrio` o `plataforma` (por defecto, los tres). Todos los comandos se corren desde
-`motor/`. Antes de empezar, leé `AGENTS.md` y la skill `educaplay-after-effects`.
+Pedile al usuario el **código del episodio** (por ejemplo `AMB26-05`). Todos los comandos se corren
+desde `motor/`. La estética es una sola, la de la plataforma EducaPlay (`docs/ESTETICA.md`). Antes de empezar, leé `AGENTS.md` y la skill `educaplay-after-effects`.
 
 Si un paso falla, **pará y mostrale al usuario el error tal cual**. No lo esquives editando
 archivos generados, escribiendo coordenadas a mano, ni saltando al paso de publicar.
@@ -72,16 +71,16 @@ Pedile al usuario que **guarde y cierre** cualquier proyecto propio que tenga ab
 Después:
 
 ```bash
-npm run ae -- <CODE> --estilo <organico|vidrio|plataforma|organico,vidrio,plataforma>
+npm run ae -- <CODE>
 ```
 
-Abre AE si hace falta, arma cada estilo, guarda `episodios/<CODE>/<CODE>-<estilo>.aep`, saca stills
-y arma `episodios/<CODE>/revision/<estilo>.jpg`. Falla si el armado dejó alguna ⚠ o ✗, si faltan
-tarjetas o subtítulos, o si falta algún still. El detalle queda en `revision/log-<estilo>.txt`.
+Abre AE si hace falta, arma el capítulo, guarda `episodios/<CODE>/<CODE>.aep`, saca stills y arma
+`episodios/<CODE>/revision/contacto.jpg`. Falla si el armado dejó alguna ⚠ o ✗, si faltan tarjetas
+o subtítulos, o si falta algún still. El detalle queda en `revision/log.txt`.
 
 ## 6. Revisión visual
 
-Abrí cada `episodios/<CODE>/revision/<estilo>.jpg` y listale al usuario, en el chat, todo lo que se
+Abrí `episodios/<CODE>/revision/contacto.jpg` y listale al usuario, en el chat, todo lo que se
 vea mal. En especial:
 
 - un gráfico que pisa a la docente, la marca de agua o la placa de nombre;
@@ -94,13 +93,13 @@ OK del usuario antes de publicar.**
 ## 7. Publicar
 
 ```bash
-npm run publicar -- <CODE> --estilo <los mismos del paso 5>
+npm run publicar -- <CODE>
 ```
 
 Vuelve a correr el chequeo completo (pasos 3 a 5) y, **sólo si todo pasa**:
 
 - commitea en la rama `episodio/<CODE>`;
 - hace push a `origin`;
-- abre un Pull Request a `main` con las hojas de contacto.
+- abre un Pull Request a `main` con la hoja de contacto.
 
 Si falla, no toca git. Pasale al usuario el link del PR que imprime al final.
