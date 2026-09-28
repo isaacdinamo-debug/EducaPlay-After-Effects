@@ -132,6 +132,29 @@ function buildEpisode() {
   FONTS = F3;
   log('▶ ' + MAIN + ' · ' + M.blocks.length + ' bloques · ' + M.captions.length + ' subtítulos');
 
+  // ── Fuentes: sin las fuentes exactas NO se arma ──────────────────────────
+  // El constructor mide cada texto para cortar líneas y dar alto a las
+  // tarjetas. Con una fuente sustituida cambian las medidas, y con ellas el
+  // equilibrio de todo el cuadro: no es un problema cosmético.
+  var REQUIRED_FONTS = M.fontsRequired || ['Museo-300', 'Museo-700', 'MuseoSansRounded-300',
+    'MuseoSansRounded-500', 'MuseoSansRounded-700', 'MuseoSansRounded-900', 'MuseoSansRounded-1000'];
+  if (app.fonts && app.fonts.getFontsByPostScriptName) {
+    var missingFonts = [];
+    for (var fi = 0; fi < REQUIRED_FONTS.length; fi++) {
+      var found = app.fonts.getFontsByPostScriptName(REQUIRED_FONTS[fi]);
+      if (!found || !found.length) missingFonts.push(REQUIRED_FONTS[fi]);
+    }
+    if (missingFonts.length) {
+      log('✗ Faltan fuentes en este equipo: ' + missingFonts.join(', ') + '. Instalalas ' +
+        '(en Windows: clic derecho → "Instalar para todos los usuarios"), reiniciá After Effects ' +
+        'y volvé a correr. No se armó nada.');
+      return;
+    }
+    log('· ' + REQUIRED_FONTS.length + ' fuentes verificadas');
+  } else {
+    log('⚠ Esta versión de After Effects no permite verificar fuentes (app.fonts): revisá que no haya fuentes faltantes');
+  }
+
   app.beginUndoGroup('EducaPlay · ' + MAIN);
   if (app.project && app.project.numItems > 0) {
     if (!app.newProject()) return; // el usuario canceló el "¿guardar cambios?"
