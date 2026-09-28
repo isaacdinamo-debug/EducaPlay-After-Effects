@@ -1,0 +1,40 @@
+[
+  {"key": "calle",            "word": "calle"},
+  {"key": "aguaEntrando",     "word": "entrar"},
+  {"key": "esperando",        "word": "esperando"},
+  {"key": "hogar",            "word": "hogar"},
+  {"key": "protocolo",        "word": "protocolo"},
+  {"key": "primero",          "word": "primero"},
+  {"key": "alertas",          "word": "alertas"},
+  {"key": "celular",          "word": "celular"},
+  {"key": "segundo",          "word": "segundo"},
+  {"key": "corta",            "word": "corta"},
+
+  {"key": "svcAgua",          "word": "agua",         "after": "corta"},
+  {"key": "svcGas",           "word": "gas",          "after": "corta"},
+  {"key": "svcLuz",           "word": "electricidad", "after": "corta"},
+
+  {"key": "levanta",          "word": "levanta"},
+  {"key": "tercero",          "word": "tercero"},
+  {"key": "reunir",           "word": "reuni"},
+  {"key": "plantaSuperior",   "word": "planta"},
+  {"key": "cuarto",           "word": "cuarto"},
+  {"key": "noVehiculos",      "word": "vehiculo"},
+
+  {"key": "vehAuto",          "word": "auto",      "after": "noVehiculos"},
+  {"key": "vehMoto",          "word": "moto",      "after": "noVehiculos"},
+  {"key": "vehBici",          "word": "bicicleta", "after": "noVehiculos"},
+  {"key": "propiosMedios",    "word": "medios",    "after": "noVehiculos"},
+  {"key": "comunicate",       "word": "comunicate"},
+
+  {"key": "quinto",           "word": "quinto"},
+  {"key": "mochila",          "word": "mochila", "after": "quinto"},
+  {"key": "sexto",            "word": "sexto"},
+  {"key": "noCamines",        "word": "camines"},
+  {"key": "centroEvacuacion", "word": "centro"},
+  {"key": "cierre",           "word": "contamos", "after": "centroEvacuacion"},
+
+  {"key": "recapAntes",       "word": "preparados", "after": "cierre"},
+  {"key": "recapDurante",     "word": "protocolo",  "after": "recapAntes"},
+  {"key": "recapDespues",     "word": "hacer",      "after": "recapDurante"}
+]
