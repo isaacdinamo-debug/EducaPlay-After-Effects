@@ -1,0 +1,1284 @@
+{
+ "code": "AMB26-04",
+ "generatedBy": "motor/scripts/export-ae.mjs",
+ "episode": {
+  "id": "AMB26-04",
+  "title": "Plan B: protocolo para una inundación",
+  "series": "Educación Ambiental Integral",
+  "objective": "Fomentar una cultura de prevención y cuidado ante situaciones de emergencia hídrica.",
+  "master": "videos/AMB26-04.mp4",
+  "voiceGain": 0.67,
+  "intervention": 3
+ },
+ "fps": 25,
+ "width": 1920,
+ "height": 1080,
+ "duration": 4477,
+ "master": "assets/AMB26-04.mp4",
+ "reserved": [
+  {
+   "key": "watermark",
+   "rect": [
+    1400,
+    56,
+    470,
+    160
+   ],
+   "from": 0,
+   "to": 4477
+  },
+  {
+   "key": "watermark-safe",
+   "rect": [
+    1300,
+    0,
+    620,
+    260
+   ],
+   "from": 0,
+   "to": 4477
+  },
+  {
+   "key": "papel-sup-izq",
+   "rect": [
+    0,
+    0,
+    443,
+    139
+   ],
+   "from": 0,
+   "to": 4477
+  },
+  {
+   "key": "placa-nombre",
+   "rect": [
+    140,
+    840,
+    720,
+    150
+   ],
+   "from": 440,
+   "to": 615
+  }
+ ],
+ "theme": {
+  "palette": {
+   "stage": "#22BCA2",
+   "stageAlt": "#1EB499",
+   "stageDeep": "#159C82",
+   "stageLine": "#14A48A",
+   "paper": "#FFFFFF",
+   "paperWarm": "#F7FFFC",
+   "ink": "#0C2B24",
+   "inkSoft": "#2F5B4F",
+   "inkMuted": "#5A7D72",
+   "accent": "#10BA1B",
+   "accentDeep": "#06590D",
+   "cyan": "#24CCF0",
+   "cyanDeep": "#0E7F9B",
+   "yellow": "#F0CC24",
+   "yellowWash": "rgba(240, 204, 36, 0.55)",
+   "magenta": "#E40054",
+   "magentaDeep": "#A8003E"
+  },
+  "captions": {
+   "scrimAlpha": 0.55,
+   "fontSize": 34,
+   "maxWidth": 1360,
+   "pill": {
+    "radius": 20,
+    "padX": 34,
+    "padY": 14,
+    "blur": 10,
+    "lineHeight": 1.32,
+    "maxLines": 2
+   }
+  },
+  "rainbow": [
+   "#E41653",
+   "#FAB817",
+   "#35BAD5",
+   "#3CAA34"
+  ],
+  "fonts": {
+   "heading": "Museo-700",
+   "headingLight": "Museo-300",
+   "body": "MuseoSansRounded-700",
+   "bodyBold": "MuseoSansRounded-900",
+   "bodyLight": "MuseoSansRounded-300"
+  }
+ },
+ "blocks": [
+  {
+   "kind": "evidence",
+   "key": "apertura-alerta",
+   "rank": "refuerzo",
+   "from": 265,
+   "to": 390,
+   "items": [
+    {
+     "src": "assets/alerta-1.png",
+     "label": "¿Qué hacés?",
+     "at": 265
+    },
+    {
+     "src": "assets/alerta-2.png",
+     "label": "¿A dónde vas?",
+     "at": 300
+    },
+    {
+     "src": "assets/alerta-3.png",
+     "label": "Cada decisión cuenta",
+     "at": 335
+    }
+   ],
+   "side": "left",
+   "align": "center",
+   "boxes": [
+    {
+     "f": 265,
+     "x": 56,
+     "y": 209,
+     "width": 760,
+     "height": 560
+    }
+   ]
+  },
+  {
+   "kind": "video",
+   "key": "recurso-1-inundacion",
+   "rank": "didactico",
+   "from": 265,
+   "to": 390,
+   "src": "assets/recurso-1.mp4",
+   "caption": "Emergencia por inundación",
+   "credit": "Registro documental · Corrientes",
+   "side": "right",
+   "align": "center",
+   "boxes": [
+    {
+     "f": 265,
+     "x": 1104,
+     "y": 269,
+     "width": 760,
+     "height": 560
+    }
+   ]
+  },
+  {
+   "kind": "titular",
+   "key": "pregunta-inicial",
+   "from": 394,
+   "to": 458,
+   "kicker": "EMERGENCIA HÍDRICA",
+   "title": "¿Qué hacés? ¿A dónde vas?",
+   "side": "opposite",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 394,
+     "x": 1304,
+     "y": 260,
+     "width": 560,
+     "height": 380
+    }
+   ]
+  },
+  {
+   "kind": "photo",
+   "key": "recurso-4-desespero",
+   "rank": "refuerzo",
+   "from": 464,
+   "to": 547,
+   "src": "assets/desespero.jpg",
+   "caption": "El agua comenzó a entrar",
+   "credit": "Recreado con Inteligencia Artificial",
+   "side": "opposite",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 464,
+     "x": 1304,
+     "y": 260,
+     "width": 560,
+     "height": 380
+    }
+   ]
+  },
+  {
+   "kind": "titular",
+   "key": "decisiones-clave",
+   "from": 557,
+   "to": 755,
+   "kicker": "DECISIONES CLAVE",
+   "title": "¿Esperar, salir o buscar un lugar seguro?",
+   "side": "opposite",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 557,
+     "x": 1304,
+     "y": 260,
+     "width": 560,
+     "height": 380
+    }
+   ]
+  },
+  {
+   "kind": "photo",
+   "key": "recurso-5-familia",
+   "rank": "refuerzo",
+   "from": 765,
+   "to": 950,
+   "src": "assets/familia.png",
+   "fit": "contain",
+   "caption": "Protegerte y proteger a los demás",
+   "side": "opposite",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 765,
+     "x": 1304,
+     "y": 260,
+     "width": 560,
+     "height": 380
+    }
+   ]
+  },
+  {
+   "kind": "titular",
+   "key": "protocolo-accion",
+   "from": 960,
+   "to": 1090,
+   "kicker": "GUÍA DE ACCIÓN",
+   "title": "Protocolo de acción ante inundaciones",
+   "side": "opposite",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 960,
+     "x": 1304,
+     "y": 260,
+     "width": 560,
+     "height": 380
+    }
+   ]
+  },
+  {
+   "kind": "titular",
+   "key": "paso-1-titular",
+   "from": 1128,
+   "to": 1412,
+   "step": 1,
+   "kicker": "PASO",
+   "title": "Mantené la calma e informate",
+   "side": "opposite",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 1128,
+     "x": 964,
+     "y": 260,
+     "width": 900,
+     "height": 270
+    }
+   ]
+  },
+  {
+   "kind": "gif",
+   "key": "recurso-6-tv",
+   "rank": "refuerzo",
+   "from": 1220,
+   "to": 1301,
+   "src": "assets/tv.mov",
+   "label": "Alertas y comunicados oficiales",
+   "side": "opposite",
+   "align": "bottom",
+   "boxes": [
+    {
+     "f": 1220,
+     "x": 964,
+     "y": 542,
+     "width": 900,
+     "height": 296
+    }
+   ]
+  },
+  {
+   "kind": "gif",
+   "key": "recurso-7-telefono",
+   "rank": "refuerzo",
+   "from": 1311,
+   "to": 1412,
+   "src": "assets/telefono.mov",
+   "label": "Celular cargado y mochila lista",
+   "side": "opposite",
+   "align": "bottom",
+   "boxes": [
+    {
+     "f": 1311,
+     "x": 964,
+     "y": 542,
+     "width": 900,
+     "height": 296
+    }
+   ]
+  },
+  {
+   "kind": "titular",
+   "key": "paso-2-titular",
+   "from": 1422,
+   "to": 1965,
+   "step": 2,
+   "kicker": "PASO",
+   "title": "Cortá los servicios",
+   "side": "opposite",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 1422,
+     "x": 964,
+     "y": 260,
+     "width": 900,
+     "height": 210
+    }
+   ]
+  },
+  {
+   "kind": "checklist",
+   "key": "recurso-8-servicios",
+   "rank": "didactico",
+   "from": 1502,
+   "to": 1831,
+   "items": [
+    {
+     "icon": "agua",
+     "term": "AGUA",
+     "detail": "Cerrá la llave de paso",
+     "at": 1542
+    },
+    {
+     "icon": "gas",
+     "term": "GAS",
+     "detail": "Cerrá la llave de paso",
+     "at": 1555
+    },
+    {
+     "icon": "luz",
+     "term": "ELECTRICIDAD",
+     "detail": "Bajá el interruptor principal",
+     "at": 1563
+    }
+   ],
+   "note": "Solo si podés hacerlo sin entrar en contacto con el agua.",
+   "side": "opposite",
+   "align": "bottom",
+   "boxes": [
+    {
+     "f": 1502,
+     "x": 964,
+     "y": 482,
+     "width": 900,
+     "height": 356
+    }
+   ]
+  },
+  {
+   "kind": "photo",
+   "key": "recurso-9-levantar-cosas",
+   "rank": "refuerzo",
+   "from": 1841,
+   "to": 1965,
+   "src": "assets/levantar-cosas.jpg",
+   "caption": "Levantá objetos a lugares altos",
+   "credit": "Recreado con Inteligencia Artificial",
+   "side": "opposite",
+   "align": "bottom",
+   "boxes": [
+    {
+     "f": 1841,
+     "x": 964,
+     "y": 482,
+     "width": 900,
+     "height": 356
+    }
+   ]
+  },
+  {
+   "kind": "titular",
+   "key": "paso-3-titular",
+   "from": 1975,
+   "to": 2398,
+   "step": 3,
+   "kicker": "PASO",
+   "title": "Protegé a tu familia",
+   "side": "opposite",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 1975,
+     "x": 964,
+     "y": 260,
+     "width": 900,
+     "height": 210
+    }
+   ]
+  },
+  {
+   "kind": "photo",
+   "key": "recurso-10-reunir-familia",
+   "rank": "refuerzo",
+   "from": 2032,
+   "to": 2280,
+   "src": "assets/reunir-familia.png",
+   "caption": "Atención a niños y adultos mayores",
+   "credit": "Recreado con Inteligencia Artificial",
+   "side": "opposite",
+   "align": "bottom",
+   "boxes": [
+    {
+     "f": 2032,
+     "x": 964,
+     "y": 482,
+     "width": 900,
+     "height": 356
+    }
+   ]
+  },
+  {
+   "kind": "photo",
+   "key": "recurso-11-planta-superior",
+   "rank": "refuerzo",
+   "from": 2290,
+   "to": 2398,
+   "src": "assets/subir-planta-superior.jpg",
+   "caption": "Trasladate a la planta superior",
+   "credit": "Recreado con Inteligencia Artificial",
+   "side": "opposite",
+   "align": "bottom",
+   "boxes": [
+    {
+     "f": 2290,
+     "x": 964,
+     "y": 482,
+     "width": 900,
+     "height": 356
+    }
+   ]
+  },
+  {
+   "kind": "titular",
+   "key": "paso-4-titular",
+   "from": 2429,
+   "to": 2732,
+   "step": 4,
+   "kicker": "PASO",
+   "title": "Evacuá si te lo indican",
+   "side": "opposite",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 2429,
+     "x": 56,
+     "y": 139,
+     "width": 560,
+     "height": 230
+    }
+   ]
+  },
+  {
+   "kind": "checklist",
+   "key": "recurso-12-vehiculos",
+   "rank": "didactico",
+   "from": 2586,
+   "to": 2724,
+   "kicker": "NO USES",
+   "items": [
+    {
+     "icon": "auto",
+     "term": "Auto",
+     "at": 2613,
+     "forbidden": true
+    },
+    {
+     "icon": "moto",
+     "term": "Moto",
+     "at": 2626,
+     "forbidden": true
+    },
+    {
+     "icon": "bici",
+     "term": "Bicicleta",
+     "at": 2638,
+     "forbidden": true
+    }
+   ],
+   "side": "opposite",
+   "align": "bottom",
+   "boxes": [
+    {
+     "f": 2586,
+     "x": 56,
+     "y": 438,
+     "width": 536,
+     "height": 400
+    }
+   ]
+  },
+  {
+   "kind": "titular",
+   "key": "servicios-emergencia",
+   "from": 2742,
+   "to": 2991,
+   "kicker": "COMUNICACIÓN",
+   "title": "Llamá a emergencias e informá tu ubicación",
+   "side": "opposite",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 2742,
+     "x": 56,
+     "y": 139,
+     "width": 560,
+     "height": 230
+    }
+   ]
+  },
+  {
+   "kind": "titular",
+   "key": "paso-5-titular",
+   "from": 3001,
+   "to": 3246,
+   "step": 5,
+   "kicker": "PASO",
+   "title": "Llevá solo lo esencial",
+   "side": "opposite",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 3001,
+     "x": 56,
+     "y": 139,
+     "width": 560,
+     "height": 230
+    }
+   ]
+  },
+  {
+   "kind": "gif",
+   "key": "recurso-13-mochila",
+   "rank": "refuerzo",
+   "from": 3086,
+   "to": 3246,
+   "src": "assets/mochila.mov",
+   "label": "Mochila de emergencia",
+   "side": "opposite",
+   "align": "bottom",
+   "boxes": [
+    {
+     "f": 3086,
+     "x": 56,
+     "y": 438,
+     "width": 560,
+     "height": 400
+    }
+   ]
+  },
+  {
+   "kind": "titular",
+   "key": "paso-6-titular",
+   "from": 3256,
+   "to": 3698,
+   "step": 6,
+   "kicker": "PASO",
+   "title": "No atravieses el agua",
+   "side": "opposite",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 3256,
+     "x": 56,
+     "y": 139,
+     "width": 560,
+     "height": 230
+    }
+   ]
+  },
+  {
+   "kind": "video",
+   "key": "recurso-14-video-evacuacion",
+   "rank": "didactico",
+   "from": 3361,
+   "to": 3698,
+   "src": "assets/recurso-14.mp4",
+   "caption": "Peligros ocultos bajo el agua",
+   "credit": "Canal de la Ciudad · Temporal en Corrientes",
+   "side": "opposite",
+   "align": "bottom",
+   "boxes": [
+    {
+     "f": 3361,
+     "x": 56,
+     "y": 438,
+     "width": 544,
+     "height": 400
+    }
+   ]
+  },
+  {
+   "kind": "titular",
+   "key": "centro-evacuacion-titular",
+   "from": 3708,
+   "to": 3837,
+   "kicker": "ZONA SEGURA",
+   "title": "Dirigite al centro de evacuación oficial",
+   "side": "opposite",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 3708,
+     "x": 56,
+     "y": 139,
+     "width": 560,
+     "height": 230
+    }
+   ]
+  },
+  {
+   "kind": "checklist",
+   "key": "recap-cierre",
+   "rank": "didactico",
+   "from": 3847,
+   "to": 4270,
+   "kicker": "EDUCAPLAY AMBIENTAL",
+   "items": [
+    {
+     "term": "Antes",
+     "detail": "Cómo prepararte",
+     "at": 3905
+    },
+    {
+     "term": "Durante",
+     "detail": "Este protocolo de acción",
+     "at": 4013
+    },
+    {
+     "term": "Después",
+     "detail": "Qué hacer luego de la inundación",
+     "at": 4211
+    }
+   ],
+   "side": "opposite",
+   "align": "bottom",
+   "boxes": [
+    {
+     "f": 3847,
+     "x": 56,
+     "y": 438,
+     "width": 560,
+     "height": 400
+    }
+   ]
+  }
+ ],
+ "captions": [
+  {
+   "from": 382,
+   "to": 536,
+   "text": "Tu calle está inundada, el agua empezó a entrar en la casa y ahora, ¿qué hacés?",
+   "box": {
+    "f": 382,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 382,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    },
+    {
+     "f": 440,
+     "x": 280,
+     "y": 662,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 550,
+   "to": 666,
+   "text": "¿Te quedás esperando que baje, salís caminando o buscás un lugar seguro?",
+   "box": {
+    "f": 550,
+    "x": 280,
+    "y": 662,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 550,
+     "x": 280,
+     "y": 662,
+     "width": 1360,
+     "height": 178
+    },
+    {
+     "f": 615,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 666,
+   "to": 833,
+   "text": "Si alguna vez tenés que enfrentar una inundación que afecte tu hogar, saber qué hacer puede",
+   "box": {
+    "f": 666,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 666,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 833,
+   "to": 909,
+   "text": "ayudarte a protegerte y a proteger a los demás.",
+   "box": {
+    "f": 833,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 833,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 919,
+   "to": 1094,
+   "text": "¿Qué te parece si repasamos un protocolo de acción que te ayude a actuar mejor en una situación de emergencia",
+   "box": {
+    "f": 919,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 919,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 1094,
+   "to": 1197,
+   "text": "hídrica? Primero, mantené la calma e informate.",
+   "box": {
+    "f": 1094,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 1094,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 1212,
+   "to": 1294,
+   "text": "Escuchá las alertas y comunicados oficiales.",
+   "box": {
+    "f": 1212,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 1212,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 1294,
+   "to": 1413,
+   "text": "Tené el celular cargado y la mochila de emergencia a mano.",
+   "box": {
+    "f": 1294,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 1294,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 1422,
+   "to": 1598,
+   "text": "Segundo, si el agua comienza a entrar en tu hogar, cortá los servicios de agua, gas y electricidad.",
+   "box": {
+    "f": 1422,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 1422,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 1604,
+   "to": 1750,
+   "text": "Solo si podés hacerlo sin entrar en contacto con ella ni exponerte a un riesgo.",
+   "box": {
+    "f": 1604,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 1604,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 1759,
+   "to": 1928,
+   "text": "Mantené cerradas puertas y ventanas. Levantá objetos importantes y sustancias peligrosas",
+   "box": {
+    "f": 1759,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 1759,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 1928,
+   "to": 2022,
+   "text": "a lugares altos. Tercero, protegé a tu familia.",
+   "box": {
+    "f": 1928,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 1928,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 2032,
+   "to": 2195,
+   "text": "Reuní a quienes estén en la vivienda prestando especial atención a los niños y personas mayores",
+   "box": {
+    "f": 2032,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 2032,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 2195,
+   "to": 2370,
+   "text": "o con movilidad reducida. Y si la misma tiene una planta superior, trasladate allí mientras",
+   "box": {
+    "f": 2195,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 2195,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 2370,
+   "to": 2527,
+   "text": "esperás indicaciones. Cuarto, si las autoridades indican evacuar, evacuá.",
+   "box": {
+    "f": 2370,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 2370,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 2544,
+   "to": 2667,
+   "text": "Pero no uses ningún tipo de vehículo como auto, moto o bicicleta.",
+   "box": {
+    "f": 2544,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 2544,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 2674,
+   "to": 2836,
+   "text": "Y si no podés salir por tus propios medios, comunicate con los servicios de emergencia e informá",
+   "box": {
+    "f": 2674,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 2674,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 2836,
+   "to": 2991,
+   "text": "tu ubicación. Como así también si hay personas que necesiten atención especial.",
+   "box": {
+    "f": 2836,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 2836,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 3001,
+   "to": 3139,
+   "text": "Quinto, si evacuás, llevá solo lo esencial en una mochila de emergencia.",
+   "box": {
+    "f": 3001,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 3001,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 3147,
+   "to": 3243,
+   "text": "En otro video de EducaPlay te contamos cómo prepararla.",
+   "box": {
+    "f": 3147,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 3147,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 3256,
+   "to": 3349,
+   "text": "Sexto, durante la evacuación no atravieses el agua.",
+   "box": {
+    "f": 3256,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 3256,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 3361,
+   "to": 3487,
+   "text": "No camines, nades ni conduzcas por calles o zonas inundadas.",
+   "box": {
+    "f": 3361,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 3361,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 3496,
+   "to": 3685,
+   "text": "Esta puede ocultar pozos, objetos peligrosos, alcantarillas abiertas y cables eléctricos.",
+   "box": {
+    "f": 3496,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 3496,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 3695,
+   "to": 3839,
+   "text": "Dirigite al centro de evacuación o zona segura indicada por las autoridades.",
+   "box": {
+    "f": 3695,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 3695,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 3839,
+   "to": 3992,
+   "text": "Ya te contamos en otro video cómo estar preparados para una situación de emergencia.",
+   "box": {
+    "f": 3839,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 3839,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 4005,
+   "to": 4114,
+   "text": "Ahora, el protocolo de acción si el agua entra a tu vivienda.",
+   "box": {
+    "f": 4005,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 4005,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 4124,
+   "to": 4271,
+   "text": "No te pierdas el video de Educa donde te explicamos qué hacer luego de la inundación.",
+   "box": {
+    "f": 4124,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 4124,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  }
+ ],
+ "moves": [
+  {
+   "key": "x0",
+   "from": 1092,
+   "to": 1126
+  },
+  {
+   "key": "x1",
+   "from": 2399,
+   "to": 2427
+  },
+  {
+   "key": "x2",
+   "from": 4282,
+   "to": 4333
+  }
+ ]
+}
