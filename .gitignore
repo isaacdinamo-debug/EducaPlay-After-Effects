@@ -1,0 +1,181 @@
+# ==========================================
+# EducaPlay After Effects — motor de medición + armado en AE
+# ==========================================
+# Regla general: entra el CÓDIGO y la DOCUMENTACIÓN.
+# Los másters, crudos, renders y assets pesados viven fuera del repo
+# (cada materia los guarda en su carpeta local de trabajo).
+
+# ------------------------------------------
+# 1. Dependencias y builds
+# ------------------------------------------
+node_modules/
+dist/
+build/
+.next/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+
+# ------------------------------------------
+# 2. Renders, crudos y temporales de producción
+# ------------------------------------------
+**/out/
+**/out-*/
+**/Render/
+**/RENDER/
+**/renders/
+**/CRUDOS/
+**/crudos/
+**/Crudos/
+**/RECURSOS/
+**/Recursos/
+**/hyperframes/
+**/.hyperframes/
+**/.waveform-cache/
+**/preview/
+**/previews/
+**/anim/
+**/temp/
+**/tmp/
+**/.cache/
+**/.remotion/
+
+# ------------------------------------------
+# 3. public/ — assets de composición
+# ------------------------------------------
+# Solo viajan los vectoriales y los manifiestos; las imágenes, audios,
+# videos y fuentes se resuelven localmente.
+**/public/**
+!**/public/**/
+!**/public/**/*.svg
+!**/public/**/*.json
+
+# ------------------------------------------
+# 4. Multimedia pesada (en cualquier ubicación)
+# ------------------------------------------
+# Video
+*.mp4
+*.mov
+*.m4v
+*.mkv
+*.avi
+*.webm
+*.wmv
+*.flv
+# Audio
+*.wav
+*.aiff
+*.flac
+*.m4a
+*.mp3
+# Imagen
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+*.avif
+*.tif
+*.tiff
+*.heic
+# Fuentes (licencias que no permiten redistribución)
+*.otf
+*.ttf
+*.woff
+*.woff2
+
+# ------------------------------------------
+# 5. Documentos y proyectos de autoría
+# ------------------------------------------
+# Escaletas y guías docentes: material institucional, se comparte aparte.
+*.docx
+*.doc
+*.pptx
+*.xlsx
+*.pdf
+~$*.docx
+~$*.xlsx
+~$*.pptx
+# Proyectos de edición y diseño
+*.prproj
+*.aep
+*.cpr
+*.drp
+*.psd
+*.ai
+*.raw
+*.cr2
+# Comprimidos y assets de After Effects
+*.zip
+*.rar
+*.7z
+*.aegraphic
+# 3D
+*.blend
+*.blend1
+*.fbx
+*.obj
+*.glb
+*.gltf
+
+# ------------------------------------------
+# 6. Python
+# ------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+
+# ------------------------------------------
+# 7. Sistema operativo e IDEs
+# ------------------------------------------
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ------------------------------------------
+# 8. Secretos
+# ------------------------------------------
+.env
+.env.local
+.env.*.local
+!.env.example
+*.pem
+*.key
+
+# ------------------------------------------
+# 9. Cachés de asistentes locales
+# ------------------------------------------
+.claude/
+.gemini/
+
+# ------------------------------------------
+# 10. Compendios institucionales fuera de alcance
+# ------------------------------------------
+# Documentos de política curricular y prensa, ajenos al motor de episodios
+# y con datos de contacto de terceros. Se comparten por otro canal.
+
+# ------------------------------------------
+# After Effects: lo que se regenera
+# ------------------------------------------
+motor/models/
+episodios/*/assets/
+episodios/*/revision/*/
+episodios/*/*.log
+# Las hojas de contacto SÍ se versionan: son la evidencia del chequeo.
+!episodios/*/revision/*.jpg

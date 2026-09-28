@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "resolveJsonModule": true,
+    "allowImportingTsExtensions": true,
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "strict": true,
+    "noEmit": true,
+    "lib": ["ESNext"],
+    "types": ["node"],
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["src/*"]
+    }
+  },
+  "include": ["src"],
+  /*
+   * Los `*.draft.ts` son el esqueleto que escribe `npm run escaleta`: llevan
+   * TODO_FRAME y placeholders a propósito, para que quien monta el capítulo vea
+   * qué falta. Si entraran al typecheck, correr `escaleta` rompería
+   * `npm run check` hasta terminar el episodio — y la compuerta que hay que
+   * poder correr en cualquier momento es justamente ésa.
+   *
+   * El draft se copia a data.ts y se borra. No lo importa nadie.
+   */
+  "exclude": ["**/*.draft.ts"]
+}
