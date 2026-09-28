@@ -121,6 +121,14 @@ Las precomps la leen por expresión. Un cambio de marca se hace ahí, no capa po
    alfa) y el `.jsx` los loopea.
 10. **Nombres visibles cambian con el idioma de AE.** Siempre matchNames, y efectos por índice en
     las expresiones.
+11. **Una fuente faltante no da error: AE la sustituye.** El constructor mide cada texto, así que la
+    sustitución cambia el alto de las tarjetas y desarma el cuadro. Por eso `build-episode.jsx`
+    verifica las 7 fuentes con `app.fonts.getFontsByPostScriptName` y no arma si falta alguna.
+12. **En otra máquina no se vuelve a medir.** `nuevo`/`prep` regeneran `track.ts`, `captions.ts`,
+    etc. con el ffmpeg y el Whisper locales, y el resultado cambia. `npm run doctor` lo detecta
+    contra git.
+13. **Windows:** AE se maneja con `AfterFX.exe -r <script>`, que vuelve enseguida; `ae/run.mjs`
+    espera una marca de fin. Las fuentes instaladas sólo para el usuario pueden no verse en AE.
 
 ## Verificación
 
