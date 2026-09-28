@@ -1,6 +1,6 @@
 {
  "code": "AMB26-04",
- "fecha": "2026-09-28T12:50:48.948Z",
+ "fecha": "2026-09-28T13:02:08.030Z",
  "frames": [
   355,
   424,
@@ -15,15 +15,6 @@
   3391,
   4231
  ],
- "estilos": {
-  "organico": {
-   "ok": true
-  },
-  "vidrio": {
-   "ok": true
-  },
-  "plataforma": {
-   "ok": true
-  }
- }
+ "ok": true,
+ "problemas": []
 }
