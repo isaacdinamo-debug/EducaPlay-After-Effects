@@ -18,15 +18,14 @@
  *
  * Sale con código 1 si algo no pasa. `npm run publicar` depende de eso.
  *
- * AE se maneja con AppleScript: `DoScript "$.evalFile(…)"`. `DoScript` siempre
- * devuelve "0", así que lo que hay que leer de vuelta se escribe a un archivo
- * temporal. Con `DoScriptFile` esas escrituras fallan en silencio (el archivo
- * queda en 0 bytes), por eso no se usa.
+ * Funciona en macOS (AppleScript) y en Windows (AfterFX.exe -r); ver runJsx.
+ * AE no devuelve valores al que lo llama: lo que hay que leer de vuelta se
+ * escribe a un archivo temporal.
  */
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import {execFileSync} from 'node:child_process';
+import {execFileSync, spawn} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -47,31 +46,65 @@ const args = (() => {
   return out;
 })();
 
-/** La versión de After Effects más nueva instalada, o AE_APP. */
+const WIN = process.platform === 'win32';
+
+/**
+ * After Effects más nuevo instalado, o AE_APP.
+ * macOS: el nombre de la app ("Adobe After Effects 2026"), para AppleScript.
+ * Windows: la ruta a AfterFX.exe.
+ */
 const aeApp = () => {
   if (process.env.AE_APP) return process.env.AE_APP;
+  if (WIN) {
+    const base = path.join(process.env.ProgramFiles ?? 'C:\\Program Files', 'Adobe');
+    const dirs = fs.existsSync(base)
+      ? fs.readdirSync(base).filter((f) => /^Adobe After Effects( CC)? 20\d\d$/.test(f)).sort() : [];
+    for (const d of dirs.reverse()) {
+      const exe = path.join(base, d, 'Support Files', 'AfterFX.exe');
+      if (fs.existsSync(exe)) return exe;
+    }
+    throw new Error(`No encontré AfterFX.exe en ${base} (definí AE_APP con la ruta a AfterFX.exe).`);
+  }
   const apps = fs.readdirSync('/Applications').filter((f) => /^Adobe After Effects 20\d\d$/.test(f)).sort();
   if (!apps.length) throw new Error('No encontré After Effects en /Applications (definí AE_APP).');
   return apps[apps.length - 1];
 };
 
 const applescriptStr = (s) => '"' + s.replace(/\\/g, '\\\\').replace(/"/g, '\\"') + '"';
+const js = (v) => JSON.stringify(v);
 
-/** Corre un .jsx en AE. El código se escribe a un archivo: sin escapar a mano. */
-const runJsx = (app, code, tmpDir) => {
-  const f = path.join(tmpDir, `tmp-${Date.now()}-${Math.random().toString(36).slice(2)}.jsx`);
-  fs.writeFileSync(f, code, 'utf8');
+/**
+ * Corre código ExtendScript en AE y espera a que termine.
+ *
+ * El código va a un archivo temporal (sin escapar a mano) y termina escribiendo
+ * una marca: así se sabe que terminó aunque AE no devuelva nada.
+ *   macOS    AppleScript `DoScript "$.evalFile(…)"`. NO `DoScriptFile`: así AE
+ *            no deja que el script escriba archivos (quedan en 0 bytes).
+ *   Windows  `AfterFX.exe -r <archivo>`: se lo pasa a la instancia abierta (o la
+ *            abre) y vuelve enseguida; se espera la marca.
+ */
+const runJsx = async (app, code, tmpDir, timeoutMs = 10 * 60 * 1000) => {
+  const id = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  const f = path.join(tmpDir, `tmp-${id}.jsx`);
+  const done = path.join(tmpDir, `tmp-${id}.done`);
+  fs.writeFileSync(f, `try {\n${code}\n} finally {\n  var __d=new File(${js(done)});__d.open('w');__d.write('ok');__d.close();\n}\n`, 'utf8');
   try {
-    // DoScript + $.evalFile, NO DoScriptFile: con DoScriptFile, AE no deja que
-    // el script escriba archivos (quedan en 0 bytes); evaluado desde DoScript sí.
-    const call = `$.evalFile(File(${JSON.stringify(f)}))`;
-    execFileSync('osascript', ['-e', `tell application ${applescriptStr(app)} to DoScript ${applescriptStr(call)}`], {stdio: 'pipe'});
+    if (WIN) {
+      spawn(app, ['-r', f], {detached: true, stdio: 'ignore'}).unref();
+    } else {
+      const call = `$.evalFile(File(${js(f)}))`;
+      execFileSync('osascript', ['-e', `tell application ${applescriptStr(app)} to DoScript ${applescriptStr(call)}`], {stdio: 'pipe'});
+    }
+    const t0 = Date.now();
+    while (!fs.existsSync(done)) {
+      if (Date.now() - t0 > timeoutMs) throw new Error('After Effects no terminó el script a tiempo.');
+      await sleep(500);
+    }
   } finally {
     fs.rmSync(f, {force: true});
+    fs.rmSync(done, {force: true});
   }
 };
-
-const js = (v) => JSON.stringify(v);
 
 /** Espera a que AE acepte scripts; lo abre si hace falta. */
 const ensureAE = async (app, tmpDir) => {
@@ -79,27 +112,29 @@ const ensureAE = async (app, tmpDir) => {
   fs.rmSync(probe, {force: true});
   const ping = `var f=new File(${js(probe)});f.open('w');f.write(app.version);f.close();`;
   try {
-    runJsx(app, ping, tmpDir);
+    // En Windows, -r abre AE si no está corriendo: se le da tiempo a arrancar.
+    await runJsx(app, ping, tmpDir, WIN ? 4 * 60 * 1000 : 20 * 1000);
   } catch {
+    if (WIN) throw new Error(`${app} no respondió. Abrí After Effects a mano y volvé a correr.`);
     console.log(`· abriendo ${app}…`);
     execFileSync('open', ['-a', app]);
     for (let i = 0; i < 60; i++) {
       await sleep(3000);
       try {
-        runJsx(app, ping, tmpDir);
+        await runJsx(app, ping, tmpDir, 20 * 1000);
         break;
       } catch { /* todavía arrancando */ }
     }
   }
   if (!fs.existsSync(probe)) throw new Error(`${app} no responde a scripts.`);
-  console.log(`· ${app} ${fs.readFileSync(probe, 'utf8')} listo`);
+  console.log(`· After Effects ${fs.readFileSync(probe, 'utf8')} listo (${WIN ? 'Windows' : 'macOS'})`);
   fs.rmSync(probe, {force: true});
 };
 
 /** Cierra el proyecto abierto sólo si es de este flujo o está vacío. */
-const closeOwnProject = (app, code, tmpDir, force) => {
+const closeOwnProject = async (app, code, tmpDir, force) => {
   const st = path.join(tmpDir, 'ae-proyecto.txt');
-  runJsx(app, `
+  await runJsx(app, `
     var r='VACIO';
     if (app.project) {
       var f=app.project.file;
@@ -164,10 +199,10 @@ const build = async (app, code, M, frames, revDir, tmpDir, force) => {
   fs.rmSync(stillDir, {recursive: true, force: true});
   fs.mkdirSync(stillDir, {recursive: true});
 
-  closeOwnProject(app, code, tmpDir, force);
+  await closeOwnProject(app, code, tmpDir, force);
 
   console.log(`\n▶ ${code}`);
-  runJsx(app, `
+  await runJsx(app, `
     $.global.EDUCAPLAY_MANIFEST = ${js(path.join(REPO, 'episodios', code, 'manifest.json'))};
     $.evalFile(File(${js(path.join(AE_DIR, 'build-episode.jsx'))}));
     var o=new File(${js(logFile)});o.encoding='UTF-8';o.lineFeed='Unix';o.open('w');
@@ -190,7 +225,7 @@ const build = async (app, code, M, frames, revDir, tmpDir, force) => {
   const pngs = frames.map((f) => path.join(stillDir, `f${String(f).padStart(5, '0')}.png`));
   const sheet = path.join(revDir, 'contacto.jpg');
   if (fs.existsSync(aep)) {
-    runJsx(app, `
+    await runJsx(app, `
       var c=null;
       for (var i=1;i<=app.project.numItems;i++){var it=app.project.item(i);
         if (it instanceof CompItem && it.name===${js(code)}) c=it;}

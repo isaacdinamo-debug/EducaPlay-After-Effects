@@ -34,6 +34,20 @@ const moved = (a, b) =>
   Math.abs(a.x - b.x) > EPS || Math.abs(a.y - b.y) > EPS ||
   Math.abs(a.width - b.width) > EPS || Math.abs(a.height - b.height) > EPS;
 
+/** Tamaño, resolución, fps y cuadros del máster, para reconocerlo en otra máquina. */
+const masterInfo = (file) => {
+  const out = execFileSync('ffprobe', ['-v', 'error', '-select_streams', 'v:0',
+    '-show_entries', 'stream=width,height,r_frame_rate,nb_frames', '-of', 'json', file], {encoding: 'utf8'});
+  const st = JSON.parse(out).streams[0];
+  const [n, d] = st.r_frame_rate.split('/').map(Number);
+  return {
+    bytes: fs.statSync(file).size,
+    width: st.width, height: st.height,
+    fps: Math.round((n / d) * 1000) / 1000,
+    frames: Number(st.nb_frames),
+  };
+};
+
 const main = async () => {
   const {flags, code} = parseArgs();
   if (!code) throw new Error('Uso: npm run export:ae -- <CODE> [--out <dir>]');
@@ -190,7 +204,20 @@ const main = async () => {
     },
     blocks,
     captions,
-    // Traslados de cámara del montajista: ahí va la cortina de agua.
+    // Todas las fuentes que usa ae/build-episode.jsx, por nombre PostScript. El
+    // constructor se niega a armar si AE no encuentra alguna: una fuente
+    // sustituida cambia las medidas del texto y con ellas el alto de cada
+    // tarjeta, así que no es un problema cosmético.
+    fontsRequired: [
+      'Museo-300', 'Museo-700',
+      'MuseoSansRounded-300', 'MuseoSansRounded-500', 'MuseoSansRounded-700',
+      'MuseoSansRounded-900', 'MuseoSansRounded-1000',
+    ],
+    // Huella del máster medido. `npm run doctor` la compara con el archivo de
+    // la máquina: un máster distinto (otro corte, otra resolución) mueve a la
+    // docente y desarma todas las cajas.
+    masterInfo: masterInfo(path.join(ROOT, 'public', data.EPISODE.master)),
+    // Traslados de cámara del montajista: ahí va el barrido de bandas.
     moves: (data.TRACK.segments ?? [])
       .filter((sg) => sg.framing === 'transition')
       .map((sg) => ({key: sg.key, from: sg.from, to: sg.to})),
