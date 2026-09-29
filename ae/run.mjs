@@ -202,7 +202,12 @@ const build = async (app, code, M, frames, revDir, tmpDir, force) => {
   console.log(`\n▶ ${code}`);
   runJsx(app, `
     $.global.EDUCAPLAY_MANIFEST = ${js(path.join(REPO, 'episodios', code, 'manifest.json'))};
-    $.evalFile(File(${js(path.join(AE_DIR, 'build-episode.jsx'))}));
+    try {
+      $.evalFile(File(${js(path.join(AE_DIR, 'build-episode.jsx'))}));
+    } catch(err) {
+      if (typeof LOG === 'undefined') LOG = [];
+      LOG.push('✗ Error en build-episode.jsx: ' + err.toString() + ' (línea ' + err.line + ')');
+    }
     var o=new File(${js(logFile)});o.encoding='UTF-8';o.lineFeed='Unix';o.open('w');
     o.write((typeof LOG!=='undefined'?LOG:['✗ el constructor no dejó LOG']).join('\\n'));o.close();`, tmpDir);
 
@@ -272,7 +277,7 @@ const main = async () => {
     await ensureAE(app, tmpDir);
     problems = await build(app, code, M, frames, revDir, tmpDir, !!flags.forzar);
   } finally {
-    fs.rmSync(tmpDir, {recursive: true, force: true});
+    try { fs.rmSync(tmpDir, {recursive: true, force: true}); } catch (_) {}
   }
 
   fs.writeFileSync(path.join(revDir, 'estado.json'), JSON.stringify({

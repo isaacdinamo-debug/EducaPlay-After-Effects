@@ -1,0 +1,25 @@
+{
+ "code": "AMB26-02",
+ "fecha": "2026-09-29T14:11:44.109Z",
+ "frames": [
+  290,
+  530,
+  676,
+  1241,
+  1595,
+  1978,
+  2120,
+  2438,
+  2897,
+  3617,
+  3830,
+  4189
+ ],
+ "ok": false,
+ "problemas": [
+  "no hay LOG del armado",
+  "tarjetas armadas NaN ≠ bloques del manifiesto 20",
+  "subtítulos NaN ≠ manifiesto 30",
+  "no se guardó episodios\\AMB26-02\\AMB26-02.aep"
+ ]
+}

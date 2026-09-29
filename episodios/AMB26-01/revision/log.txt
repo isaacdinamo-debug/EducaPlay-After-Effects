@@ -1,0 +1,23 @@
+▶ AMB26-01 · 20 bloques · 23 subtítulos
+⚠ photo:cielo-lluvia: ReferenceError: La función capText.trim no está definida (línea 760)
+✗ photo:cielo-lluvia quedó incompleto
+⚠ video:gotas-ventana: ReferenceError: La función capText.trim no está definida (línea 760)
+✗ video:gotas-ventana quedó incompleto
+⚠ video:calle-agua: ReferenceError: La función capText.trim no está definida (línea 760)
+✗ video:calle-agua quedó incompleto
+⚠ video:ramas-viento: ReferenceError: La función capText.trim no está definida (línea 760)
+✗ video:ramas-viento quedó incompleto
+⚠ video:persona-ventana: ReferenceError: La función capText.trim no está definida (línea 760)
+✗ video:persona-ventana quedó incompleto
+⚠ photo:telefono-recurso: ReferenceError: La función capText.trim no está definida (línea 760)
+✗ photo:telefono-recurso quedó incompleto
+⚠ photo:noticia-clarin: ReferenceError: La función capText.trim no está definida (línea 760)
+✗ photo:noticia-clarin quedó incompleto
+⚠ gif:mochila-animada: ReferenceError: La función capText.trim no está definida (línea 760)
+✗ gif:mochila-animada quedó incompleto
+⚠ gif:atencion-sticker: ReferenceError: La función capText.trim no está definida (línea 760)
+✗ gif:atencion-sticker quedó incompleto
+· 20 tarjetas armadas
+· 23 subtítulos, una capa cada uno, todos en ≤2 líneas
+· 6 barridos de bandas
+✓ guardado en C:\Users\produ\.gemini\config\skills\educaplay-after-effects\episodios\AMB26-01\AMB26-01.aep

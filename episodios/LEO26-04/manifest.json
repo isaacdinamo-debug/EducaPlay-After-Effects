@@ -1,0 +1,1343 @@
+{
+ "code": "LEO26-04",
+ "generatedBy": "motor/scripts/export-ae.mjs",
+ "episode": {
+  "id": "LEO26-04",
+  "title": "De leer a comprender: ¡explicalo con tus palabras!",
+  "series": "Leo, Comprendo y Aprendo",
+  "objective": "Reconocer estrategias para reformular información y producir respuestas con palabras propias, a partir de la comprensión, selección y organización de las ideas principales.",
+  "master": "videos/LEO26-04.mp4",
+  "voiceGain": 1,
+  "intervention": 2
+ },
+ "fps": 29.97002997002997,
+ "width": 1920,
+ "height": 1080,
+ "duration": 5028,
+ "master": "assets/LEO26-04.mp4",
+ "reserved": [
+  {
+   "key": "watermark",
+   "rect": [
+    1400,
+    35,
+    420,
+    140
+   ],
+   "from": 0,
+   "to": 5028
+  },
+  {
+   "key": "watermark",
+   "rect": [
+    1400,
+    35,
+    420,
+    140
+   ],
+   "from": 0,
+   "to": 5028
+  },
+  {
+   "key": "placa-nombre",
+   "rect": [
+    100,
+    870,
+    600,
+    160
+   ],
+   "from": 416,
+   "to": 590
+  }
+ ],
+ "theme": {
+  "palette": {
+   "stage": "#22BCA2",
+   "stageAlt": "#1EB499",
+   "stageDeep": "#159C82",
+   "stageLine": "#14A48A",
+   "paper": "#FFFFFF",
+   "paperWarm": "#F7FFFC",
+   "ink": "#0C2B24",
+   "inkSoft": "#2F5B4F",
+   "inkMuted": "#5A7D72",
+   "accent": "#10BA1B",
+   "accentDeep": "#06590D",
+   "cyan": "#24CCF0",
+   "cyanDeep": "#0E7F9B",
+   "yellow": "#F0CC24",
+   "yellowWash": "rgba(240, 204, 36, 0.55)",
+   "magenta": "#E40054",
+   "magentaDeep": "#A8003E"
+  },
+  "captions": {
+   "scrimAlpha": 0.55,
+   "fontSize": 34,
+   "maxWidth": 1360,
+   "pill": {
+    "radius": 20,
+    "padX": 34,
+    "padY": 14,
+    "blur": 10,
+    "lineHeight": 1.32,
+    "maxLines": 2
+   }
+  },
+  "rainbow": [
+   "#E41653",
+   "#FAB817",
+   "#35BAD5",
+   "#3CAA34"
+  ],
+  "fonts": {
+   "heading": "MuseoSans-900",
+   "headingLight": "MuseoSans-300",
+   "body": "MuseoSans-700",
+   "bodyBold": "MuseoSans-900",
+   "bodyLight": "MuseoSans-300"
+  }
+ },
+ "blocks": [
+  {
+   "kind": "photo",
+   "key": "estudiante-pensativo",
+   "rank": "refuerzo",
+   "from": 1117,
+   "to": 1325,
+   "src": "assets/1-estudiante-pensativo.mov",
+   "caption": "¿Te pasó alguna vez?",
+   "side": "opposite",
+   "align": "center",
+   "boxes": [
+    {
+     "f": 1117,
+     "x": 1328,
+     "y": 297,
+     "width": 536,
+     "height": 420
+    }
+   ]
+  },
+  {
+   "kind": "titular",
+   "key": "explicar-no-copiar",
+   "kicker": "Estrategia",
+   "title": "Explicar con tus palabras",
+   "from": 1333,
+   "to": 1510,
+   "side": "opposite",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 1333,
+     "x": 1304,
+     "y": 175,
+     "width": 560,
+     "height": 220
+    }
+   ]
+  },
+  {
+   "kind": "checklist",
+   "key": "no-copiar-checklist",
+   "rank": "didactico",
+   "kicker": "Aclaración",
+   "title": "No es:",
+   "from": 1394,
+   "to": 1510,
+   "items": [
+    {
+     "term": "Copiar el texto",
+     "detail": "No memorizar frases ajenas",
+     "at": 1404
+    },
+    {
+     "term": "Usar sinónimos",
+     "detail": "No sustituir palabras sueltas",
+     "at": 1460
+    }
+   ],
+   "side": "opposite",
+   "align": "bottom",
+   "boxes": [
+    {
+     "f": 1394,
+     "x": 1304,
+     "y": 458,
+     "width": 560,
+     "height": 380
+    },
+    {
+     "f": 1507,
+     "x": 1308,
+     "y": 458,
+     "width": 556,
+     "height": 380
+    },
+    {
+     "f": 1508,
+     "x": 1318,
+     "y": 458,
+     "width": 546,
+     "height": 380
+    },
+    {
+     "f": 1509,
+     "x": 1332,
+     "y": 458,
+     "width": 532,
+     "height": 380
+    }
+   ]
+  },
+  {
+   "kind": "titular",
+   "key": "explicar-comprender",
+   "kicker": "Objetivo",
+   "title": "Explicar es comprender",
+   "from": 1524,
+   "to": 1680,
+   "side": "opposite",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 1524,
+     "x": 1304,
+     "y": 175,
+     "width": 560,
+     "height": 220
+    }
+   ]
+  },
+  {
+   "kind": "photo",
+   "key": "comprender-gif",
+   "rank": "refuerzo",
+   "from": 1540,
+   "to": 1680,
+   "src": "assets/3-comprender.mov",
+   "caption": "Demostrar que comprendiste",
+   "side": "opposite",
+   "align": "bottom",
+   "boxes": [
+    {
+     "f": 1540,
+     "x": 1384,
+     "y": 458,
+     "width": 480,
+     "height": 380
+    }
+   ]
+  },
+  {
+   "kind": "titular",
+   "key": "paso-1-comprender",
+   "step": 1,
+   "kicker": "1° Paso",
+   "title": "Comprendé con atención",
+   "from": 1728,
+   "to": 2082,
+   "side": "opposite",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 1728,
+     "x": 1304,
+     "y": 175,
+     "width": 560,
+     "height": 220
+    }
+   ]
+  },
+  {
+   "kind": "checklist",
+   "key": "preguntas-clave",
+   "rank": "didactico",
+   "kicker": "Lectura activa",
+   "title": "Preguntate:",
+   "from": 1840,
+   "to": 2082,
+   "items": [
+    {
+     "term": "¿De qué trata?",
+     "detail": "El tema general",
+     "at": 1880
+    },
+    {
+     "term": "¿Cuál es la idea principal?",
+     "detail": "El mensaje central",
+     "at": 1930
+    }
+   ],
+   "side": "opposite",
+   "align": "bottom",
+   "boxes": [
+    {
+     "f": 1840,
+     "x": 1392,
+     "y": 458,
+     "width": 472,
+     "height": 380
+    }
+   ]
+  },
+  {
+   "kind": "photo",
+   "key": "definicion-biologia",
+   "rank": "didactico",
+   "from": 2090,
+   "to": 2695,
+   "src": "assets/6-geminis-frag.jpg",
+   "caption": "Imagen generada con Gemini",
+   "side": "opposite",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 2090,
+     "x": 1304,
+     "y": 175,
+     "width": 560,
+     "height": 300
+    }
+   ]
+  },
+  {
+   "kind": "titular",
+   "key": "de-que-trata",
+   "kicker": "Pregunta clave",
+   "title": "¿De qué trata? Producción de alimento",
+   "from": 2550,
+   "to": 2695,
+   "side": "opposite",
+   "align": "bottom",
+   "boxes": [
+    {
+     "f": 2550,
+     "x": 1388,
+     "y": 618,
+     "width": 476,
+     "height": 220
+    }
+   ]
+  },
+  {
+   "kind": "titular",
+   "key": "paso-2-seleccionar",
+   "step": 2,
+   "kicker": "2° Paso",
+   "title": "Seleccioná la información",
+   "from": 2709,
+   "to": 3000,
+   "side": "opposite",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 2709,
+     "x": 1304,
+     "y": 175,
+     "width": 560,
+     "height": 220
+    }
+   ]
+  },
+  {
+   "kind": "checklist",
+   "key": "seleccion-items",
+   "rank": "didactico",
+   "kicker": "Identificá",
+   "title": "Elementos clave:",
+   "from": 2820,
+   "to": 3000,
+   "items": [
+    {
+     "term": "Ideas principales",
+     "detail": "El núcleo del texto",
+     "at": 2840
+    },
+    {
+     "term": "Conceptos",
+     "detail": "Términos clave",
+     "at": 2884
+    },
+    {
+     "term": "Datos",
+     "detail": "Información relevante",
+     "at": 2903
+    }
+   ],
+   "side": "opposite",
+   "align": "bottom",
+   "boxes": [
+    {
+     "f": 2820,
+     "x": 1385,
+     "y": 458,
+     "width": 479,
+     "height": 380
+    }
+   ]
+  },
+  {
+   "kind": "titular",
+   "key": "paso-3-reformular",
+   "step": 3,
+   "kicker": "3° Paso",
+   "title": "La clave: reformulá",
+   "from": 3041,
+   "to": 3245,
+   "side": "opposite",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 3041,
+     "x": 1304,
+     "y": 175,
+     "width": 560,
+     "height": 220
+    }
+   ]
+  },
+  {
+   "kind": "checklist",
+   "key": "reformula-pasos",
+   "rank": "didactico",
+   "kicker": "Estrategia",
+   "title": "Cómo reformular:",
+   "from": 3041,
+   "to": 3245,
+   "items": [
+    {
+     "term": "1. Reformulá",
+     "detail": "Alejate del texto",
+     "at": 3041
+    },
+    {
+     "term": "2. Pensá",
+     "detail": "Buscá tus propias palabras",
+     "at": 3146
+    },
+    {
+     "term": "3. Explicá",
+     "detail": "Como a un compañero",
+     "at": 3188
+    }
+   ],
+   "side": "opposite",
+   "align": "bottom",
+   "boxes": [
+    {
+     "f": 3041,
+     "x": 1368,
+     "y": 458,
+     "width": 496,
+     "height": 380
+    },
+    {
+     "f": 3042,
+     "x": 1351,
+     "y": 458,
+     "width": 513,
+     "height": 380
+    },
+    {
+     "f": 3043,
+     "x": 1321,
+     "y": 458,
+     "width": 543,
+     "height": 380
+    },
+    {
+     "f": 3044,
+     "x": 1304,
+     "y": 458,
+     "width": 560,
+     "height": 380
+    }
+   ]
+  },
+  {
+   "kind": "titular",
+   "key": "no-copies-explica",
+   "kicker": "Regla de oro",
+   "title": "No copies: ¡explicá!",
+   "from": 3260,
+   "to": 3430,
+   "side": "opposite",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 3260,
+     "x": 964,
+     "y": 175,
+     "width": 900,
+     "height": 220
+    }
+   ]
+  },
+  {
+   "kind": "photo",
+   "key": "no-x",
+   "rank": "refuerzo",
+   "from": 3260,
+   "to": 3365,
+   "src": "assets/11-no-x.webp",
+   "caption": "No copies la definición",
+   "side": "opposite",
+   "align": "bottom",
+   "boxes": [
+    {
+     "f": 3260,
+     "x": 976,
+     "y": 458,
+     "width": 888,
+     "height": 380
+    }
+   ]
+  },
+  {
+   "kind": "photo",
+   "key": "tilde-verde",
+   "rank": "refuerzo",
+   "from": 3370,
+   "to": 3430,
+   "src": "assets/12-tilde-vrde.mov",
+   "caption": "Explicá con tus palabras",
+   "side": "opposite",
+   "align": "bottom",
+   "boxes": [
+    {
+     "f": 3370,
+     "x": 968,
+     "y": 458,
+     "width": 896,
+     "height": 380
+    }
+   ]
+  },
+  {
+   "kind": "titular",
+   "key": "ejemplo-reformulado",
+   "kicker": "Ejemplo resuelto",
+   "title": "La definición explicada",
+   "from": 3463,
+   "to": 3755,
+   "side": "opposite",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 3463,
+     "x": 1304,
+     "y": 175,
+     "width": 560,
+     "height": 220
+    }
+   ]
+  },
+  {
+   "kind": "photo",
+   "key": "gemini-explic",
+   "rank": "didactico",
+   "from": 3480,
+   "to": 3755,
+   "src": "assets/13-gemini-explic.jpg",
+   "caption": "Imagen generada con Gemini",
+   "side": "opposite",
+   "align": "bottom",
+   "boxes": [
+    {
+     "f": 3480,
+     "x": 1384,
+     "y": 458,
+     "width": 480,
+     "height": 380
+    }
+   ]
+  },
+  {
+   "kind": "titular",
+   "key": "paso-4-organizar",
+   "step": 4,
+   "kicker": "4° Paso",
+   "title": "Organizá y revisá",
+   "from": 3760,
+   "to": 4155,
+   "side": "opposite",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 3760,
+     "x": 1304,
+     "y": 175,
+     "width": 560,
+     "height": 220
+    }
+   ]
+  },
+  {
+   "kind": "checklist",
+   "key": "checklist-revision",
+   "rank": "didactico",
+   "kicker": "Checklist",
+   "title": "Antes de responder:",
+   "from": 3781,
+   "to": 4155,
+   "items": [
+    {
+     "term": "Pensá qué vas a decir",
+     "detail": "Tener clara la idea",
+     "at": 3781
+    },
+    {
+     "term": "Ordená tus ideas",
+     "detail": "Estructurar la respuesta",
+     "at": 3842
+    },
+    {
+     "term": "Revisá que se entienda",
+     "detail": "Claridad en la expresión",
+     "at": 3892
+    },
+    {
+     "term": "Usá tus propias palabras",
+     "detail": "Sin copiar de memoria",
+     "at": 4072
+    }
+   ],
+   "side": "opposite",
+   "align": "bottom",
+   "boxes": [
+    {
+     "f": 3781,
+     "x": 1384,
+     "y": 458,
+     "width": 480,
+     "height": 380
+    },
+    {
+     "f": 3789,
+     "x": 1363,
+     "y": 458,
+     "width": 501,
+     "height": 380
+    },
+    {
+     "f": 3790,
+     "x": 1325,
+     "y": 458,
+     "width": 539,
+     "height": 380
+    },
+    {
+     "f": 3791,
+     "x": 1304,
+     "y": 458,
+     "width": 560,
+     "height": 380
+    }
+   ]
+  },
+  {
+   "kind": "titular",
+   "key": "resumen-4-pasos",
+   "kicker": "En resumen",
+   "title": "Los 4 pasos estratégicos",
+   "from": 4264,
+   "to": 4476,
+   "side": "opposite",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 4264,
+     "x": 964,
+     "y": 175,
+     "width": 900,
+     "height": 220
+    }
+   ]
+  },
+  {
+   "kind": "checklist",
+   "key": "cuatro-pasos",
+   "rank": "didactico",
+   "kicker": "Estrategia",
+   "title": "Secuencia completa:",
+   "from": 4280,
+   "to": 4476,
+   "items": [
+    {
+     "term": "1. Comprendé",
+     "detail": "Leé con atención",
+     "at": 4298
+    },
+    {
+     "term": "2. Seleccioná",
+     "detail": "Ideas y conceptos clave",
+     "at": 4337
+    },
+    {
+     "term": "3. Reformulá",
+     "detail": "Explicá a un compañero",
+     "at": 4373
+    },
+    {
+     "term": "4. Organizá",
+     "detail": "Revisá tu respuesta",
+     "at": 4405
+    }
+   ],
+   "side": "opposite",
+   "align": "bottom",
+   "boxes": [
+    {
+     "f": 4280,
+     "x": 992,
+     "y": 458,
+     "width": 872,
+     "height": 380
+    }
+   ]
+  },
+  {
+   "kind": "titular",
+   "key": "pregunta-cierre",
+   "kicker": "Desafío",
+   "title": "¿Copiar o explicar?",
+   "from": 4610,
+   "to": 4725,
+   "side": "opposite",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 4610,
+     "x": 1304,
+     "y": 175,
+     "width": 560,
+     "height": 220
+    }
+   ]
+  },
+  {
+   "kind": "photo",
+   "key": "pensa-cierre",
+   "rank": "refuerzo",
+   "from": 4615,
+   "to": 4725,
+   "src": "assets/9-pensa.webp",
+   "caption": "Demostrá lo que comprendiste",
+   "side": "opposite",
+   "align": "bottom",
+   "boxes": [
+    {
+     "f": 4615,
+     "x": 1376,
+     "y": 458,
+     "width": 488,
+     "height": 380
+    }
+   ]
+  },
+  {
+   "kind": "photo",
+   "key": "chau",
+   "rank": "refuerzo",
+   "from": 4735,
+   "to": 4830,
+   "src": "assets/14-chau.webp",
+   "caption": "¡Nos vemos en el próximo video!",
+   "side": "opposite",
+   "align": "center",
+   "boxes": [
+    {
+     "f": 4735,
+     "x": 1328,
+     "y": 297,
+     "width": 536,
+     "height": 420
+    }
+   ]
+  }
+ ],
+ "captions": [
+  {
+   "from": 237,
+   "to": 439,
+   "text": "La comprensión lectora es un proceso mediante el cual el lector construye el significado del texto a",
+   "box": {
+    "f": 237,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 237,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    },
+    {
+     "f": 416,
+     "x": 280,
+     "y": 682,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 439,
+   "to": 599,
+   "text": "partir de la interacción entre sus conocimientos previos y la información que proporciona el texto.",
+   "box": {
+    "f": 439,
+    "x": 280,
+    "y": 682,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 439,
+     "x": 280,
+     "y": 682,
+     "width": 1360,
+     "height": 178
+    },
+    {
+     "f": 590,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 621,
+   "to": 891,
+   "text": "La comprensión lectora es un proceso donde el lector construye",
+   "box": {
+    "f": 621,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 621,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 891,
+   "to": 1099,
+   "text": "el significado del texto a partir de sus conocimientos previos y bueno, la información del texto.",
+   "box": {
+    "f": 891,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 891,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 1117,
+   "to": 1320,
+   "text": "¿Cómo era? ¿Nunca te pasó que entendés el tema, pero cuando te piden explicarlo, las palabras no aparecen?",
+   "box": {
+    "f": 1117,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 1117,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 1333,
+   "to": 1509,
+   "text": "Explicar con tus propias palabras no es copiar. Tampoco es cambiar algunas palabras por sinónimos.",
+   "box": {
+    "f": 1333,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 1333,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 1524,
+   "to": 1680,
+   "text": "Explicar es demostrar que comprendiste una idea y que la podés comunicar de manera clara.",
+   "box": {
+    "f": 1524,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 1524,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 1686,
+   "to": 1865,
+   "text": "¿Cómo hacerlo? Primero comprendé, leé o escuchá con atención y preguntate.",
+   "box": {
+    "f": 1686,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 1686,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 1879,
+   "to": 2084,
+   "text": "¿De qué trata? ¿Cuál es la idea principal? Ahora vamos a leer una definición para entender mejor.",
+   "box": {
+    "f": 1879,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 1879,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 2090,
+   "to": 2305,
+   "text": "Por ejemplo, en biología tenemos esta definición. La fotosíntesis es el proceso mediante el cual las plantas",
+   "box": {
+    "f": 2090,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 2090,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 2305,
+   "to": 2501,
+   "text": "producen su propio alimento. Para realizarla utilizan agua, dióxido de carbono y energía de",
+   "box": {
+    "f": 2305,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 2305,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 2501,
+   "to": 2674,
+   "text": "la luz solar. ¿De qué trata? ¿De cómo las plantas producen su alimento?",
+   "box": {
+    "f": 2501,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 2501,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 2709,
+   "to": 2805,
+   "text": "Después seleccioná. No necesitás recordar todo.",
+   "box": {
+    "f": 2709,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 2709,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 2818,
+   "to": 2989,
+   "text": "Identifica las ideas principales, conceptos y datos que son importantes para responder así.",
+   "box": {
+    "f": 2818,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 2818,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 3001,
+   "to": 3161,
+   "text": "Ahora viene la clave. Reformulá. Alejate un momento del texto y pensá.",
+   "box": {
+    "f": 3001,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 3001,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 3170,
+   "to": 3312,
+   "text": "¿Cómo se lo explicarías a un compañero? No copies la definición.",
+   "box": {
+    "f": 3170,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 3170,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 3318,
+   "to": 3429,
+   "text": "Identificá la idea y explicá con tus propias palabras.",
+   "box": {
+    "f": 3318,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 3318,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 3441,
+   "to": 3649,
+   "text": "Por ejemplo, así. La fotosíntesis es el procedimiento con que las plantas fabrican su alimento mediante",
+   "box": {
+    "f": 3441,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 3441,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 3649,
+   "to": 3741,
+   "text": "el agua, el dióxido de carbono y la luz solar.",
+   "box": {
+    "f": 3649,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 3649,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 3760,
+   "to": 3966,
+   "text": "Finalmente, pensá qué vas a decir. Ordená tus ideas y revisá que tu respuesta responda",
+   "box": {
+    "f": 3760,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 3760,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 3966,
+   "to": 4138,
+   "text": "a la consigna. Revisá que se entienda y esté expresada con tus propias palabras.",
+   "box": {
+    "f": 3966,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 3966,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 4165,
+   "to": 4292,
+   "text": "Entonces, cuando tengas que responder una consigna, recordá.",
+   "box": {
+    "f": 4165,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 4165,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 4298,
+   "to": 4472,
+   "text": "Comprendé. Seleccioná. Reformulá y organizá para demostrar que comprendiste.",
+   "box": {
+    "f": 4298,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 4298,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 4486,
+   "to": 4692,
+   "text": "Y ahora que ya lo sabés, la próxima vez que tengas una consigna, ¿vas a copiar o vas a explicar lo que realmente",
+   "box": {
+    "f": 4486,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 4486,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 4692,
+   "to": 4800,
+   "text": "comprendiste? Nos vemos en el próximo video.",
+   "box": {
+    "f": 4692,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 4692,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  }
+ ],
+ "moves": [
+  {
+   "key": "x0",
+   "from": 1391,
+   "to": 1394
+  },
+  {
+   "key": "x1",
+   "from": 1506,
+   "to": 1514
+  },
+  {
+   "key": "x2",
+   "from": 2082,
+   "to": 3000
+  },
+  {
+   "key": "x3",
+   "from": 3041,
+   "to": 3044
+  },
+  {
+   "key": "x4",
+   "from": 3434,
+   "to": 3442
+  },
+  {
+   "key": "x5",
+   "from": 3788,
+   "to": 3791
+  },
+  {
+   "key": "x6",
+   "from": 4476,
+   "to": 4484
+  },
+  {
+   "key": "x7",
+   "from": 4804,
+   "to": 4942
+  }
+ ]
+}

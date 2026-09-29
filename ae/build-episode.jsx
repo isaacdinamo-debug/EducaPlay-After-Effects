@@ -746,26 +746,29 @@ function buildEpisode() {
     return Math.max(h, ty + P);
   }
 
-  BUILD.photo = function (comp, b, box) { return b.rank === 'refuerzo' ? resourceRow(comp, b, box, 'photo') : mediaCard(comp, b, box, 'photo').h; };
-  BUILD.gif = function (comp, b, box) { return b.rank === 'refuerzo' ? resourceRow(comp, b, box, 'gif') : mediaCard(comp, b, box, 'gif').h; };
+  BUILD.photo = function (comp, b, box) { return mediaCard(comp, b, box, 'photo').h; };
+  BUILD.gif = function (comp, b, box) { return mediaCard(comp, b, box, 'gif').h; };
 
   var DISC_I = 0; // cada ítem de una lista toma el siguiente color de banda
 
   function mediaCard(comp, b, box, kind) {
     var didactico = b.rank === 'didactico';
-    var w = didactico ? box.width : Math.round(box.width * 0.82);
-    // El refuerzo es más angosto y se pega al borde exterior del cuadro.
-    var x = didactico ? 0 : (box.x + box.width / 2 > W / 2 ? box.width - w : 0);
+    var w = box.width;
+    var x = 0;
     var capText = b.caption || b.label || '';
+    // Filtrar leyendas técnicas innecesarias (recurso, animación, foto, etc.)
+    if (/^(recurso|animaci[oó]n|video|foto|imagen|gif)(\s*\d+)?$/i.test(capText.trim())) {
+      capText = '';
+    }
     var capH = capText ? 64 : 0;
     var inner = 14;
     var mw = w - inner * 2;
     var mx = x + inner;
-    var mh = Math.min(box.height - inner * 2 - capH, Math.round(mw * 0.62));
+    var mh = Math.min(box.height - inner * 2 - capH, Math.round(mw * 0.70));
     var h = inner + mh + (capText ? capH : inner);
 
     card(comp, x, 0, w, h);
-    mediaInCard(comp, b.src, mx, inner, mw, mh, b.fit, 0, kind === 'photo');
+    mediaInCard(comp, b.src, mx, inner, mw, mh, b.fit || (kind === 'gif' ? 'contain' : 'cover'), 0, kind === 'photo');
     if (capText) {
       var cap = text(comp, capText, mx, inner + mh + 16, {
         name: 'PIE', font: FONTS.body, size: 26, color: hex(PAL.ink), maxW: mw,
@@ -1186,76 +1189,7 @@ function buildEpisode() {
     log('· ' + M.captions.length + ' subtítulos, una capa cada uno' + (over ? '' : ', todos en ≤' + PILL.maxLines + ' líneas'));
   });
 
-  // Plataforma: portada como la web. Bandas diagonales, el lockup
-  // "Educaplay | Nivel Secundario" y una baldosa gris con el título; todo sube
-  // a una banda superior cuando entran las alertas y el recurso 1.
-  soft('apertura', function () {
-    var dur = OPEN_TO - OPEN_FROM;
-    var ap = proj.items.addComp('APERTURA', W, H, 1, sec(dur), FPS);
-    ap.parentFolder = F.graficos;
-    var ep = M.episode;
-    var cy0 = H / 2, cyBand = 128, sBand = 44;
-    var ctl = ap.layers.addNull(sec(dur));
-    ctl.name = 'PORTADA · control';
-    var ct = ctl.property('ADBE Transform Group');
-    ct.property('ADBE Anchor Point').setValue([W / 2, cy0]);
-    ct.property('ADBE Position').setValue([W / 2, cy0]);
-
-    var educa = text(ap, 'Educa', 0, 0, {name: 'EDUCA', font: 'Museo-700', size: 104, color: [1, 1, 1]});
-    var play = text(ap, 'play', 0, 0, {name: 'PLAY', font: 'Museo-300', size: 104, color: [1, 1, 1]});
-    var nivel = text(ap, 'Nivel Secundario', 0, 0, {name: 'NIVEL', font: 'MuseoSans-500', size: 46, color: [1, 1, 1]});
-    var gapBar = 34;
-    var lockW = educa.w + play.w + gapBar * 2 + nivel.w;
-    var lx = W / 2 - lockW / 2, ly = cy0 - 150;
-    educa.layer.property('ADBE Transform Group').property('ADBE Position').setValue([lx, ly]);
-    play.layer.property('ADBE Transform Group').property('ADBE Position').setValue([lx + educa.w + 2, ly + (educa.h - play.h)]);
-    var barX = lx + educa.w + play.w + gapBar;
-    var bar = newShapeLayer(ap, 'BARRA');
-    addStroke(addPath(bar, [[barX, ly + 18], [barX, ly + educa.h - 4]], false, 'barra'), [1, 1, 1], 3);
-    nivel.layer.property('ADBE Transform Group').property('ADBE Position').setValue([barX + gapBar, ly + (educa.h - nivel.h) / 2 + 6]);
-
-    var tileW = 1100, tx = W / 2 - tileW / 2, ty = cy0 - 10;
-    var serie = text(ap, ep.series.toUpperCase(), tx + 44, ty + 38, {name: 'SERIE', font: FONTS.bodyBold, size: 24, color: hex(WEB.oscuro), tracking: 200});
-    var ttl = text(ap, ep.title, tx + 44, ty + 38 + serie.h + 14, {name: 'TÍTULO', font: FONTS.heading, size: 62, leading: 70, color: hex(WEB.tinta), maxW: tileW - 88});
-    var tileH = 38 + serie.h + 14 + ttl.h + 40;
-    var tile = newShapeLayer(ap, 'BALDOSA · título');
-    linkFill(addRect(tile, tx, ty, tileW, tileH, 16, hex(WEB.gris), 'gris'), 'Papel');
-    tile.moveToEnd();
-    var strip = bandStrip(ap, tx, ty, tileW, 8, sec(16));
-    strip.moveBefore(tile);
-    soft('recorte de franja', function () {
-      var m = tile.duplicate();
-      m.name = 'MATTE · franja';
-      m.moveBefore(strip);
-      strip.setTrackMatte(m, TrackMatteType.ALPHA);
-      m.enabled = false;
-    });
-
-    var kids = [educa.layer, play.layer, bar, nivel.layer, serie.layer, ttl.layer, tile, strip];
-    for (var i = 0; i < kids.length; i++) kids[i].parent = ctl;
-    fadeIn(educa.layer, sec(8), sec(12), 24);
-    fadeIn(play.layer, sec(10), sec(12), 24);
-    fadeIn(bar, sec(12), sec(10), 0);
-    fadeIn(nivel.layer, sec(13), sec(12), 24);
-    fadeIn(tile, sec(12), sec(10), 30);
-    revealChars(serie.layer, sec(16), sec(10), false);
-    revealChars(ttl.layer, sec(18), sec(14), true);
-    keys(ct.property('ADBE Position'), [sec(OPEN_HOLD - 6), sec(OPEN_HOLD + 8)], [[W / 2, cy0], [W / 2, cyBand]]);
-    keys(ct.property('ADBE Scale'), [sec(OPEN_HOLD - 6), sec(OPEN_HOLD + 8)], [[100, 100], [sBand, sBand]]);
-
-    var bands = diagonalBands(ap, 'BANDAS apertura', 0, sec(16), 0, 0, W, H);
-    for (var q = bands.length - 1; q >= 0; q--) bands[q].moveToBeginning();
-
-    var AL = main.layers.add(ap);
-    AL.name = 'APERTURA · portada';
-    AL.startTime = sec(OPEN_FROM);
-    AL.label = 11;
-    AL.motionBlur = true;
-    AL.property('ADBE Transform Group').property('ADBE Opacity').expression =
-      'var fo=thisComp.layer("CONTROL").effect("Salida (frames)")(1)*thisComp.frameDuration;' +
-      'ease(outPoint-time,0,fo,0,100);';
-    log('· portada f' + OPEN_FROM + '–' + OPEN_TO);
-  });
+  // Apertura: el máster abre limpio con la docente sin titular ni portada invasiva.
 
   // ─────────────────────────────────────────────────────────────── cortinas
   // En cada traslado de cámara del montajista, un barrido de bandas diagonales

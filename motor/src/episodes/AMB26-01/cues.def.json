@@ -1,0 +1,67 @@
+[
+  {
+    "key": "pregunta_inicia",
+    "word": "inundación"
+  },
+  {
+    "key": "telefono",
+    "word": "teléfono"
+  },
+  {
+    "key": "extraordinarias",
+    "word": "extraordinarias"
+  },
+  {
+    "key": "mochila",
+    "word": "mochila",
+    "after": "extraordinarias"
+  },
+  {
+    "key": "salvo",
+    "word": "salvo"
+  },
+  {
+    "key": "linterna",
+    "word": "linterna"
+  },
+  {
+    "key": "alimentos",
+    "word": "alimentos"
+  },
+  {
+    "key": "botiquin",
+    "word": "botiquín"
+  },
+  {
+    "key": "bolsas",
+    "word": "bolsas"
+  },
+  {
+    "key": "ropa",
+    "word": "ropa"
+  },
+  {
+    "key": "higiene",
+    "word": "higiene"
+  },
+  {
+    "key": "vulnerabilidad",
+    "word": "vulnerabilidad"
+  },
+  {
+    "key": "desagues",
+    "word": "desagües"
+  },
+  {
+    "key": "objetos",
+    "word": "objetos"
+  },
+  {
+    "key": "reunirse",
+    "word": "reunirse"
+  },
+  {
+    "key": "prepararnos",
+    "word": "prepararnos"
+  }
+]
