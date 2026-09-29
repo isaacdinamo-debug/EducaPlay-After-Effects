@@ -14,7 +14,16 @@ archivos generados, escribiendo coordenadas a mano, ni saltando al paso de publi
 
 ```bash
 cd motor && npm install
+npm run doctor -- <CODE>
 ```
+
+`doctor` audita la máquina y **tiene que terminar en 0 problemas** antes de seguir. Revisa:
+- fuentes instaladas y After Effects;
+- que el máster sea el aprobado;
+- que los archivos medidos no hayan cambiado.
+
+Si marca fuentes faltantes, pedile al usuario que las instale (en Windows, "Instalar para todos
+los usuarios") y que reinicie After Effects.
 
 Si el episodio ya existe en `motor/src/episodes/<CODE>/` y sólo faltan los medios en esta máquina:
 
@@ -22,7 +31,8 @@ Si el episodio ya existe en `motor/src/episodes/<CODE>/` y sólo faltan los medi
 npm run medios -- <CODE> --desde "<carpeta que tiene public/videos/<CODE>.mp4>"
 ```
 
-y pasá directo al paso 3.
+y pasá directo al paso 3. **No corras `npm run nuevo` sobre un episodio que ya existe**: vuelve a
+medir con las herramientas de esta máquina y cambia el encuadre y los subtítulos aprobados.
 
 ## 2. Episodio nuevo: medir y escribir `data.ts`
 

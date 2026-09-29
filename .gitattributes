@@ -1,0 +1,5 @@
+# Fin de línea LF en todo el repo, en cualquier sistema: en Windows con
+# core.autocrlf, los archivos generados aparecerían como modificados.
+* text=auto eol=lf
+*.jpg binary
+*.png binary

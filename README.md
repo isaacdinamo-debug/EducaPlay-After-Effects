@@ -13,7 +13,7 @@ Repositorio oficial: [https://github.com/isaacdinamo-debug/EducaPlay-After-Effec
 - **Node.js**: versión ≥ 22.6.
 - **Python**: versión ≥ 3.10.
 - **FFmpeg / FFprobe**: en el PATH del sistema.
-- **Tipografías Oficiales**: *Museo* (700 Bold) y *Museo Sans Rounded* (700 Bold, 900 Black).
+- **Tipografías Oficiales**: *Museo* (700 Bold) y *Museo Sans Rounded* (300/500/700/900/1000). En Windows, instalalas con clic derecho → **"Instalar para todos los usuarios"** y reiniciá After Effects.
 
 ---
 
@@ -27,6 +27,7 @@ cd EducaPlay-After-Effects
 # 2. Instalar dependencias del motor
 cd motor
 npm install
+npm run doctor                                   # auditoría de la máquina: tiene que dar 0 problemas
 cd ..
 ```
 

@@ -6,6 +6,7 @@
   "description": "EducaPlay Secundaria — motor de medición de episodios para After Effects",
   "scripts": {
     "medios": "node scripts/medios.mjs",
+    "doctor": "node scripts/doctor.mjs",
     "nuevo": "node scripts/nuevo.mjs",
     "prep": "node scripts/prep.mjs",
     "track": "node scripts/track-presenter.mjs",
