@@ -1,5 +1,5 @@
 /**
- * build-episode.jsx — arma un capítulo de Ambiente en After Effects.
+ * build-episode.jsx — arma un capítulo de Educaplay en After Effects (cualquier materia).
  *
  *   npm run export:ae -- <CODE>          (en motor/)
  *   npm run ae -- <CODE>
@@ -104,14 +104,21 @@ function buildEpisode() {
   }
   if (!manifestFile) return;
 
-  // Modo vivo (npm run ae -- <CODE> --vivo): la misma estética con más vida
-  // dentro del Motion Design System §6. Ver docs/ESTETICA.md, «Modo vivo».
-  var VIVO = !!$.global.EDUCAPLAY_VIVO;
+  // Modo vivo: el armado por defecto (npm run ae -- <CODE> --clasico lo apaga).
+  // La misma estética con más vida dentro del Motion Design System §6. Ver
+  // docs/ESTETICA.md, «Modo vivo».
+  var VIVO = !$.global.EDUCAPLAY_CLASICO;
   var wordsFile = $.global.EDUCAPLAY_WORDS ? File($.global.EDUCAPLAY_WORDS) : null;
-  $.global.EDUCAPLAY_VIVO = undefined;
+  $.global.EDUCAPLAY_CLASICO = undefined;
   $.global.EDUCAPLAY_WORDS = undefined;
 
   var M = readJSON(manifestFile);
+  // Corrido a mano (Archivo › Scripts) nadie pasa el timing por palabra: se
+  // busca en el motor, relativo a este script.
+  if (VIVO && !wordsFile) {
+    var wf = File(File($.fileName).parent.parent.fsName + '/motor/src/episodes/' + M.code + '/words.json');
+    if (wf.exists) wordsFile = wf;
+  }
   var ROOTDIR = manifestFile.parent;
   var FPS = M.fps, W = M.width, H = M.height;
   var MAIN = M.code;
@@ -1669,12 +1676,13 @@ function buildEpisode() {
   masterLayer.locked = true;
 
   // ─────────────────────────────────────────────────────────────── guardar
-  var out = File(ROOTDIR.fsName + '/' + MAIN + (VIVO ? '-vivo' : '') + '.aep');
+  var out = File(ROOTDIR.fsName + '/' + MAIN + (VIVO ? '' : '-clasico') + '.aep');
   proj.save(out);
   main.openInViewer();
   app.endUndoGroup();
 
-  log('✓ guardado en ' + out.fsName);
+  // Sólo el nombre: el LOG se versiona y una ruta absoluta cambia en cada PC.
+  log('✓ guardado en episodios/' + MAIN + '/' + out.name);
   // El LOG lo lee y lo guarda ae/run.mjs (revision/log.txt).
 }
 

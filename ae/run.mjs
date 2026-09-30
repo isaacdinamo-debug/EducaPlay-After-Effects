@@ -4,8 +4,8 @@
  *   npm run ae -- <CODE>                          (desde motor/)
  *   npm run ae -- <CODE> --frames 420,1620        (stills en esos frames)
  *   npm run ae -- <CODE> --forzar                 (cierra aunque haya otro proyecto)
- *   npm run ae -- <CODE> --vivo                   (modo vivo: <CODE>-vivo.aep y
- *                                                  revision-vivo/, lo aprobado no se toca)
+ *   npm run ae -- <CODE> --clasico                (sin modo vivo: <CODE>-clasico.aep y
+ *                                                  revision-clasico/; el defecto es el modo vivo)
  *
  *   1. abre After Effects si no está corriendo y espera a que acepte scripts;
  *   2. cierra el proyecto abierto SIN guardar sólo si lo generó este flujo
@@ -29,6 +29,7 @@ import os from 'node:os';
 import path from 'node:path';
 import {execFileSync, spawn} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
+import {aeApp, WIN} from './ae-app.mjs';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const AE_DIR = path.join(REPO, 'ae');
@@ -60,29 +61,6 @@ const args = (() => {
   return out;
 })();
 
-const WIN = process.platform === 'win32';
-
-/**
- * After Effects más nuevo instalado, o AE_APP.
- * macOS: el nombre de la app ("Adobe After Effects 2026"), para AppleScript.
- * Windows: la ruta a AfterFX.exe.
- */
-const aeApp = () => {
-  if (process.env.AE_APP) return process.env.AE_APP;
-  if (WIN) {
-    const base = path.join(process.env.ProgramFiles ?? 'C:\\Program Files', 'Adobe');
-    const dirs = fs.existsSync(base)
-      ? fs.readdirSync(base).filter((f) => /^Adobe After Effects( CC)? 20\d\d$/.test(f)).sort() : [];
-    for (const d of dirs.reverse()) {
-      const exe = path.join(base, d, 'Support Files', 'AfterFX.exe');
-      if (fs.existsSync(exe)) return exe;
-    }
-    throw new Error(`No encontré AfterFX.exe en ${base} (definí AE_APP con la ruta a AfterFX.exe).`);
-  }
-  const apps = fs.readdirSync('/Applications').filter((f) => /^Adobe After Effects 20\d\d$/.test(f)).sort();
-  if (!apps.length) throw new Error('No encontré After Effects en /Applications (definí AE_APP).');
-  return apps[apps.length - 1];
-};
 
 const applescriptStr = (s) => '"' + s.replace(/\\/g, '\\\\').replace(/"/g, '\\"') + '"';
 const js = (v) => JSON.stringify(typeof v === 'string' ? v.replace(/\\/g, '/') : v);
@@ -101,7 +79,9 @@ const runJsx = async (app, code, tmpDir, timeoutMs = 10 * 60 * 1000) => {
   const id = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
   const f = path.join(tmpDir, `tmp-${id}.jsx`);
   const done = path.join(tmpDir, `tmp-${id}.done`);
-  fs.writeFileSync(f, `try {\n${code}\n} finally {\n  var __d=new File(${js(done)});__d.open('w');__d.write('ok');__d.close();\n}\n`, 'utf8');
+  // Con BOM: ExtendScript en Windows lee el archivo como UTF-8 sólo si lo
+  // tiene, y las rutas pueden llevar tildes (usuarios, carpetas de entrega).
+  fs.writeFileSync(f, '\uFEFF' + `try {\n${code}\n} finally {\n  var __d=new File(${js(done)});__d.open('w');__d.write('ok');__d.close();\n}\n`, 'utf8');
   try {
     if (WIN) {
       spawn(app, ['-r', f], {detached: true, stdio: 'ignore'}).unref();
@@ -141,14 +121,19 @@ const ensureAE = async (app, tmpDir) => {
     }
   }
 
-  for (let i = 0; i < 60; i++) {
+  // Si todavía no respondió, se reintenta ESPERANDO cada intento: sin await,
+  // en Windows cada vuelta lanzaba otro `AfterFX.exe -r`.
+  for (let i = 0; i < 20 && !fs.existsSync(probe); i++) {
     try {
-      runJsx(app, ping, tmpDir);
-      if (fs.existsSync(probe)) break;
+      await runJsx(app, ping, tmpDir, 20 * 1000);
     } catch { /* todavía arrancando */ }
-    await sleep(3000);
+    if (!fs.existsSync(probe)) await sleep(3000);
   }
-  if (!fs.existsSync(probe)) throw new Error(`${app} no responde a scripts.`);
+  if (!fs.existsSync(probe)) {
+    throw new Error(`${app} no responde a scripts. Revisá dos cosas en After Effects: ` +
+      '(1) Preferencias › Scripting y expresiones › «Permitir que los scripts escriban archivos y tengan acceso a la red» ' +
+      'tildado; (2) que no haya un diálogo abierto esperando un clic (recuperar proyecto, licencia, actualización).');
+  }
   console.log(`· After Effects ${fs.readFileSync(probe, 'utf8')} listo (${WIN ? 'Windows' : 'macOS'})`);
   fs.rmSync(probe, {force: true});
 };
@@ -212,9 +197,9 @@ const contactSheet = (pngs, out) => {
   execFileSync('ffmpeg', ['-y', '-loglevel', 'error', ...inputs, '-filter_complex', filter, '-frames:v', '1', '-q:v', '4', out]);
 };
 
-const build = async (app, code, M, frames, revDir, tmpDir, force, vivo) => {
+const build = async (app, code, M, frames, revDir, tmpDir, force, clasico) => {
   const problems = [];
-  const aep = path.join(REPO, 'episodios', code, `${code}${vivo ? '-vivo' : ''}.aep`);
+  const aep = path.join(REPO, 'episodios', code, `${code}${clasico ? '-clasico' : ''}.aep`);
   const words = path.join(REPO, 'motor', 'src', 'episodes', code, 'words.json');
   const logFile = path.join(tmpDir, 'log.txt');
   const stillDir = path.join(revDir, 'stills');
@@ -227,7 +212,7 @@ const build = async (app, code, M, frames, revDir, tmpDir, force, vivo) => {
   console.log(`\n▶ ${code}`);
   await runJsx(app, `
     $.global.EDUCAPLAY_MANIFEST = ${js(path.join(REPO, 'episodios', code, 'manifest.json'))};
-    ${vivo ? `$.global.EDUCAPLAY_VIVO = true; $.global.EDUCAPLAY_WORDS = ${js(words)};` : ''}
+    ${clasico ? '$.global.EDUCAPLAY_CLASICO = true;' : `$.global.EDUCAPLAY_WORDS = ${js(words)};`}
     try {
       $.evalFile(File(${js(path.join(AE_DIR, 'build-episode.jsx'))}));
     } catch(err) {
@@ -287,14 +272,15 @@ const build = async (app, code, M, frames, revDir, tmpDir, force, vivo) => {
 
 const main = async () => {
   const {code, flags} = args;
-  if (!code) throw new Error('Uso: npm run ae -- <CODE> [--frames 420,1620] [--forzar] [--vivo]');
-  const vivo = !!flags.vivo;
+  if (!code) throw new Error('Uso: npm run ae -- <CODE> [--clasico] [--frames 420,1620] [--forzar]');
+  // El modo vivo es el defecto desde el 30/9/2026; --vivo queda aceptado como sinónimo.
+  const clasico = !!flags.clasico;
 
   const manifestPath = path.join(REPO, 'episodios', code, 'manifest.json');
   if (!fs.existsSync(manifestPath)) throw new Error(`Falta ${path.relative(REPO, manifestPath)}: corré npm run export:ae -- ${code}`);
   const M = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
   const frames = flags.frames ? String(flags.frames).split(',').map(Number) : defaultFrames(M);
-  const revDir = path.join(REPO, 'episodios', code, vivo ? 'revision-vivo' : 'revision');
+  const revDir = path.join(REPO, 'episodios', code, clasico ? 'revision-clasico' : 'revision');
   fs.mkdirSync(revDir, {recursive: true});
 
   const app = aeApp();
@@ -302,13 +288,13 @@ const main = async () => {
   let problems;
   try {
     await ensureAE(app, tmpDir);
-    problems = await build(app, code, M, frames, revDir, tmpDir, !!flags.forzar, vivo);
+    problems = await build(app, code, M, frames, revDir, tmpDir, !!flags.forzar, clasico);
   } finally {
     try { fs.rmSync(tmpDir, {recursive: true, force: true}); } catch (_) {}
   }
 
   fs.writeFileSync(path.join(revDir, 'estado.json'), JSON.stringify({
-    code, vivo, fecha: new Date().toISOString(), frames,
+    code, modo: clasico ? 'clasico' : 'vivo', fecha: new Date().toISOString(), frames,
     ok: problems.length === 0, problemas: problems,
   }, null, 1));
   if (problems.length) {
