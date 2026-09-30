@@ -979,12 +979,14 @@ function buildEpisode() {
     var ttl = text(comp, b.caption || b.label || '', tx, ty, {name: 'TÍTULO', font: FONTS.heading, size: wide ? 32 : 26, leading: wide ? 38 : 31, color: hex(WEB.tinta), maxW: tw});
     revealChars(ttl.layer, sec(VIVO ? 10 : 6), sec(14), true);
     ty += ttl.h + 16;
-    var m = /recurso-(\d+)/.exec(b.key);
-    var metas = [[kind === 'gif' ? 'animacion' : 'recurso', (kind === 'gif' ? 'ANIMACIÓN' : 'RECURSO') + (m ? ' ' + m[1] : '')]];
+    // Sin «RECURSO 10» ni «ANIMACIÓN 7»: es la numeración interna de la
+    // escaleta y no le dice nada al estudiante (Isaac, 30/9/2026). Queda sólo
+    // el crédito, que sí informa ("Recreado con IA").
+    var metas = [];
     if (b.credit) metas.push(['ia', b.credit.replace('Recreado con Inteligencia Artificial', 'Recreado con IA')]);
     for (var i = 0; i < metas.length; i++) {
       var ic = metaIcon(comp, metas[i][0], tx, ty + 2, 20);
-      var mt = text(comp, metas[i][1], tx + 32, ty, {name: 'META ' + (i + 1), font: FONTS.body, size: 21, color: hex(WEB.meta), tracking: i === 0 ? 80 : 0});
+      var mt = text(comp, metas[i][1], tx + 32, ty, {name: 'META ' + (i + 1), font: FONTS.body, size: 21, color: hex(WEB.meta), tracking: 0});
       var mt0 = VIVO ? sec(20 + 6 * i) : sec(12 + 4 * i);
       fadeIn(ic, mt0, sec(10), 10);
       fadeIn(mt.layer, mt0, sec(10), 10);

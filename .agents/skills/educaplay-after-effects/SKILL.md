@@ -95,6 +95,9 @@ aprobado antes del modo vivo. Dos criterios que no están en el código:
 
 **La marca se escribe «Educaplay»** (nunca EducaPlay/EDUCAPLAY). Ver `AGENTS.md`.
 
+**En pantalla no va la numeración de la escaleta** («RECURSO 10», «ANIMACIÓN 7»): es para el
+equipo. Las filas de recursos llevan título y, si hay, el crédito («Recreado con IA»).
+
 ## Subtítulos (`docs/SUBTITULOS.md` §1.4)
 
 - **Sin resaltado por palabra.** Una capa de texto por subtítulo: se edita con doble clic y el

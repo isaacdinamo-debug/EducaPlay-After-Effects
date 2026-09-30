@@ -29,8 +29,9 @@ títulos.
   baldosa **"2° PASO"**, compuesta como los botones "2° AÑO" de la web. Al entrar, un barrido corto
   de bandas diagonales cruza la tarjeta.
 - **Recursos de refuerzo** (fotos y GIF que ilustran lo que la docente ya dijo): fila de la web, con
-  miniatura redondeada, título y metadatos con ícono ("RECURSO 4 · Recreado con IA",
-  "ANIMACIÓN 6").
+  miniatura redondeada, título y, si tiene, el crédito con su ícono ("Recreado con IA"). **Nunca**
+  la numeración de la escaleta ("RECURSO 10", "ANIMACIÓN 7"): es interna y al estudiante no le dice
+  nada.
 - **Recursos didácticos** (videos documentales): baldosa gris grande con el medio, el pie y el
   crédito en una pastilla oscura.
 - **Checklists:** baldosa gris. Cada ítem lleva un pictograma blanco sobre un disco de color de
