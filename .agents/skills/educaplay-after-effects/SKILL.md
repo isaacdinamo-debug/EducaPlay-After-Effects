@@ -1,10 +1,10 @@
 ---
 name: educaplay-after-effects
 description: |
-  Capítulos de EducaPlay Secundaria (Corrientes) en Adobe After Effects: medir el máster con el motor (encuadre de la docente, Whisper, palabras-gatillo), escribir el data.ts del episodio, exportar el manifiesto, armar el .aep editable con la estética de la plataforma EducaPlay, verificar con stills y publicar en GitHub. Usar para cualquier código de episodio (AMB26-XX, LEO0XX…), para tocar ae/build-episode.jsx, o para diagnosticar por qué un gráfico pisa a la docente, un subtítulo pasa de dos líneas o el armado en AE deja advertencias.
+  Capítulos de Educaplay Secundaria (Corrientes) en Adobe After Effects: medir el máster con el motor (encuadre de la docente, Whisper, palabras-gatillo), escribir el data.ts del episodio, exportar el manifiesto, armar el .aep editable con la estética de la plataforma Educaplay, verificar con stills y publicar en GitHub. Usar para cualquier código de episodio (AMB26-XX, LEO26-XX, HIS…, EEF…; cualquier materia), para tocar ae/build-episode.jsx, o para diagnosticar por qué un gráfico pisa a la docente, un subtítulo pasa de dos líneas o el armado en AE deja advertencias.
 ---
 
-# EducaPlay en After Effects
+# Educaplay en After Effects
 
 Los scripts hacen la medición y el armado. Este archivo guarda **los criterios y las trampas**: lo
 que no se deduce leyendo el código y lo que más caro salió descubrir. El paso a paso operativo es el
@@ -48,11 +48,12 @@ vuelca esas cajas al manifiesto y el `.jsx` sólo pone en escena.
 **Las cuatro comprobaciones que ningún script hace:**
 1. Un score de 1.00 en un gatillo sólo dice que la palabra existe, no que sea el cue correcto.
 2. Buscá cada palabra-gatillo en `words.json`, una por una, para detectar lo que nunca se grabó.
-3. El nombre de la docente sale de la placa quemada y se confirma con Isaac, nunca de la escaleta.
+3. El nombre de la docente sale de la placa quemada y se confirma con el responsable del capítulo
+   (hoy, Isaac), nunca de la escaleta.
 4. Leé los subtítulos generados. Whisper cambia palabras por otras que existen; se corrigen con
    `CAPTION_FIX`.
 
-## Estética: la plataforma EducaPlay (`docs/ESTETICA.md`)
+## Estética: la plataforma Educaplay (`docs/ESTETICA.md`)
 
 Es la única. Toma los colores medidos sobre la web de Corrientes Play:
 
@@ -82,11 +83,17 @@ La capa `CONTROL` de la comp principal gobierna todo el capítulo:
 
 Las precomps la leen por expresión. Un cambio de marca se hace ahí, no capa por capa.
 
-**Modo vivo (`--vivo`, en prueba):** transformación entre titulares, asentamiento en vez de rebote,
-título al ritmo de la voz, flecha que avisa, entrada por partes y foco en la secuencia. Detalle en
-`docs/ESTETICA.md`. Todo va detrás de `VIVO` en el `.jsx`: sin la bandera, el armado tiene que
-quedar igual al aprobado. La sincronización con la voz **no se fuerza**: si la docente dice el título
-tarde o con otras palabras, una tarjeta vacía esperándola es peor que el revelado de siempre.
+**Modo vivo (el armado por defecto; `--clasico` lo apaga):** transformación entre titulares, viaje
+en los traslados, asentamiento en vez de rebote, título al ritmo de la voz, flecha que avisa, hilo
+flecha → recurso, pastillas (`chips`), entrada por partes y foco en la secuencia. Detalle en
+`docs/ESTETICA.md`. Todo va detrás de `VIVO` en el `.jsx`: con `--clasico` el armado queda igual al
+aprobado antes del modo vivo. Dos criterios que no están en el código:
+- La sincronización con la voz **no se fuerza**: si la docente dice el título tarde o con otras
+  palabras, una tarjeta vacía esperándola es peor que el revelado de siempre.
+- Las **pastillas son contenido**, no animación: sólo lo que la docente enumera y no está en
+  pantalla, y con el OK del responsable.
+
+**La marca se escribe «Educaplay»** (nunca EducaPlay/EDUCAPLAY). Ver `AGENTS.md`.
 
 ## Subtítulos (`docs/SUBTITULOS.md` §1.4)
 
@@ -126,7 +133,9 @@ tarde o con otras palabras, una tarjeta vacía esperándola es peor que el revel
 9. **AE importa un GIF como cuadro fijo.** El export los transcodifica a `.mov` (Animation, con
    alfa) y el `.jsx` los loopea.
 10. **Nombres visibles cambian con el idioma de AE.** Siempre matchNames, y efectos por índice en
-    las expresiones.
+    las expresiones. Vale también para las plantillas de render: en AE en español «Best Settings» se
+    llama «Configuración óptima», y hasta el nombre que devuelve AE puede no aceptarse de vuelta.
+    `npm run preview` usa las plantillas por defecto a propósito.
 11. **Una fuente faltante no da error: AE la sustituye.** El constructor mide cada texto, así que la
     sustitución cambia el alto de las tarjetas y desarma el cuadro. Por eso `build-episode.jsx`
     verifica las 7 fuentes con `app.fonts.getFontsByPostScriptName` y no arma si falta alguna.
@@ -135,6 +144,12 @@ tarde o con otras palabras, una tarjeta vacía esperándola es peor que el revel
     contra git.
 13. **Windows:** AE se maneja con `AfterFX.exe -r <script>`, que vuelve enseguida; `ae/run.mjs`
     espera una marca de fin. Las fuentes instaladas sólo para el usuario pueden no verse en AE.
+14. **Ternarios encadenados sin paréntesis** (`a ? x : b ? y : z`): ExtendScript evaluó mal uno así
+    y leyó `.until` de un objeto indefinido. Escribilos con `if/else`.
+15. **`aerender` se cuelga sin error con JPEG que traen credenciales C2PA grandes** (segmentos APP11,
+    típicos de imágenes hechas con IA): AE las muestra, los stills salen, pero el render desde la
+    terminal no avanza en ese cuadro. `export:ae` ya saca esos segmentos de la copia para AE (mismos
+    píxeles). Si un tramo de `npm run preview` se traba, buscá el recurso que está en esos cuadros.
 
 ## Verificación
 

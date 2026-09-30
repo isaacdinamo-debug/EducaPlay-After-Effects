@@ -1,6 +1,8 @@
-# Estética: la plataforma EducaPlay
+# Estética: la plataforma Educaplay
 
-Los capítulos se arman con la estética de la web de EducaPlay (Corrientes Play), nivel secundario.
+Los capítulos se arman con la estética de la web de Educaplay (Corrientes Play), nivel secundario. Es la
+misma para todas las materias; lo que cambia por materia es la serie y el plató (`motor/src/brand/estudios.ts`).
+La marca se escribe siempre «Educaplay».
 La aplica `ae/build-episode.jsx` sobre las cajas del motor:
 
 ```bash
@@ -64,22 +66,27 @@ Además de los colores:
 
 Todo el capítulo lee estos valores por expresión: un cambio de marca se hace ahí, no capa por capa.
 
-## Modo vivo (en prueba sobre AMB26-04)
+## Modo vivo (el armado por defecto desde el 30/9/2026)
 
 ```bash
-npm run ae -- <CODE> --vivo   # → episodios/<CODE>/<CODE>-vivo.aep y revision-vivo/
+npm run ae -- <CODE>             # modo vivo → <CODE>.aep y revision/
+npm run ae -- <CODE> --clasico   # sin modo vivo → <CODE>-clasico.aep y revision-clasico/
 ```
 
 La misma estética y las mismas piezas, con más vida **dentro del Motion Design System §6**: nada
-corre en loop ni se mueve de fondo, y el rebote se apaga. El movimiento responde a la docente. Sin
-`--vivo`, el armado es el aprobado.
+corre en loop ni se mueve de fondo, y el rebote se apaga. El movimiento responde a la docente.
+Probado en AMB26-04; en un capítulo de mitos como AMB26-02 (titular y después recursos sueltos en la
+misma caja) casi no hay transformaciones ni hilos, y queda igual de sobrio.
 
 | Recurso | Qué hace | Por qué entra en el manual |
 |---|---|---|
 | **Transformación entre titulares** | Si el titular siguiente empieza a ≤ 20 cuadros, en la misma caja y sin traslado de cámara, la tarjeta no sale: se va el contenido (sube y se funde en 9 cuadros), la tarjeta acomoda su alto y entra el titular nuevo. Entre dos pasos la baldosa queda y cambia el número. | «Continuo y conectado» (§9.3); las salidas liberan espacio sin vaciar el cuadro (§6). |
+| **Viaje en los traslados** | Si entre dos titulares hay un traslado de cámara que los cambia de lado, la tarjeta viaja hacia el lado nuevo con el barrido de bandas y el titular nuevo llega desde ese rumbo. Si no cambia de lado, la tarjeta espera bajo las bandas y se estira a la caja nueva. | Movimiento con intención: acompaña el recorrido de la cámara (§3.7). |
 | **Asentamiento** | Al terminar de entrar, la tarjeta sigue unos px hacia adentro y se detiene. Reemplaza al rebote (`Rebote` = 0). | Aceleración y desaceleración naturales, sin rebote (§6). Pasa una sola vez. |
 | **Título al ritmo de la voz** | Cada palabra del titular entra cuando la docente la dice (con `words.json`). Sólo si el calce es limpio: en orden, empezando en los primeros 20 cuadros y en menos de 60. Si no, revelado de siempre. | Información sincronizada con la explicación oral (§3.3). |
 | **Flecha que avisa** | La flecha ↓ del subrayado cabecea una vez cuando entra el recurso de abajo y 24 cuadros antes de que el titular se vaya o se transforme. | Las entradas anticipan dónde mirar (§6). |
+| **Hilo flecha → recurso** | Un trazo menta asoma debajo de la flecha ↓ del titular y baja hasta el recurso que lo ilustra cuando éste termina de entrar. | Movimiento que muestra relación (§3.7). |
+| **Pastillas** | `chips` del titular en `data.ts`: lo que la docente enumera y no está en pantalla. Cada una entra sobre su palabra (cue) y la tarjeta crece para hacerle lugar. Es contenido: lo decide el responsable. | Aparición progresiva sincronizada con la voz (§3.3). |
 | **Por partes** | En filas y tarjetas de medio: tarjeta → medio (fundido + máscara 92→100 %) → título → metadatos. | Aparición progresiva (§3.3). |
 | **Foco en la secuencia** | En listas encadenadas (Antes → Durante → Después), al pasar al ítem siguiente los anteriores bajan al 45 %; al final vuelven todos. | Una idea visual principal por vez (§3.3). |
 
