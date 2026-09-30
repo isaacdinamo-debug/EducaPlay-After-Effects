@@ -63,3 +63,30 @@ Además de los colores:
 | `Subtítulos` | Prende o apaga todos los subtítulos |
 
 Todo el capítulo lee estos valores por expresión: un cambio de marca se hace ahí, no capa por capa.
+
+## Modo vivo (en prueba sobre AMB26-04)
+
+```bash
+npm run ae -- <CODE> --vivo   # → episodios/<CODE>/<CODE>-vivo.aep y revision-vivo/
+```
+
+La misma estética y las mismas piezas, con más vida **dentro del Motion Design System §6**: nada
+corre en loop ni se mueve de fondo, y el rebote se apaga. El movimiento responde a la docente. Sin
+`--vivo`, el armado es el aprobado.
+
+| Recurso | Qué hace | Por qué entra en el manual |
+|---|---|---|
+| **Transformación entre titulares** | Si el titular siguiente empieza a ≤ 20 cuadros, en la misma caja y sin traslado de cámara, la tarjeta no sale: se va el contenido (sube y se funde en 9 cuadros), la tarjeta acomoda su alto y entra el titular nuevo. Entre dos pasos la baldosa queda y cambia el número. | «Continuo y conectado» (§9.3); las salidas liberan espacio sin vaciar el cuadro (§6). |
+| **Asentamiento** | Al terminar de entrar, la tarjeta sigue unos px hacia adentro y se detiene. Reemplaza al rebote (`Rebote` = 0). | Aceleración y desaceleración naturales, sin rebote (§6). Pasa una sola vez. |
+| **Título al ritmo de la voz** | Cada palabra del titular entra cuando la docente la dice (con `words.json`). Sólo si el calce es limpio: en orden, empezando en los primeros 20 cuadros y en menos de 60. Si no, revelado de siempre. | Información sincronizada con la explicación oral (§3.3). |
+| **Flecha que avisa** | La flecha ↓ del subrayado cabecea una vez cuando entra el recurso de abajo y 24 cuadros antes de que el titular se vaya o se transforme. | Las entradas anticipan dónde mirar (§6). |
+| **Por partes** | En filas y tarjetas de medio: tarjeta → medio (fundido + máscara 92→100 %) → título → metadatos. | Aparición progresiva (§3.3). |
+| **Foco en la secuencia** | En listas encadenadas (Antes → Durante → Después), al pasar al ítem siguiente los anteriores bajan al 45 %; al final vuelven todos. | Una idea visual principal por vez (§3.3). |
+
+Controles que agrega a `CONTROL`:
+
+| Control | Qué hace |
+|---|---|
+| `Asentamiento (px)` / `Asentamiento (frames)` | Distancia y duración del asentamiento (0 px lo apaga) |
+| `Flecha que avisa` | Prende o apaga los cabeceos de la flecha |
+| `Foco en la secuencia` | Prende o apaga el atenuado de los ítems anteriores |

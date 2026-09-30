@@ -104,6 +104,13 @@ function buildEpisode() {
   }
   if (!manifestFile) return;
 
+  // Modo vivo (npm run ae -- <CODE> --vivo): la misma estética con más vida
+  // dentro del Motion Design System §6. Ver docs/ESTETICA.md, «Modo vivo».
+  var VIVO = !!$.global.EDUCAPLAY_VIVO;
+  var wordsFile = $.global.EDUCAPLAY_WORDS ? File($.global.EDUCAPLAY_WORDS) : null;
+  $.global.EDUCAPLAY_VIVO = undefined;
+  $.global.EDUCAPLAY_WORDS = undefined;
+
   var M = readJSON(manifestFile);
   var ROOTDIR = manifestFile.parent;
   var FPS = M.fps, W = M.width, H = M.height;
@@ -130,7 +137,22 @@ function buildEpisode() {
   F3.heading = 'MuseoSansRounded-900';
   F3.headingLight = 'MuseoSansRounded-300';
   FONTS = F3;
-  log('▶ ' + MAIN + ' · ' + M.blocks.length + ' bloques · ' + M.captions.length + ' subtítulos');
+  log('▶ ' + MAIN + ' · ' + M.blocks.length + ' bloques · ' + M.captions.length + ' subtítulos' + (VIVO ? ' · modo vivo' : ''));
+
+  /** Minúsculas, sin tildes ni signos: para comparar lo escrito con lo dicho. */
+  function norm(s) {
+    return s.toLowerCase().replace(/[áàä]/g, 'a').replace(/[éèë]/g, 'e').replace(/[íìï]/g, 'i')
+      .replace(/[óòö]/g, 'o').replace(/[úùü]/g, 'u').replace(/ñ/g, 'n').replace(/[^a-z]/g, '');
+  }
+  // Timing por palabra del máster ([inicio s, fin s, palabra] → [frame, normalizada]).
+  var WORDS = [];
+  if (VIVO && wordsFile) {
+    if (!wordsFile.exists) log('⚠ modo vivo: no existe ' + wordsFile.fsName + ', los títulos no se sincronizan con la voz');
+    else {
+      var rawW = readJSON(wordsFile);
+      for (var wi = 0; wi < rawW.length; wi++) WORDS.push([Math.round(rawW[wi][0] * FPS), norm(rawW[wi][2])]);
+    }
+  }
 
   // ── Fuentes: sin las fuentes exactas NO se arma ──────────────────────────
   // El constructor mide cada texto para cortar líneas y dar alto a las
@@ -231,11 +253,22 @@ function buildEpisode() {
   sliderCtl('Entrada (frames)', 18);
   sliderCtl('Salida (frames)', 12);
   sliderCtl('Deslizamiento (px)', 60);
-  sliderCtl('Rebote (%)', 8);
+  // En modo vivo el sobrepaso lo reemplaza el asentamiento: una cola larga
+  // en vez de un rebote (§6 del Motion Design System).
+  sliderCtl('Rebote (%)', VIVO ? 0 : 8);
   sliderCtl('Sombra (%)', 14);
-  var cb = fx.addProperty('ADBE Checkbox Control');
-  cb.name = 'Subtítulos';
-  cb.property(1).setValue(1);
+  function checkboxCtl(name, v) {
+    var e = fx.addProperty('ADBE Checkbox Control');
+    e.name = name;
+    e.property(1).setValue(v);
+  }
+  checkboxCtl('Subtítulos', 1);
+  if (VIVO) {
+    sliderCtl('Asentamiento (px)', 6);
+    sliderCtl('Asentamiento (frames)', 70);
+    checkboxCtl('Flecha que avisa', 1);
+    checkboxCtl('Foco en la secuencia', 1);
+  }
 
   function colorExpr(name) { return CTRL_REF + '.effect("' + ctlName(name) + '")(1)'; }
 
@@ -408,6 +441,93 @@ function buildEpisode() {
     });
   }
 
+  /**
+   * Segundos en que la docente dice cada palabra de `str` dentro del bloque, o
+   * null. Sólo se sincroniza si el calce es limpio: la mitad o más de las
+   * palabras largas encontradas EN ORDEN, la primera en los 20 primeros
+   * cuadros y todas dentro de 60. Si lo dice tarde, desordenado o con otras
+   * palabras, la tarjeta quedaría vacía esperando: mejor el revelado de siempre.
+   */
+  function titleSync(b, str) {
+    if (!WORDS.length) return null;
+    var tw = str.split(/\s+/), n = tw.length;
+    var sp = [];
+    for (var i = 0; i < WORDS.length; i++) {
+      if (WORDS[i][0] >= b.from - 12 && WORDS[i][0] <= b.from + 150) sp.push(WORDS[i]);
+    }
+    var at = [], j = 0, longs = 0, hits = 0, first = null, last = null;
+    for (var k = 0; k < n; k++) {
+      var t = norm(tw[k]);
+      at.push(null);
+      if (t.length < 3) continue;
+      longs++;
+      for (var q = j; q < sp.length; q++) {
+        var x = sp[q][1], p = Math.min(4, t.length, x.length);
+        if (x.length >= 3 && x.substr(0, p) === t.substr(0, p)) {
+          at[k] = sp[q][0] - b.from;
+          if (first === null) first = at[k];
+          last = at[k];
+          j = q + 1;
+          hits++;
+          break;
+        }
+      }
+    }
+    if (!hits || hits * 2 < longs || first > 20 || last - first > 60) return null;
+    // Las palabras sin calce (cortas o no dichas) se reparten entre sus vecinas.
+    for (k = 0; k < n; k++) {
+      if (at[k] !== null) continue;
+      var a = k - 1, z = k + 1;
+      while (z < n && at[z] === null) z++;
+      if (a < 0) at[k] = at[z] - 4 * (z - k);
+      else if (z >= n) at[k] = at[a] + 4;
+      else at[k] = at[a] + (at[z] - at[a]) / (z - a);
+    }
+    // Dos cuadros de anticipo, nunca antes del cuadro 6, siempre en aumento.
+    var out = [];
+    for (k = 0; k < n; k++) {
+      var f = Math.max(6, at[k] - 2);
+      if (k && f < out[k - 1] * FPS + 2) f = out[k - 1] * FPS + 2;
+      out.push(sec(f));
+    }
+    return out;
+  }
+
+  /** Como revealChars por palabra, pero cada palabra entra cuando la dice la docente. */
+  function revealSynced(layer, at) {
+    soft('revelado sincronizado', function () {
+      var an = layer.property('ADBE Text Properties').property('ADBE Text Animators').addProperty('ADBE Text Animator');
+      an.name = 'Revelado · voz';
+      var props = an.property('ADBE Text Animator Properties');
+      props.addProperty('ADBE Text Opacity').setValue(0);
+      props.addProperty('ADBE Text Position 3D').setValue([0, 22, 0]);
+      var sel = an.property('ADBE Text Selectors').addProperty('ADBE Text Selector');
+      sel.property('ADBE Text Range Advanced').property('ADBE Text Range Type2').setValue(3);
+      var n = at.length, ts = [], vs = [];
+      function push(t, v) {
+        if (ts.length && t <= ts[ts.length - 1] + 0.001) { vs[vs.length - 1] = v; return; }
+        ts.push(t); vs.push(v);
+      }
+      for (var i = 0; i < n; i++) {
+        push(at[i], 100 * i / n);
+        push(Math.min(at[i] + sec(4), i + 1 < n ? at[i + 1] : 1e9), 100 * (i + 1) / n);
+      }
+      keys(sel.property('ADBE Text Percent Start'), ts, vs);
+    });
+  }
+
+  /** Modo vivo: el medio aparece dentro de la tarjeta ya entrada (fundido y leve crecimiento de la máscara). */
+  function revealMedia(m, x, y, w, h, t0) {
+    if (!VIVO) return;
+    soft('revelado del medio', function () {
+      keys(m.layer.property('ADBE Transform Group').property('ADBE Opacity'), [t0, t0 + sec(10)], [0, 100]);
+      var g = m.matte.property('ADBE Root Vectors Group').property(1).property('ADBE Vector Transform Group');
+      g.property('ADBE Vector Anchor').setValue([x + w / 2, y + h / 2]);
+      g.property('ADBE Vector Position').setValue([x + w / 2, y + h / 2]);
+      keys(g.property('ADBE Vector Scale'), [t0, t0 + sec(12)], [[92, 92], [100, 100]]);
+    });
+  }
+
   function fadeIn(layer, t0, dur, rise) {
     var t = layer.property('ADBE Transform Group');
     keys(t.property('ADBE Opacity'), [t0, t0 + dur], [0, 100]);
@@ -568,15 +688,22 @@ function buildEpisode() {
     var t = l.property('ADBE Transform Group');
     t.property('ADBE Anchor Point').setValue([x, y]);
     t.property('ADBE Position').setValue([x, y]);
-    keys(t.property('ADBE Scale'), [t0, t0 + sec(14)], [[0, 100], [100, 100]]);
+    if (t0 !== null) keys(t.property('ADBE Scale'), [t0, t0 + sec(14)], [[0, 100], [100, 100]]);
     return l;
   }
 
   /** Tarjeta oscura de los listados, con la franja arriba recortada a sus esquinas. */
-  function darkCard(comp, x, y, w, h) {
+  function darkCard(comp, x, y, w, h, fromH) {
     var l = newShapeLayer(comp, 'TARJETA · oscura');
     linkFill(addRect(l, x, y, w, h, RADIUS, hex(WEB.oscuro), 'oscuro'), 'Acento oscuro');
-    var strip = bandStrip(comp, x, y, w, 8, sec(2));
+    // Transformación (modo vivo): la tarjeta viene del titular anterior y
+    // sólo acomoda su alto, con el borde de arriba fijo.
+    if (fromH) soft('alto de la transformación', function () {
+      var rc = l.property('ADBE Root Vectors Group').property(1).property('ADBE Vectors Group').property('ADBE Vector Shape - Rect');
+      keys(rc.property('ADBE Vector Rect Size'), [0, sec(10)], [[w, fromH], [w, h]]);
+      keys(rc.property('ADBE Vector Rect Position'), [0, sec(10)], [[x + w / 2, y + fromH / 2], [x + w / 2, y + h / 2]]);
+    });
+    var strip = bandStrip(comp, x, y, w, 8, fromH ? null : sec(2));
     l.moveToEnd();
     strip.moveBefore(l);
     soft('recorte de franja', function () {
@@ -640,7 +767,7 @@ function buildEpisode() {
   }
 
   /** Número gigante con "°" y la palabra chica al lado: la baldosa "2° AÑO". */
-  function numberTile(comp, n, word, x, y, S, t0) {
+  function numberTile(comp, n, word, x, y, S, t0, roll) {
     var tile = newShapeLayer(comp, 'BALDOSA · ' + word + ' ' + n);
     linkFill(addRect(tile, x, y, S, S, 12, hex(WEB.gris), 'gris'), 'Papel');
     var num = text(comp, String(n), 0, 0, {name: 'NÚMERO', font: 'MuseoSansRounded-1000', size: S * 0.66, color: hex(WEB.tinta)});
@@ -651,6 +778,12 @@ function buildEpisode() {
     addStroke(addEllipse(deg, rx, ry, ringD * 0.72, null, 'grado'), hex(WEB.tinta), S * 0.065);
     var wd = text(comp, word, rx - ringD * 0.62, ny + num.h * 0.52, {name: 'PALABRA', font: FONTS.bodyBold, size: S * 0.13, color: hex(WEB.tinta)});
     var all = [tile, num.layer, deg, wd.layer];
+    // Transformación (modo vivo): la baldosa ya estaba en pantalla con el paso
+    // anterior; sólo cambia lo de adentro, que sube como el título.
+    if (roll) {
+      for (var r = 1; r < all.length; r++) fadeIn(all[r], t0, sec(9), 20);
+      return tile;
+    }
     // Pop con un leve sobrepaso, como pidió la dirección de esta versión.
     for (var i = 0; i < all.length; i++) {
       var t = all[i].property('ADBE Transform Group');
@@ -672,8 +805,9 @@ function buildEpisode() {
     var x0 = P;
     var hasStep = b.step !== undefined;
     var S = wide ? 150 : 116;
+    var V = VB || {};
     if (hasStep) {
-      numberTile(comp, b.step, 'PASO', P, top, S, sec(4));
+      numberTile(comp, b.step, 'PASO', P, top, S, sec(V.hin && V.prevStep ? 3 : 4), V.hin && V.prevStep);
       x0 += S + (wide ? 30 : 22);
     }
     var innerW = box.width - x0 - P - 50;
@@ -687,18 +821,61 @@ function buildEpisode() {
       name: 'TÍTULO', font: FONTS.heading, size: wide ? 50 : 38, leading: wide ? 58 : 45,
       color: [1, 1, 1], maxW: innerW,
     });
-    revealChars(title.layer, sec(8), sec(18), true);
+    var synced = VIVO ? titleSync(b, b.title) : null;
+    if (synced) {
+      revealSynced(title.layer, synced);
+      log('· ' + b.key + ': título al ritmo de la voz');
+    } else revealChars(title.layer, sec(8), sec(18), true);
     y += title.h + 18;
-    mintUnderline(comp, x0, box.width - P - 50, y, sec(14), true);
+    var under = mintUnderline(comp, x0, box.width - P - 50, y, sec(14), true);
+    if (V.nudges && V.nudges.length) arrowNudge(under, V.nudges);
     y += 14 + P;
     var h = Math.max(y, hasStep ? top + S + P : 0);
-    darkCard(comp, 0, 0, box.width, h);
+    darkCard(comp, 0, 0, box.width, h, V.hin ? Math.min(V.fromH, box.height) : 0);
     if (hasStep) soft('bandas de paso', function () {
       var bs = diagonalBands(comp, 'BANDAS PASO', 0, sec(14), 0, 0, box.width, h);
       for (var q = bs.length - 1; q >= 0; q--) bs[q].moveToBeginning();
     });
+    if (V.hout) contentExit(comp, V.nextStep && hasStep);
     return h;
   };
+
+  /**
+   * Modo vivo: la flecha ↓ del subrayado cabecea una vez (baja 10 px y
+   * vuelve) en cada instante de `ts`: cuando entra el recurso de abajo y
+   * justo antes de que la tarjeta se vaya o se transforme.
+   */
+  function arrowNudge(layer, ts) {
+    soft('flecha que avisa', function () {
+      var ex = 'var on=' + CTRL_REF + '.effect("Flecha que avisa")(1);var T=[' + ts.join(',') + '];var y=0;' +
+        'for(var i=0;i<T.length;i++){var d=time-T[i];if(d>0&&d<0.56)y=Math.max(y,Math.sin(Math.PI*d/0.56));}' +
+        'value+[0,on*10*y];';
+      var root = layer.property('ADBE Root Vectors Group');
+      for (var i = 1; i <= root.numProperties; i++) {
+        var g = root.property(i);
+        if (g.name === 'flecha' || g.name === 'punta') {
+          g.property('ADBE Vector Transform Group').property('ADBE Vector Position').expression = ex;
+        }
+      }
+    });
+  }
+
+  /**
+   * Modo vivo: el titular no se va, se transforma en el siguiente. En sus
+   * últimos 9 cuadros sale sólo el contenido (sube y se funde); la tarjeta,
+   * la franja y, si el siguiente también es un paso, la baldosa, quedan.
+   */
+  function contentExit(comp, keepTile) {
+    var T1 = comp.duration - sec(1), T0 = T1 - sec(8);
+    var e = 'ease(time,' + T0 + ',' + T1 + ',0,1)';
+    for (var i = 1; i <= comp.numLayers; i++) {
+      var l = comp.layer(i), n = l.name;
+      if (/^(TARJETA|FRANJA|MATTE|BANDAS)/.test(n) || (keepTile && n.indexOf('BALDOSA') === 0)) continue;
+      var t = l.property('ADBE Transform Group');
+      t.property('ADBE Opacity').expression = 'value*(1-' + e + ');';
+      t.property('ADBE Position').expression = 'value+[0,-14*' + e + '];';
+    }
+  }
 
   /** Ícono de línea chico para los metadatos de las filas. */
   function metaIcon(comp, kind, x, y, s) {
@@ -727,11 +904,13 @@ function buildEpisode() {
     var w = box.width;
     var h = T + P * 2;
     card(comp, 0, 0, w, h);
-    mediaInCard(comp, b.src, P, P, T, T, kind === 'gif' ? 'contain' : 'cover', 0, kind === 'photo');
+    var thumb = mediaInCard(comp, b.src, P, P, T, T, kind === 'gif' ? 'contain' : 'cover', 0, kind === 'photo');
+    // Modo vivo: por partes. Tarjeta, miniatura, título y metadatos.
+    revealMedia(thumb, P, P, T, T, sec(4));
     var tx = P + T + 24, tw = w - tx - P;
     var ty = P + 6;
     var ttl = text(comp, b.caption || b.label || '', tx, ty, {name: 'TÍTULO', font: FONTS.heading, size: wide ? 32 : 26, leading: wide ? 38 : 31, color: hex(WEB.tinta), maxW: tw});
-    revealChars(ttl.layer, sec(6), sec(14), true);
+    revealChars(ttl.layer, sec(VIVO ? 10 : 6), sec(14), true);
     ty += ttl.h + 16;
     var m = /recurso-(\d+)/.exec(b.key);
     var metas = [[kind === 'gif' ? 'animacion' : 'recurso', (kind === 'gif' ? 'ANIMACIÓN' : 'RECURSO') + (m ? ' ' + m[1] : '')]];
@@ -739,8 +918,9 @@ function buildEpisode() {
     for (var i = 0; i < metas.length; i++) {
       var ic = metaIcon(comp, metas[i][0], tx, ty + 2, 20);
       var mt = text(comp, metas[i][1], tx + 32, ty, {name: 'META ' + (i + 1), font: FONTS.body, size: 21, color: hex(WEB.meta), tracking: i === 0 ? 80 : 0});
-      fadeIn(ic, sec(12 + 4 * i), sec(10), 10);
-      fadeIn(mt.layer, sec(12 + 4 * i), sec(10), 10);
+      var mt0 = VIVO ? sec(20 + 6 * i) : sec(12 + 4 * i);
+      fadeIn(ic, mt0, sec(10), 10);
+      fadeIn(mt.layer, mt0, sec(10), 10);
       ty += mt.h + 10;
     }
     return Math.max(h, ty + P);
@@ -765,14 +945,14 @@ function buildEpisode() {
     var h = inner + mh + (capText ? capH : inner);
 
     card(comp, x, 0, w, h);
-    mediaInCard(comp, b.src, mx, inner, mw, mh, b.fit, 0, kind === 'photo');
+    revealMedia(mediaInCard(comp, b.src, mx, inner, mw, mh, b.fit, 0, kind === 'photo'), mx, inner, mw, mh, sec(4));
     if (capText) {
       var cap = text(comp, capText, mx, inner + mh + 16, {
         name: 'PIE', font: FONTS.body, size: 26, color: hex(PAL.ink), maxW: mw,
       });
-      revealChars(cap.layer, sec(10), sec(14), true);
+      revealChars(cap.layer, sec(VIVO ? 14 : 10), sec(14), true);
     }
-    if (b.credit) creditPill(comp, b.credit, mx + mw, inner + mh, sec(14));
+    if (b.credit) creditPill(comp, b.credit, mx + mw, inner + mh, sec(VIVO ? 20 : 14));
     return {h: h, x: x, w: w};
   }
 
@@ -818,6 +998,7 @@ function buildEpisode() {
       soft('color alerta', function () { st2.property('ADBE Vector Stroke Color').expression = colorExpr('Alerta'); });
       drawOn(toFront(l, slash), t0 + sec(10), t0 + sec(18));
     }
+    return l;
   }
 
   BUILD.checklist = function (comp, b, box) {
@@ -855,24 +1036,39 @@ function buildEpisode() {
       }
       y += maxH + 18;
     } else {
-      var centers = [], times = [];
+      var centers = [], times = [], rows = [];
       for (var j = 0; j < n; j++) {
         var it2 = b.items[j];
         var s0 = Math.max(0, sec(it2.at - b.from));
         centers.push(y + d / 2);
         times.push(s0);
-        itemIcon(comp, it2, x0 + d / 2, y + d / 2, d, s0);
+        var row = [itemIcon(comp, it2, x0 + d / 2, y + d / 2, d, s0)];
         var tx = x0 + d + 18;
         var term2 = text(comp, it2.term, tx, y + (it2.detail ? 0 : d / 2 - 18), {name: 'TÉRMINO · ' + it2.term, font: FONTS.heading, size: wide ? 36 : 31, color: hex(PAL.ink)});
         fadeIn(term2.layer, s0 + sec(4), sec(10), 18);
+        row.push(term2.layer);
         var rowH = d;
         if (it2.detail) {
           var det2 = text(comp, it2.detail, tx, y + term2.h + 4, {name: 'DETALLE · ' + it2.term, font: FONTS.bodyLight, size: wide ? 27 : 24, color: hex(PAL.inkSoft), maxW: innerW - d - 18});
           fadeIn(det2.layer, s0 + sec(8), sec(10), 12);
+          row.push(det2.layer);
           rowH = Math.max(d, term2.h + 4 + det2.h);
         }
         y += rowH + 16;
+        rows.push(row);
       }
+      // Modo vivo: una idea por vez. Cuando la docente pasa al ítem siguiente,
+      // los anteriores bajan al 45 %; al final vuelven todos (la síntesis).
+      if (VIVO && n > 1 && !b.items[0].forbidden) soft('foco en la secuencia', function () {
+        var back = Math.min(times[n - 1] + sec(40), comp.duration - sec(14));
+        for (var r = 0; r < n - 1; r++) {
+          var a0 = times[r + 1];
+          var ex = 'var on=' + CTRL_REF + '.effect("Foco en la secuencia")(1);' +
+            'var a=ease(time,' + a0 + ',' + (a0 + sec(8)) + ',0,1)-ease(time,' + back + ',' + (back + sec(10)) + ',0,1);' +
+            'value*(1-0.55*on*a);';
+          for (var c = 0; c < rows[r].length; c++) rows[r][c].property('ADBE Transform Group').property('ADBE Opacity').expression = ex;
+        }
+      });
       // Una secuencia (Antes → Durante → Después) se une con un hilo que
       // avanza de ítem en ítem. Una lista de prohibiciones no: no es un camino.
       if (n > 1 && !b.items[0].forbidden) soft('hilo de la secuencia', function () {
@@ -948,6 +1144,49 @@ function buildEpisode() {
   for (var ob = 0; ob < M.blocks.length; ob++) {
     if (M.blocks[ob].kind === 'titular') { OPEN_TO = M.blocks[ob].from - 4; break; }
   }
+  // Modo vivo: qué titulares se transforman en el siguiente y cuándo cabecea
+  // su flecha. Un titular pasa al siguiente si éste empieza a ≤ 20 cuadros,
+  // en la misma caja (lado y ancho) y sin traslado de cámara en el medio: ahí
+  // la tarjeta queda y sólo cambia lo de adentro.
+  var VINFO = [], VB = null, CARD_H = [];
+  for (var vi = 0; vi < M.blocks.length; vi++) VINFO.push({});
+  if (VIVO) {
+    var chains = 0;
+    for (vi = 0; vi < M.blocks.length; vi++) {
+      var vb = M.blocks[vi];
+      if (vb.kind !== 'titular') continue;
+      var nx = -1;
+      for (var vj = vi + 1; vj < M.blocks.length; vj++) if (M.blocks[vj].kind === 'titular') { nx = vj; break; }
+      if (nx < 0) continue;
+      var nb = M.blocks[nx], b0 = vb.boxes[vb.boxes.length - 1], b1 = nb.boxes[0];
+      var cut = false;
+      for (var vm = 0; vm < (M.moves || []).length; vm++) {
+        if (M.moves[vm].from < nb.from && M.moves[vm].to > vb.to) cut = true;
+      }
+      if (nb.from - vb.to <= 20 && nb.from >= vb.to && b0.x === b1.x && b0.width === b1.width &&
+        vb.align === nb.align && vb.boxes.length === 1 && nb.boxes.length === 1 && !cut) {
+        VINFO[vi].hout = true; VINFO[vi].next = nx; VINFO[vi].nextStep = nb.step !== undefined;
+        VINFO[nx].hin = true; VINFO[nx].prev = vi; VINFO[nx].prevStep = vb.step !== undefined;
+        chains++;
+      }
+    }
+    // La flecha ↓ avisa: cuando entra un recurso mientras está el titular y
+    // 24 cuadros antes de que la tarjeta se vaya o se transforme.
+    for (vi = 0; vi < M.blocks.length; vi++) {
+      var tb = M.blocks[vi];
+      if (tb.kind !== 'titular') continue;
+      var end = VINFO[vi].hout ? M.blocks[VINFO[vi].next].from : tb.to;
+      var ns = [];
+      for (vj = 0; vj < M.blocks.length; vj++) {
+        var ob = M.blocks[vj];
+        if (ob.kind !== 'titular' && ob.from > tb.from + 30 && ob.from < end - 30) ns.push(sec(ob.from - tb.from));
+      }
+      if (end - tb.from > 80) ns.push(sec(end - tb.from - 24));
+      VINFO[vi].nudges = ns;
+    }
+    log('· modo vivo: ' + chains + ' transformaciones entre titulares');
+  }
+
   var built = 0;
   for (var bi = 0; bi < M.blocks.length; bi++) {
     var b = M.blocks[bi];
@@ -955,7 +1194,10 @@ function buildEpisode() {
     var builder = BUILD[b.kind];
     DISC_I = 0;
     if (!builder) { log('· sin constructor para ' + b.kind + ' (' + b.key + '), se omite'); continue; }
-    var dur = sec(b.to - b.from);
+    VB = VINFO[bi];
+    if (VB.hin) VB.fromH = CARD_H[VB.prev];
+    // Un titular que se transforma sigue en pantalla hasta que entra el siguiente.
+    var dur = sec((VB.hout ? M.blocks[VB.next].from : b.to) - b.from);
     var pre = proj.items.addComp(b.kind + '_' + b.key, box.width, box.height, 1, dur, FPS);
     pre.parentFolder = F.graficos;
     pre.bgColor = hex(PAL.stage);
@@ -964,6 +1206,7 @@ function buildEpisode() {
     var contentH = soft(b.kind + ':' + b.key, function () { return builder(pre, b, box); });
     if (!contentH) { log('✗ ' + b.kind + ':' + b.key + ' quedó incompleto'); contentH = box.height; }
     contentH = Math.min(Math.ceil(contentH), box.height);
+    CARD_H[bi] = contentH;
 
     // `align` ubica la tarjeta dentro de la caja libre, como lo pide el motor.
     var offY = b.align === 'bottom' ? box.height - contentH
@@ -976,6 +1219,7 @@ function buildEpisode() {
       L.startTime = sec(b.from + OPEN_HOLD);
       L.outPoint = sec(b.to);
     }
+    if (VB.hout) L.outPoint = sec(M.blocks[VB.next].from);
     L.motionBlur = true;
     L.label = b.kind === 'titular' ? 11 : b.kind === 'checklist' ? 14 : 13;
     var tr = L.property('ADBE Transform Group');
@@ -1001,18 +1245,25 @@ function buildEpisode() {
     // desliza desde el borde exterior y se pasa apenas; `Rebote (%)` en 0 lo
     // vuelve un ease out cúbico sin sobrepaso (el sistema de Ambiente lo
     // desaconseja, por eso es un control y no una constante).
+    // Modo vivo: la tarjeta que llega de una transformación no entra (ya
+    // estaba) y la que se transforma no sale. Las demás, al terminar de
+    // entrar, se asientan: siguen `Asentamiento (px)` hacia adentro a lo largo
+    // de `Asentamiento (frames)` y se quedan quietas. Una sola vez, no un loop.
     var common = 'var c=thisComp.layer("CONTROL");' +
       'var fi=Math.max(1,c.effect("Entrada (frames)")(1))*thisComp.frameDuration;' +
       'var fo=Math.max(1,c.effect("Salida (frames)")(1))*thisComp.frameDuration;' +
-      'var t=Math.min(1,Math.max(0,(time-inPoint)/fi));' +
+      'var t=' + (VB.hin ? '1' : 'Math.min(1,Math.max(0,(time-inPoint)/fi))') + ';' +
       'var s=1.70158*c.effect("Rebote (%)")(1)/8;' +
       'var e=1+(s+1)*Math.pow(t-1,3)+s*Math.pow(t-1,2);' +
-      'var x=ease(outPoint-time,0,fo,0,1);';
+      'var x=' + (VB.hout ? '1' : 'ease(outPoint-time,0,fo,0,1)') + ';';
+    var settle = !VIVO || VB.hin ? '' :
+      '+c.effect("Asentamiento (px)")(1)*Math.pow(1-Math.min(1,Math.max(0,(time-inPoint-fi)/' +
+      '(Math.max(1,c.effect("Asentamiento (frames)")(1))*thisComp.frameDuration))),3)';
     var dir = toRight ? 1 : -1;
     soft('expresiones de tarjeta', function () {
       tr.property('ADBE Opacity').expression = common + 'Math.min(Math.min(1,t*2.5),x)*100;';
       tr.property('ADBE Position').expression = common +
-        'var d=c.effect("Deslizamiento (px)")(1);value+[' + dir + '*((1-e)*d+(1-x)*d*0.35),0];';
+        'var d=c.effect("Deslizamiento (px)")(1);value+[' + dir + '*((1-e)*d' + settle + '+(1-x)*d*0.35),0];';
     });
     soft('sombra', function () {
       var ds = L.property('ADBE Effect Parade').addProperty('ADBE Drop Shadow');
@@ -1283,7 +1534,7 @@ function buildEpisode() {
   masterLayer.locked = true;
 
   // ─────────────────────────────────────────────────────────────── guardar
-  var out = File(ROOTDIR.fsName + '/' + MAIN + '.aep');
+  var out = File(ROOTDIR.fsName + '/' + MAIN + (VIVO ? '-vivo' : '') + '.aep');
   proj.save(out);
   main.openInViewer();
   app.endUndoGroup();

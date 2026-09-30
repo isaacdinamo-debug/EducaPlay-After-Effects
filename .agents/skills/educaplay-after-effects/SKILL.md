@@ -82,6 +82,12 @@ La capa `CONTROL` de la comp principal gobierna todo el capítulo:
 
 Las precomps la leen por expresión. Un cambio de marca se hace ahí, no capa por capa.
 
+**Modo vivo (`--vivo`, en prueba):** transformación entre titulares, asentamiento en vez de rebote,
+título al ritmo de la voz, flecha que avisa, entrada por partes y foco en la secuencia. Detalle en
+`docs/ESTETICA.md`. Todo va detrás de `VIVO` en el `.jsx`: sin la bandera, el armado tiene que
+quedar igual al aprobado. La sincronización con la voz **no se fuerza**: si la docente dice el título
+tarde o con otras palabras, una tarjeta vacía esperándola es peor que el revelado de siempre.
+
 ## Subtítulos (`docs/SUBTITULOS.md` §1.4)
 
 - **Sin resaltado por palabra.** Una capa de texto por subtítulo: se edita con doble clic y el
