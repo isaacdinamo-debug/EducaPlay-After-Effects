@@ -19,7 +19,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {execFileSync} from 'node:child_process';
 import {pathToFileURL} from 'node:url';
-import {episodeDir, parseArgs, ROOT} from './lib/common.mjs';
+import {episodeDir, parseArgs, ROOT, trackerOpts} from './lib/common.mjs';
 
 const load = (rel) => import(pathToFileURL(path.join(ROOT, rel)).href);
 
@@ -77,7 +77,10 @@ const main = async () => {
   const {slotOf, isFullFrame} = await load('src/episodes/blocks.ts');
   const data = await load(`src/episodes/${code}/data.ts`);
 
-  const fmt = formatTokens(1920, 1080);
+  const {estudioDe} = await load('src/brand/estudios.ts');
+  const est = estudioDe(code, trackerOpts(code).studio);
+  if (!est) throw new Error(`Falta declarar el plató de ${code} (npm run doctor -- ${code} dice cómo).`);
+  const fmt = formatTokens(1920, 1080, est);
   const sized = adaptTrack(data.TRACK, fmt.width, fmt.height);
   const track = {
     ...sized,
@@ -201,7 +204,9 @@ const main = async () => {
     return {from: c.from, to: c.to, text: c.text, box: boxes[0], boxes};
   });
 
-  const P = THEME.colors;
+  // El color del plató (fondo de la comp) sale del estudio; el resto del
+  // tema es el de la plataforma, común a todas las materias.
+  const P = {...THEME.colors, stage: est.stage ?? THEME.colors.stage};
   const manifest = {
     code,
     generatedBy: 'motor/scripts/export-ae.mjs',

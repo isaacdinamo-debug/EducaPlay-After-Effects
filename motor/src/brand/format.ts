@@ -22,6 +22,7 @@
  */
 
 import {THEME} from './ambienteTheme.ts';
+import type {Estudio} from './estudios.ts';
 import type {Framing, ReservedRect} from '../layout/presenter.ts';
 
 export type Safe = {top: number; right: number; bottom: number; left: number};
@@ -164,7 +165,11 @@ const PAPER_BR_V = [1080 - 508, 1920 - 152, 508, 152] as const;
  */
 const WATERMARK_V = [0, 0, 0, 0] as const;
 
-export const formatTokens = (width: number, height: number): FormatTokens => {
+/**
+ * `estudio` pone la reserva de la marca de agua del plató (src/brand/estudios.ts).
+ * Sin él, la histórica de Ambiente: es la misma que declaran verde y lila.
+ */
+export const formatTokens = (width: number, height: number, estudio?: Pick<Estudio, 'reserva'> | null): FormatTokens => {
   const vertical = height > width;
 
   const safe = vertical ? SAFE_V : THEME.layout.safe;
@@ -195,7 +200,7 @@ export const formatTokens = (width: number, height: number): FormatTokens => {
     defaultFraming: THEME.layout.defaultFraming,
     watermark: vertical
       ? (WATERMARK_V as readonly [number, number, number, number])
-      : (THEME.layout.watermark as readonly [number, number, number, number]),
+      : ((estudio?.reserva ?? THEME.layout.watermark) as readonly [number, number, number, number]),
     captions,
     stageMax: vertical ? STAGE_MAX_V : STAGE_MAX_H169,
     plateReserved,

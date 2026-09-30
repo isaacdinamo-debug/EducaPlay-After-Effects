@@ -11,7 +11,7 @@ Los criterios y las trampas están en la skill `.agents/skills/educaplay-after-e
 
 | Carpeta | Qué es |
 |---|---|
-| `motor/` | Medición: encuadre de la docente, transcripción con timing por palabra, palabras-gatillo, cajas libres (`resolveSlot`), verificadores y export del manifiesto. Node ≥ 22.6, sin Remotion ni React. |
+| `motor/` | Medición: encuadre de la docente, transcripción con timing por palabra, palabras-gatillo, cajas libres (`resolveSlot`), verificadores y export del manifiesto. Node 24 LTS (≥ 23.6), sin Remotion ni React. |
 | `motor/src/episodes/<CODE>/` | Datos de cada episodio. **El único archivo escrito a mano es `data.ts`**; el resto lo generan los scripts. |
 | `motor/plantillas/data.molde.ts` | Molde de `data.ts` para un capítulo nuevo. |
 | `motor/src/brand/estudios.ts` | Materias (prefijo → serie y plató) y platós (cómo se separa el fondo, marca de agua). |
@@ -75,7 +75,7 @@ Banderas de `npm run ae`:
 
 ## Requisitos de la máquina
 
-After Effects 2026 en **macOS o Windows**, Node ≥ 22.6, ffmpeg/ffprobe, `whisper-cli` (sólo para medir)
+After Effects 2026 en **macOS o Windows**, Node 24 LTS (≥ 23.6, ver `.nvmrc`), ffmpeg/ffprobe, `whisper-cli` (sólo para medir)
 y las 7 fuentes Museo / Museo Sans Rounded instaladas en el sistema. AE las busca por nombre
 PostScript. En Windows van con "Instalar para todos los usuarios". En AE tiene que estar tildado
 *Preferencias › Scripting y expresiones › «Permitir que los scripts escriban archivos y tengan

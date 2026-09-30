@@ -96,6 +96,12 @@ const BLOCKS: readonly Block[] = [
   // {kind: 'titular', key: 'x', from: MARKS.a, to: MARKS.b,
   //  kicker: 'Contexto', title: 'Título'},
   //
+  // Modo vivo, opcional: `chips` son pastillas con lo que la docente ENUMERA
+  // mientras está el titular y no aparece en pantalla. Cada una con su cue en
+  // cues.def.json. Es contenido: sólo con el OK del responsable. El slot del
+  // titular tiene que tener el alto FINAL (el armado avisa con ⚠ si no entra).
+  //  chips: [{text: 'Pozos', at: MARKS.pozos}, {text: 'Cables eléctricos', at: MARKS.cables}],
+  //
   // {kind: 'photo', key: 'y', from: …, to: …,
   //  src: 'AMB24-01/foto.png', caption: '', credit: ''},
   //
@@ -137,6 +143,7 @@ const data: EpisodeData = {
   EPISODE: {
     id: '<CODE>',
     title: '',
+    /** Tal cual la materia en src/brand/estudios.ts (MATERIAS[prefijo].series). */
     series: '',
     objective: '',
     master: 'videos/<CODE>.mp4',

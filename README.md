@@ -16,7 +16,7 @@ Repositorio: <https://github.com/isaacdinamo-debug/EducaPlay-After-Effects>
   versión: variable `AE_APP`).
   - En AE: *Preferencias › Scripting y expresiones* → tildar **«Permitir que los scripts escriban
     archivos y tengan acceso a la red»**. Sin eso, `npm run ae` dice que AE «no responde a scripts».
-- **Node ≥ 22.6** (`.nvmrc`), **ffmpeg/ffprobe** en el PATH y **`whisper-cli`** (whisper.cpp; sólo
+- **Node 24 LTS** (≥ 23.6; `.nvmrc`), **ffmpeg/ffprobe** en el PATH y **`whisper-cli`** (whisper.cpp; sólo
   para medir capítulos nuevos).
 - Las **7 fuentes** `Museo-300`, `Museo-700` y `MuseoSansRounded-300/500/700/900/1000`. No vienen en
   el repo (tienen licencia). En Windows: clic derecho → «Instalar para todos los usuarios» y

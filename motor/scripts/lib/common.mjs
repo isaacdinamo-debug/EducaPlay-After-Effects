@@ -8,7 +8,6 @@
 import {execFile, execFileSync, spawn} from 'node:child_process';
 import {promisify} from 'node:util';
 import fs from 'node:fs';
-import os from 'node:os';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
@@ -17,15 +16,48 @@ const execFileP = promisify(execFile);
 export const ROOT = path.resolve(fileURLToPath(import.meta.url), '../../..');
 
 /**
- * Carpeta donde el montajista entrega cada episodio (<CODE>/ con el máster, la
- * escaleta .docx y RECURSOS/). No vive en este repo: son medios pesados.
- * Override con EDUCAPLAY_EPISODES.
+ * `motor/.env` (ver `.env.example`): dónde están los medios EN ESTA PC. Se lee
+ * al importar este módulo, así todos los scripts ven las mismas rutas. Una
+ * variable ya exportada en el entorno gana sobre el archivo.
  */
-export const EPISODES_ROOT =
-  process.env.EDUCAPLAY_EPISODES ??
-  path.join(os.homedir(), 'Documents', 'EducaPlay', 'Secundaria ', 'Ambiente');
+export const ENV_FILE = path.join(ROOT, '.env');
+const loadEnv = () => {
+  if (!fs.existsSync(ENV_FILE)) return;
+  for (const line of fs.readFileSync(ENV_FILE, 'utf8').split(/\r?\n/)) {
+    const m = line.match(/^\s*([A-Z_]+)\s*=\s*(.*?)\s*$/);
+    if (!m || process.env[m[1]]) continue;
+    process.env[m[1]] = m[2].replace(/^(["'])(.*)\1$/, '$2');
+  }
+};
+loadEnv();
+
+/**
+ * Carpeta donde el montajista entrega cada episodio (<CODE>/ con el máster, la
+ * escaleta .docx y RECURSOS/). No vive en este repo: son medios pesados, y cada
+ * PC la declara en `motor/.env` (EDUCAPLAY_EPISODES). No hay valor por defecto:
+ * el que había era la carpeta de una sola Mac, con un espacio final que Windows
+ * no admite.
+ */
+export const EPISODES_ROOT = process.env.EDUCAPLAY_EPISODES || null;
+export const episodesRoot = () => {
+  if (!EPISODES_ROOT) {
+    throw new Error('Falta EDUCAPLAY_EPISODES: copiá motor/.env.example a motor/.env y poné la carpeta ' +
+      'de entregas de esta PC (la que tiene una subcarpeta <CODE>/ con máster, escaleta y RECURSOS/).');
+  }
+  return EPISODES_ROOT;
+};
 
 export const episodeDir = (code) => path.join(ROOT, 'src', 'episodes', code);
+
+/**
+ * Opciones de medición del capítulo: `src/episodes/<CODE>/tracker.json`
+ * (`studio`, `watermark`). Es un archivo y no un flag para que re-correr
+ * `nuevo` mida igual.
+ */
+export const trackerOpts = (code) => {
+  const f = path.join(episodeDir(code), 'tracker.json');
+  return fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : {};
+};
 
 /** Parseo mínimo de flags: --clave valor | --flag | code posicional. */
 export const parseArgs = (argv = process.argv.slice(2)) => {
@@ -52,13 +84,6 @@ export const parseArgs = (argv = process.argv.slice(2)) => {
 };
 
 export const requireKey = () => {
-  const envPath = path.join(ROOT, '.env');
-  if (fs.existsSync(envPath)) {
-    for (const line of fs.readFileSync(envPath, 'utf8').split('\n')) {
-      const m = line.match(/^\s*([A-Z_]+)\s*=\s*(.+?)\s*$/);
-      if (m && !process.env[m[1]]) process.env[m[1]] = m[2];
-    }
-  }
   const key = process.env.GEMINI_API_KEY ?? process.env.GOOGLE_API_KEY;
   if (!key) {
     throw new Error(
@@ -84,6 +109,10 @@ export const masterFor = (code, override) => {
   const working = path.join(ROOT, 'public', 'videos', `${code}.mp4`);
   if (fs.existsSync(working)) return working;
 
+  if (!EPISODES_ROOT) {
+    throw new Error(`No hay máster en ${path.relative(ROOT, working)} y falta EDUCAPLAY_EPISODES en motor/.env ` +
+      `para buscarlo en la carpeta de entregas (o traelo con npm run medios -- ${code}).`);
+  }
   const dir = path.join(EPISODES_ROOT, code);
   if (!fs.existsSync(dir)) {
     throw new Error(
