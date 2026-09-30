@@ -48,6 +48,24 @@ const masterInfo = (file) => {
   };
 };
 
+/** Segmentos de un JPEG hasta el comienzo de los datos (SOS). */
+const jpegSegments = (d) => {
+  const out = [];
+  let i = 2;
+  while (i + 4 < d.length && d[i] === 0xff && d[i + 1] !== 0xda) {
+    const len = d.readUInt16BE(i + 2);
+    out.push({marker: d[i + 1], start: i, end: i + 2 + len});
+    i += 2 + len;
+  }
+  return {segments: out, scan: i};
+};
+const hasApp11 = (file) => jpegSegments(fs.readFileSync(file)).segments.some((s) => s.marker === 0xeb);
+const stripApp11 = (d) => {
+  const {segments, scan} = jpegSegments(d);
+  return Buffer.concat([d.subarray(0, 2),
+    ...segments.filter((s) => s.marker !== 0xeb).map((s) => d.subarray(s.start, s.end)), d.subarray(scan)]);
+};
+
 const main = async () => {
   const {flags, code} = parseArgs();
   if (!code) throw new Error('Uso: npm run export:ae -- <CODE> [--out <dir>]');
@@ -93,6 +111,16 @@ const main = async () => {
           '-y', '-loglevel', 'error', '-i', src,
           '-r', String(data.FPS), '-c:v', 'qtrle', '-pix_fmt', 'argb', dst,
         ]);
+      }
+    } else if (/\.jpe?g$/i.test(base) && hasApp11(src)) {
+      // Credenciales de contenido (C2PA/JUMBF, segmentos APP11) que agregan los
+      // generadores de IA: AE muestra la imagen, pero `aerender` se cuelga sin
+      // error al llegar a ese cuadro (subir-planta-superior.jpg de AMB26-04
+      // traía 2,6 MB). La copia para AE va sin esos segmentos: mismos píxeles,
+      // el original en public/ no se toca y el crédito en pantalla sigue.
+      const dst = path.join(assetsDir, name);
+      if (!fs.existsSync(dst) || fs.statSync(dst).mtimeMs < fs.statSync(src).mtimeMs) {
+        fs.writeFileSync(dst, stripApp11(fs.readFileSync(src)));
       }
     } else {
       const dst = path.join(assetsDir, name);
