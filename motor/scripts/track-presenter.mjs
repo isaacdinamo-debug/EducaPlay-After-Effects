@@ -188,23 +188,27 @@ const framingOf = (cx) =>
 
 /**
  * Color de fondo del plató, para declarar uno que no se conoce: mediana de las
- * franjas laterales (un 8 % de cada borde) de un cuadro a los 5 s, donde casi
- * nunca hay docente ni gráfica.
+ * franjas laterales (un 8 % de cada borde) de cuatro cuadros repartidos en el
+ * capítulo, sin el papel blanco ni el negro. Un solo cuadro al principio mentía:
+ * suele ser la intro o una placa.
  */
-const medirFondo = (master) => {
-  const W = 192, H = 108;
-  const px = execFileSync('ffmpeg', ['-v', 'error', '-ss', '5', '-i', master, '-frames:v', '1',
-    '-vf', `scale=${W}:${H}`, '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-'], {maxBuffer: W * H * 3 + 1024});
+const medirFondo = (master, durationS) => {
+  const W = 192, H = 108, edge = Math.round(W * 0.08);
   const ch = [[], [], []];
-  const edge = Math.round(W * 0.08);
-  for (let y = 0; y < H; y++) {
-    for (let x = 0; x < W; x++) {
-      if (x >= edge && x < W - edge) continue;
-      const i = (y * W + x) * 3;
-      for (let c = 0; c < 3; c++) ch[c].push(px[i + c]);
+  for (const f of [0.2, 0.4, 0.6, 0.8]) {
+    const px = execFileSync('ffmpeg', ['-v', 'error', '-ss', String((durationS * f).toFixed(2)), '-i', master,
+      '-frames:v', '1', '-vf', `scale=${W}:${H}`, '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-'], {maxBuffer: W * H * 3 + 1024});
+    for (let y = 0; y < H; y++) {
+      for (let x = 0; x < W; x++) {
+        if (x >= edge && x < W - edge) continue;
+        const i = (y * W + x) * 3, r = px[i], g = px[i + 1], b = px[i + 2];
+        const lo = Math.min(r, g, b), hi = Math.max(r, g, b);
+        if ((lo > WHITE_MIN && hi - lo < WHITE_SPREAD) || hi < 30) continue; // papel o negro
+        ch[0].push(r); ch[1].push(g); ch[2].push(b);
+      }
     }
   }
-  return ch.map((v) => median(v));
+  return ch[0].length ? ch.map((v) => median(v)) : [0, 0, 0];
 };
 
 const main = async () => {
@@ -228,7 +232,7 @@ const main = async () => {
   const epOpts = trackerOpts(code);
   const est = estudioDe(code, flags.lila ? 'lila' : epOpts.studio);
   if (!est) {
-    const rgb = medirFondo(master);
+    const rgb = medirFondo(master, info.duration);
     throw new Error(`No sé en qué plató se grabó ${code}: su materia no lo declara en src/brand/estudios.ts ` +
       `ni hay "studio" en src/episodes/${code}/tracker.json.\n` +
       `  Color de fondo medido en el máster: rgb(${rgb.join(', ')}).\n` +
@@ -401,7 +405,7 @@ const main = async () => {
 
     // Un "sujeto" más ancho que MAX_PERSON_W no es una persona: es una PLACA a
     // cuadro completo. Todos los cortes de la serie abren con el bumper de
-    // EducaPlay y cierran con la del Gobierno de Corrientes, y ahí el cuadro
+    // Educaplay y cierran con la del Gobierno de Corrientes, y ahí el cuadro
     // entero deja de ser plató, así que el umbral de color marca todo.
     //
     // Se declara como encuadre 'none' —sin sujeto, sin perfil y sin banda

@@ -1,7 +1,13 @@
-▶ AMB26-04 · 25 bloques · 27 subtítulos
+▶ AMB26-04 · 25 bloques · 27 subtítulos · modo vivo
 · 7 fuentes verificadas
+· modo vivo: 8 transformaciones entre titulares
+· protocolo-accion: título al ritmo de la voz
+· paso-1-titular: título al ritmo de la voz
+· paso-3-titular: título al ritmo de la voz
+· centro-evacuacion-titular: título al ritmo de la voz
 · 25 tarjetas armadas
+· 8 hilos flecha → recurso
 · 27 subtítulos, una capa cada uno, todos en ≤2 líneas
 · portada f265–390
 · 2 barridos de bandas
-✓ guardado en /Users/isaac/Documents/EducaPlay/EducaPlay-After-Effects/episodios/AMB26-04/AMB26-04.aep
+✓ guardado en episodios/AMB26-04/AMB26-04.aep

@@ -164,4 +164,9 @@ const main = () => {
 `);
 };
 
-main();
+try {
+  await main();
+} catch (e) {
+  console.error(`\n✗ ${e.message}`);
+  process.exit(1);
+}

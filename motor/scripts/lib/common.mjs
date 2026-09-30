@@ -1,7 +1,7 @@
 /**
  * Utilidades compartidas por los scripts de la serie Leo.
  *
- * Viene del motor de episodios de EducaPlay Secundaria, con la ruta de episodios
+ * Viene del motor de episodios de Educaplay Secundaria, con la ruta de episodios
  * PARAMETRIZADA: el original tenía `path.join(ROOT, '..', 'Capitulos ')`
  * hardcodeado (con el espacio final real), lo que lo ataba a ese proyecto.
  */

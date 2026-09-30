@@ -179,5 +179,6 @@ episodios/*/revision/*/
 episodios/*/*.log
 # Las hojas de contacto SÍ se versionan: son la evidencia del chequeo.
 !episodios/*/revision/*.jpg
+!episodios/*/revision-clasico/*.jpg
 # aerender deja un registro por proyecto al lado del .aep
 episodios/*/*.aep registros/

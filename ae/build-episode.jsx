@@ -21,7 +21,7 @@
  * Las cajas NO se deciden acá. Vienen resueltas por la resolveSlot() del motor
  * (la banda libre al costado de la docente), así que un gráfico no la pisa.
  * Lo que este script agrega es la puesta en escena, con la estética de la
- * plataforma EducaPlay (ver docs/ESTETICA.md).
+ * plataforma Educaplay (ver docs/ESTETICA.md).
  *
  * Todo lo que se agrega por scripting usa matchNames, no nombres visibles:
  * funciona igual con AE en español o en inglés.
@@ -125,7 +125,7 @@ function buildEpisode() {
   var PAL = M.theme.palette;
   var FONTS = M.theme.fonts;
 
-  // Estética de la plataforma EducaPlay (Corrientes Play): los colores se
+  // Estética de la plataforma Educaplay (Corrientes Play): los colores se
   // midieron sobre la web y reemplazan a los tokens de la materia.
   var WEB = {
     cian: '#5DCBE1', rojo: '#EA3355', amarillo: '#F5C042', verde: '#54B835',
@@ -184,7 +184,7 @@ function buildEpisode() {
     log('⚠ Esta versión de After Effects no permite verificar fuentes (app.fonts): revisá que no haya fuentes faltantes');
   }
 
-  app.beginUndoGroup('EducaPlay · ' + MAIN);
+  app.beginUndoGroup('Educaplay · ' + MAIN);
   if (app.project && app.project.numItems > 0) {
     if (!app.newProject()) return; // el usuario canceló el "¿guardar cambios?"
   }
@@ -1420,7 +1420,7 @@ function buildEpisode() {
   });
 
   // ───────────────────────────────────────────────────────────── subtítulos
-  // Estándar de subtitulado EducaPlay (subtitulos/EDUCAPLAY_MOTION_GRAPHICS_
+  // Estándar de subtitulado Educaplay (subtitulos/EDUCAPLAY_MOTION_GRAPHICS_
   // ACTUALIZADO.md §1.4):
   //   · pastilla esmerilada: scrim plano al 55 % (negro: la tinta #07202C del
   //     documento no llega a 4,5:1, ver THEME.captions), 10 px de desenfoque
