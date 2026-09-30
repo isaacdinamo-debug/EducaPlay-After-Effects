@@ -34,6 +34,18 @@ const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const AE_DIR = path.join(REPO, 'ae');
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
+const isAERunning = () => {
+  if (process.platform === 'win32') {
+    try {
+      const out = execFileSync('tasklist', ['/FI', 'IMAGENAME eq AfterFX.exe', '/NH'], {encoding: 'utf8'});
+      return out.toLowerCase().includes('afterfx.exe');
+    } catch {
+      return false;
+    }
+  }
+  return true;
+};
+
 const args = (() => {
   const out = {flags: {}, code: null};
   const a = process.argv.slice(2);
@@ -73,7 +85,7 @@ const aeApp = () => {
 };
 
 const applescriptStr = (s) => '"' + s.replace(/\\/g, '\\\\').replace(/"/g, '\\"') + '"';
-const js = (v) => JSON.stringify(v);
+const js = (v) => JSON.stringify(typeof v === 'string' ? v.replace(/\\/g, '/') : v);
 
 /**
  * Corre código ExtendScript en AE y espera a que termine.
@@ -127,6 +139,14 @@ const ensureAE = async (app, tmpDir) => {
         break;
       } catch { /* todavía arrancando */ }
     }
+  }
+
+  for (let i = 0; i < 60; i++) {
+    try {
+      runJsx(app, ping, tmpDir);
+      if (fs.existsSync(probe)) break;
+    } catch { /* todavía arrancando */ }
+    await sleep(3000);
   }
   if (!fs.existsSync(probe)) throw new Error(`${app} no responde a scripts.`);
   console.log(`· After Effects ${fs.readFileSync(probe, 'utf8')} listo (${WIN ? 'Windows' : 'macOS'})`);
@@ -208,7 +228,12 @@ const build = async (app, code, M, frames, revDir, tmpDir, force, vivo) => {
   await runJsx(app, `
     $.global.EDUCAPLAY_MANIFEST = ${js(path.join(REPO, 'episodios', code, 'manifest.json'))};
     ${vivo ? `$.global.EDUCAPLAY_VIVO = true; $.global.EDUCAPLAY_WORDS = ${js(words)};` : ''}
-    $.evalFile(File(${js(path.join(AE_DIR, 'build-episode.jsx'))}));
+    try {
+      $.evalFile(File(${js(path.join(AE_DIR, 'build-episode.jsx'))}));
+    } catch(err) {
+      if (typeof LOG === 'undefined') LOG = [];
+      LOG.push('✗ Error en build-episode.jsx: ' + err.toString() + ' (línea ' + err.line + ')');
+    }
     var o=new File(${js(logFile)});o.encoding='UTF-8';o.lineFeed='Unix';o.open('w');
     o.write((typeof LOG!=='undefined'?LOG:['✗ el constructor no dejó LOG']).join('\\n'));o.close();`, tmpDir);
 
@@ -233,8 +258,18 @@ const build = async (app, code, M, frames, revDir, tmpDir, force, vivo) => {
       var c=null;
       for (var i=1;i<=app.project.numItems;i++){var it=app.project.item(i);
         if (it instanceof CompItem && it.name===${js(code)}) c=it;}
-      var fr=${js(frames)}, out=${js(pngs)};
-      for (var k=0;k<fr.length;k++) c.saveFrameToPng(fr[k]/c.frameRate, new File(out[k]));`, tmpDir);
+      if (!c) {
+        var pf = new File(${js(aep)});
+        if (pf.exists) {
+          app.open(pf);
+          for (var i=1;i<=app.project.numItems;i++){var it=app.project.item(i);
+            if (it instanceof CompItem && it.name===${js(code)}) c=it;}
+        }
+      }
+      if (c) {
+        var fr=${js(frames)}, out=${js(pngs)};
+        for (var k=0;k<fr.length;k++) c.saveFrameToPng(fr[k]/c.frameRate, new File(out[k]));
+      }`, tmpDir);
     const ok = await waitFiles(pngs, 30000 + frames.length * 8000);
     const got = pngs.filter((p) => fs.existsSync(p));
     if (!ok) problems.push(`faltan stills: ${pngs.length - got.length} de ${pngs.length}`);
@@ -269,7 +304,7 @@ const main = async () => {
     await ensureAE(app, tmpDir);
     problems = await build(app, code, M, frames, revDir, tmpDir, !!flags.forzar, vivo);
   } finally {
-    fs.rmSync(tmpDir, {recursive: true, force: true});
+    try { fs.rmSync(tmpDir, {recursive: true, force: true}); } catch (_) {}
   }
 
   fs.writeFileSync(path.join(revDir, 'estado.json'), JSON.stringify({

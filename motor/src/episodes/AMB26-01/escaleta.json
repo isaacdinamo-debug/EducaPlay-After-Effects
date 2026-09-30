@@ -1,0 +1,305 @@
+{
+  "meta": {
+    "codigo": "AMB26-01",
+    "titulo": "¿Podemos estar preparados?",
+    "patente": "AMB26_01",
+    "objetivo": "Brindar herramientas prácticas para anticiparse a una inundación y actuar de forma segura durante la emergencia hídrica.",
+    "creditos": "",
+    "enCamara": "",
+    "correcciones": [
+      "Escaleta corregida- Lourdes Correctora- 21/08/26",
+      "Equipo de Biología: Paola Suarez: 21/08/26"
+    ],
+    "fuente": "..\\..\\..\\..\\..\\Videos\\EDUCAPLAY 2026 LOCAL\\SECUNDARIA\\Educación Ambiental integral\\AMB26-01\\AMB26_01 ESCALETA .docx"
+  },
+  "secciones": [
+    {
+      "fila": 1,
+      "guion": "",
+      "titulares": [],
+      "recursos": [
+        {
+          "n": null,
+          "desc": "imagen 1: Cielo con nubes de lluvia video 2:gotas golpeando una ventana; video 3:una calle con agua; video 4:ramas moviéndose con viento.",
+          "raw": "imagen 1: Cielo con nubes de lluvia video 2:gotas golpeando una ventana; video 3:una calle con agua; video 4:ramas moviéndose con viento.",
+          "archivos": [
+            "cielo-con-nubes-de-lluvia.jpg",
+            "cielo-tormenta-gemini.jpg",
+            "gotas-golpeando-una-ventana.mp4",
+            "lluvia-ventana-gemini.jpg",
+            "persona-mirando-por-una-ventana-mientras-llueve.mov",
+            "ramas-moviendose-con-viento.mov",
+            "una-calle-con-agua.mov",
+            "video-youtube1.mp4",
+            "video-youtube2.mp4"
+          ]
+        }
+      ],
+      "observaciones": "La imagen y los  videos siguientes con cortes muy rápidos con sonido de lluvia.",
+      "gatillos": [],
+      "ambiguedades": []
+    },
+    {
+      "fila": 2,
+      "guion": "Vos en off (a modo de reflexión): ¿Cómo podría estar preparada para una posible situación de emergencia hídrica?",
+      "titulares": [],
+      "recursos": [
+        {
+          "n": null,
+          "desc": "video 5: Persona mirando por una ventana mientras llueve video 6: Agua acumulándose en el patio, imagen 2: En el teléfono se ve una alarma meteorológica.",
+          "raw": "video 5: Persona mirando por una ventana mientras llueve video 6: Agua acumulándose en el patio, imagen 2: En el teléfono se ve una alarma meteorológica.",
+          "archivos": [
+            "agua-acumulandose-en-el-patio.mov",
+            "gotas-golpeando-una-ventana.mp4",
+            "lluvia-ventana-gemini.jpg",
+            "persona-mirando-por-una-ventana-mientras-llueve.mov",
+            "ropa-seca-y-elementos-de-higiene-personal-de-higiene-personal-creado-con-gemini.jpg",
+            "telefono-con-alarma-meteorologica.png",
+            "telefono.png",
+            "video-youtube1.mp4",
+            "video-youtube2.mp4"
+          ]
+        }
+      ],
+      "observaciones": "Sonido de lluvia con videos 5 y 6.\nSonido de alarma de teléfono suena mientras se ve la imagen 2.",
+      "gatillos": [],
+      "ambiguedades": []
+    },
+    {
+      "fila": 3,
+      "guion": "Si tuvieras que salir rápido de tu casa durante una inundación,  ¿qué llevarías?",
+      "titulares": [],
+      "recursos": [],
+      "observaciones": "",
+      "gatillos": [],
+      "ambiguedades": []
+    },
+    {
+      "fila": 4,
+      "guion": "Probablemente en lo  primero que pensamos es en el teléfono, pero ¿qué más podría ser útil?",
+      "titulares": [
+        "¿Qué más podría ser útil?"
+      ],
+      "recursos": [
+        {
+          "n": null,
+          "desc": "imagen 3: teléfono",
+          "raw": "imagen 3: teléfono",
+          "archivos": [
+            "telefono-con-alarma-meteorologica.png",
+            "telefono.png"
+          ]
+        }
+      ],
+      "observaciones": "El teléfono aparece cuando se lo menciona y desaparece al aparecer el titular.\nEl titular aparece cuando se menciona la palabra “pero” y queda hasta el final.",
+      "gatillos": [
+        "pero"
+      ],
+      "ambiguedades": [
+        "«hasta el final» — ¿de la sección o del video?"
+      ]
+    },
+    {
+      "fila": 5,
+      "guion": "Teniendo en cuenta que durante períodos de lluvias extraordinarias, como puede suceder con el fenómeno de El Niño, muchas veces no tenemos tiempo de pensar en qué deberíamos llevar con nosotros.",
+      "titulares": [
+        "CLARIN -",
+        "Inundaciones en Corrientes: casas bajo el agua y récord de evacuados"
+      ],
+      "recursos": [
+        {
+          "n": null,
+          "desc": "video 7: video youtube",
+          "raw": "video 7: video youtube",
+          "archivos": [
+            "video-youtube1.mp4",
+            "video-youtube2.mp4"
+          ]
+        }
+      ],
+      "observaciones": "El video aparece cuando se menciona “extraordinarias” y queda hasta el final de la sección. De min 0.21 a 0.30",
+      "gatillos": [
+        "extraordinarias"
+      ],
+      "ambiguedades": [
+        "«min 0.21 a 0.30» — ¿es tiempo de la LÍNEA DE TIEMPO o entrada/salida del CLIP fuente?",
+        "«hasta el final» — ¿de la sección o del video?"
+      ]
+    },
+    {
+      "fila": 6,
+      "guion": "Te invito a que armemos una mochila de emergencia para hacer frente a una posible inundación que afecte tu hogar;  ante la sorpresiva suba del agua lo primero que debemos hacer es ponernos a salvo y eso muchas veces representa abandonar el lugar en el que estamos, lo más rápido posible.",
+      "titulares": [
+        "Mochila de emergencia"
+      ],
+      "recursos": [
+        {
+          "n": null,
+          "desc": "imagen 4: mochila",
+          "raw": "imagen 4: mochila",
+          "archivos": [
+            "mochila.gif"
+          ]
+        }
+      ],
+      "observaciones": "El titular y la imagen aparecen cuando se menciona “mochila” y quedan hasta el final de la sección.",
+      "gatillos": [
+        "mochila"
+      ],
+      "ambiguedades": [
+        "«hasta el final» — ¿de la sección o del video?"
+      ]
+    },
+    {
+      "fila": 7,
+      "guion": "Por eso es una gran idea tener armada una mochila de emergencia. Además de tu teléfono y una linterna con baterías nuevas, sería recomendable tener agua, algunos alimentos no perecederos y que no necesitan cocción como barras de cereal, galletitas o frutos secos,  y elementos básicos de un botiquín como alcohol, gasas y apósitos adhesivos.",
+      "titulares": [
+        "Teléfono",
+        "Linterna",
+        "Agua",
+        "Alimentos",
+        "Botiquín"
+      ],
+      "recursos": [
+        {
+          "n": null,
+          "desc": "imagen 5: linterna imagen 6: Agua y alimentos Botiquín",
+          "raw": "imagen 5: linterna imagen 6: Agua y alimentos Botiquín",
+          "archivos": [
+            "agua-y-alimentos-no-perecederos.jpg",
+            "botiquin-re-elaborado-con-gemini.jpg",
+            "linterna.png"
+          ]
+        }
+      ],
+      "observaciones": "Los titulares aparecen a medida que se los nombra y quedan todos hasta el final. Las imágenes aparecen cuando se las mencionan y quedan hasta el final.",
+      "gatillos": [],
+      "ambiguedades": [
+        "«hasta el final» — ¿de la sección o del video?"
+      ]
+    },
+    {
+      "fila": 8,
+      "guion": "La documentación importante, como tu DNI, podrías guardarla en bolsas herméticas.",
+      "titulares": [],
+      "recursos": [
+        {
+          "n": null,
+          "desc": "imagen 7: bolsa hermética",
+          "raw": "imagen 7: bolsa hermética",
+          "archivos": [
+            "bolsa-hermetica-creado-con-gemini.jpg"
+          ]
+        }
+      ],
+      "observaciones": "La imagen aparece cuando se menciona DNI.",
+      "gatillos": [],
+      "ambiguedades": []
+    },
+    {
+      "fila": 9,
+      "guion": "También es necesario tener una muda de ropa y algún abrigo. Para la higiene:   jabón, cepillo y pasta dental, toallitas húmedas y papel higiénico por ejemplo.",
+      "titulares": [
+        "• Ropa seca",
+        "• Elementos de higiene personal"
+      ],
+      "recursos": [
+        {
+          "n": null,
+          "desc": "imagen 8: Ropa seca y elementos de higiene personal",
+          "raw": "imagen 8: Ropa seca y elementos de higiene personal",
+          "archivos": [
+            "ropa-seca-y-elementos-de-higiene-personal-de-higiene-personal-creado-con-gemini.jpg"
+          ]
+        }
+      ],
+      "observaciones": "Los titulares y la imagen aparecen cuando se mencionan y queda hasta el final de la sección.",
+      "gatillos": [],
+      "ambiguedades": [
+        "«hasta el final» — ¿de la sección o del video?"
+      ]
+    },
+    {
+      "fila": 10,
+      "guion": "Que exista un fenómeno climático no implica que la emergencia sea inevitable, el riesgo también depende de nuestra vulnerabilidad y de cuánto nos preparemos.",
+      "titulares": [],
+      "recursos": [],
+      "observaciones": "",
+      "gatillos": [],
+      "ambiguedades": []
+    },
+    {
+      "fila": 11,
+      "guion": "Armar una mochila de emergencia no es lo único que podemos hacer.  Limpiar desagües y canaletas o retirar y asegurar objetos que puedan ser arrastrados por la corriente también ayuda a que un fenómeno climático no se convierta en una emergencia inevitable.\nDefinir previamente dónde reunirse con la familia si deben salir de casa, también es una gran idea.",
+      "titulares": [
+        "Limpiar desagües y canaletas",
+        "Retirar objetos sueltos",
+        "Definir puntos de encuentro"
+      ],
+      "recursos": [
+        {
+          "n": null,
+          "desc": "imagen 9: Limpiar desagües y canaletas",
+          "raw": "imagen 9: Limpiar desagües y canaletas",
+          "archivos": [
+            "limpiar-desagues-y-canaletas-creado-con-gemini.jpg"
+          ]
+        }
+      ],
+      "observaciones": "Los titulares e imagen aparecen cuando se mencionan y quedan hasta el final de la sección.",
+      "gatillos": [],
+      "ambiguedades": [
+        "«hasta el final» — ¿de la sección o del video?"
+      ]
+    },
+    {
+      "fila": 12,
+      "guion": "Y si el agua comienza a ingresar a tu vivienda:\nCortá el gas y la electricidad, solo si podés hacerlo sin entrar en contacto con agua.\nSubí objetos importantes y sustancias peligrosas a lugares altos.\nY si las autoridades indican evacuar, no esperes a que el agua alcance niveles peligrosos.",
+      "titulares": [
+        "Benemérita Cruz Roja Costarricense -",
+        "¿Cómo actuar ante un desastre por inundación?",
+        "SIKANA Español - ¿Qué hacer en caso de inundación?"
+      ],
+      "recursos": [
+        {
+          "n": null,
+          "desc": "video 8: video youtube1 video 9: video youtube2",
+          "raw": "video 8: video youtube1 video 9: video youtube2",
+          "archivos": [
+            "video-youtube1.mp4",
+            "video-youtube2.mp4"
+          ]
+        }
+      ],
+      "observaciones": "Video 8:\naparece cuando se menciona “corta el gas” de min. 1.11 hasta 1.14\n(desaparece cuando empieza próximo extracto)\nvideo 9:\nde min. 0.27 a 0.34 cuando se menciona “subí objetos…”, (desaparece cuando empieza próximo extracto)\nvideo 8:\nde 1.15 a 1.22 cuando se menciona “indican” y queda hasta el final de la sección.",
+      "gatillos": [
+        "corta el gas",
+        "subí objetos…",
+        "indican"
+      ],
+      "ambiguedades": [
+        "«min. 1.11 hasta 1.14» — ¿es tiempo de la LÍNEA DE TIEMPO o entrada/salida del CLIP fuente?",
+        "«min. 0.27 a 0.34» — ¿es tiempo de la LÍNEA DE TIEMPO o entrada/salida del CLIP fuente?",
+        "«hasta el final» — ¿de la sección o del video?"
+      ]
+    },
+    {
+      "fila": 13,
+      "guion": "Al fenómeno de El Niño no podemos evitarlo, pero sí podemos conocer los riesgos a los que nos enfrentamos, identificar nuestras vulnerabilidades y prepararnos.",
+      "titulares": [],
+      "recursos": [
+        {
+          "n": null,
+          "desc": "sticker",
+          "raw": "sticker",
+          "archivos": []
+        }
+      ],
+      "observaciones": "El sticker aparece desde el principio hasta el final de la sección.",
+      "gatillos": [],
+      "ambiguedades": [
+        "«hasta el final» — ¿de la sección o del video?"
+      ]
+    }
+  ]
+}

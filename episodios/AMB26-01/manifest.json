@@ -1,0 +1,1077 @@
+{
+ "code": "AMB26-01",
+ "generatedBy": "motor/scripts/export-ae.mjs",
+ "episode": {
+  "id": "AMB26-01",
+  "title": "¿Podemos estar preparados?",
+  "series": "Educación Ambiental Integral",
+  "objective": "Brindar herramientas prácticas para anticiparse a una inundación y actuar de forma segura durante la emergencia hídrica.",
+  "master": "videos/AMB26-01.mp4",
+  "voiceGain": 1,
+  "intervention": 2
+ },
+ "fps": 25,
+ "width": 1920,
+ "height": 1080,
+ "duration": 4349,
+ "master": "assets/AMB26-01.mp4",
+ "reserved": [
+  {
+   "key": "watermark",
+   "rect": [
+    1400,
+    56,
+    470,
+    160
+   ],
+   "from": 0,
+   "to": 4349
+  },
+  {
+   "key": "watermark",
+   "rect": [
+    1400,
+    35,
+    420,
+    140
+   ],
+   "from": 0,
+   "to": 4349
+  },
+  {
+   "key": "placa-nombre",
+   "rect": [
+    79,
+    818,
+    550,
+    110
+   ],
+   "from": 585,
+   "to": 775
+  }
+ ],
+ "theme": {
+  "palette": {
+   "stage": "#22BCA2",
+   "stageAlt": "#1EB499",
+   "stageDeep": "#159C82",
+   "stageLine": "#14A48A",
+   "paper": "#FFFFFF",
+   "paperWarm": "#F7FFFC",
+   "ink": "#0C2B24",
+   "inkSoft": "#2F5B4F",
+   "inkMuted": "#5A7D72",
+   "accent": "#10BA1B",
+   "accentDeep": "#06590D",
+   "cyan": "#24CCF0",
+   "cyanDeep": "#0E7F9B",
+   "yellow": "#F0CC24",
+   "yellowWash": "rgba(240, 204, 36, 0.55)",
+   "magenta": "#E40054",
+   "magentaDeep": "#A8003E"
+  },
+  "captions": {
+   "scrimAlpha": 0.55,
+   "fontSize": 34,
+   "maxWidth": 1360,
+   "pill": {
+    "radius": 20,
+    "padX": 34,
+    "padY": 14,
+    "blur": 10,
+    "lineHeight": 1.32,
+    "maxLines": 2
+   }
+  },
+  "rainbow": [
+   "#E41653",
+   "#FAB817",
+   "#35BAD5",
+   "#3CAA34"
+  ],
+  "fonts": {
+   "heading": "MuseoSans-900",
+   "headingLight": "MuseoSans-300",
+   "body": "MuseoSans-700",
+   "bodyBold": "MuseoSans-900",
+   "bodyLight": "MuseoSans-300"
+  }
+ },
+ "blocks": [
+  {
+   "kind": "photo",
+   "key": "cielo-lluvia",
+   "rank": "refuerzo",
+   "from": 250,
+   "to": 310,
+   "src": "assets/cielo-con-nubes-de-lluvia.jpg",
+   "caption": "Cielo con nubes de tormenta",
+   "side": "opposite",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 250,
+     "x": 1104,
+     "y": 216,
+     "width": 760,
+     "height": 420
+    }
+   ]
+  },
+  {
+   "kind": "video",
+   "key": "gotas-ventana",
+   "rank": "refuerzo",
+   "from": 310,
+   "to": 370,
+   "src": "assets/gotas-golpeando-una-ventana.mp4",
+   "caption": "Lluvias intensas",
+   "side": "opposite",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 310,
+     "x": 1104,
+     "y": 216,
+     "width": 760,
+     "height": 420
+    }
+   ]
+  },
+  {
+   "kind": "video",
+   "key": "calle-agua",
+   "rank": "refuerzo",
+   "from": 370,
+   "to": 430,
+   "src": "assets/una-calle-con-agua.mov",
+   "caption": "Acumulación de agua en calles",
+   "side": "opposite",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 370,
+     "x": 1104,
+     "y": 216,
+     "width": 760,
+     "height": 420
+    }
+   ]
+  },
+  {
+   "kind": "video",
+   "key": "ramas-viento",
+   "rank": "refuerzo",
+   "from": 430,
+   "to": 490,
+   "src": "assets/ramas-moviendose-con-viento.mov",
+   "caption": "Vientos fuertes de temporal",
+   "side": "opposite",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 430,
+     "x": 1104,
+     "y": 216,
+     "width": 760,
+     "height": 420
+    }
+   ]
+  },
+  {
+   "kind": "video",
+   "key": "persona-ventana",
+   "rank": "refuerzo",
+   "from": 490,
+   "to": 550,
+   "src": "assets/persona-mirando-por-una-ventana-mientras-llueve.mov",
+   "caption": "Emergencia hídrica en el hogar",
+   "side": "opposite",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 490,
+     "x": 1104,
+     "y": 216,
+     "width": 760,
+     "height": 420
+    }
+   ]
+  },
+  {
+   "kind": "titular",
+   "key": "que-mas-util",
+   "kicker": "Pregunta clave",
+   "title": "¿Qué más podría ser útil?",
+   "from": 784,
+   "to": 860,
+   "side": "opposite",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 784,
+     "x": 1304,
+     "y": 216,
+     "width": 560,
+     "height": 190
+    }
+   ]
+  },
+  {
+   "kind": "photo",
+   "key": "telefono-recurso",
+   "rank": "refuerzo",
+   "from": 784,
+   "to": 860,
+   "src": "assets/telefono.png",
+   "caption": "El teléfono no es suficiente",
+   "side": "opposite",
+   "align": "bottom",
+   "boxes": [
+    {
+     "f": 784,
+     "x": 1320,
+     "y": 458,
+     "width": 544,
+     "height": 380
+    }
+   ]
+  },
+  {
+   "kind": "titular",
+   "key": "lluvias-extraordinarias",
+   "kicker": "Fenómeno climático",
+   "title": "Lluvias extraordinarias",
+   "from": 920,
+   "to": 1220,
+   "side": "opposite",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 920,
+     "x": 964,
+     "y": 216,
+     "width": 900,
+     "height": 190
+    }
+   ]
+  },
+  {
+   "kind": "photo",
+   "key": "noticia-clarin",
+   "rank": "didactico",
+   "from": 940,
+   "to": 1220,
+   "src": "assets/cielo-tormenta-gemini.jpg",
+   "caption": "Registro documental de inundaciones",
+   "credit": "Evidencia documental",
+   "side": "opposite",
+   "align": "bottom",
+   "boxes": [
+    {
+     "f": 940,
+     "x": 964,
+     "y": 458,
+     "width": 900,
+     "height": 380
+    }
+   ]
+  },
+  {
+   "kind": "titular",
+   "key": "titular-mochila",
+   "kicker": "Prevención activa",
+   "title": "Mochila de emergencia",
+   "from": 1290,
+   "to": 1720,
+   "side": "opposite",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 1290,
+     "x": 1304,
+     "y": 216,
+     "width": 560,
+     "height": 190
+    }
+   ]
+  },
+  {
+   "kind": "gif",
+   "key": "mochila-animada",
+   "rank": "refuerzo",
+   "from": 1302,
+   "to": 1720,
+   "src": "assets/mochila.mov",
+   "label": "Tenerla armada y lista para salir",
+   "side": "opposite",
+   "align": "bottom",
+   "boxes": [
+    {
+     "f": 1302,
+     "x": 1304,
+     "y": 458,
+     "width": 560,
+     "height": 380
+    }
+   ]
+  },
+  {
+   "kind": "titular",
+   "key": "titular-elementos-1",
+   "kicker": "Mochila de emergencia",
+   "title": "Elementos esenciales",
+   "from": 1880,
+   "to": 2480,
+   "side": "opposite",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 1880,
+     "x": 964,
+     "y": 216,
+     "width": 900,
+     "height": 190
+    }
+   ]
+  },
+  {
+   "kind": "checklist",
+   "key": "checklist-esenciales",
+   "rank": "didactico",
+   "kicker": "Contenido básico",
+   "title": "Elementos clave:",
+   "from": 1900,
+   "to": 2480,
+   "items": [
+    {
+     "term": "Teléfono y linterna",
+     "detail": "Con baterías nuevas",
+     "at": 1945
+    },
+    {
+     "term": "Agua y alimentos",
+     "detail": "No perecederos, sin cocción",
+     "at": 2054
+    },
+    {
+     "term": "Botiquín básico",
+     "detail": "Alcohol, gasas y apósitos",
+     "at": 2299
+    }
+   ],
+   "side": "opposite",
+   "align": "bottom",
+   "boxes": [
+    {
+     "f": 1900,
+     "x": 964,
+     "y": 458,
+     "width": 900,
+     "height": 380
+    }
+   ]
+  },
+  {
+   "kind": "titular",
+   "key": "titular-elementos-2",
+   "kicker": "Mochila de emergencia",
+   "title": "Documentación e higiene",
+   "from": 2490,
+   "to": 2820,
+   "side": "opposite",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 2490,
+     "x": 964,
+     "y": 216,
+     "width": 900,
+     "height": 190
+    }
+   ]
+  },
+  {
+   "kind": "checklist",
+   "key": "checklist-documentacion",
+   "rank": "didactico",
+   "kicker": "Protección personal",
+   "title": "Cuidado indispensable:",
+   "from": 2500,
+   "to": 2820,
+   "items": [
+    {
+     "term": "Documentación y DNI",
+     "detail": "En bolsas herméticas",
+     "at": 2515
+    },
+    {
+     "term": "Ropa seca y abrigo",
+     "detail": "Muda de recambio protegida",
+     "at": 2615
+    },
+    {
+     "term": "Higiene personal",
+     "detail": "Jabón, cepillos y toallitas",
+     "at": 2675
+    }
+   ],
+   "side": "opposite",
+   "align": "bottom",
+   "boxes": [
+    {
+     "f": 2500,
+     "x": 964,
+     "y": 458,
+     "width": 900,
+     "height": 380
+    }
+   ]
+  },
+  {
+   "kind": "titular",
+   "key": "gestion-riesgo",
+   "kicker": "Gestión del riesgo",
+   "title": "Reducir la vulnerabilidad",
+   "from": 2880,
+   "to": 3200,
+   "side": "opposite",
+   "align": "center",
+   "boxes": [
+    {
+     "f": 2880,
+     "x": 1304,
+     "y": 397,
+     "width": 560,
+     "height": 260
+    }
+   ]
+  },
+  {
+   "kind": "titular",
+   "key": "titular-acciones",
+   "kicker": "Medidas preventivas",
+   "title": "Acciones en el hogar",
+   "from": 3280,
+   "to": 3820,
+   "side": "opposite",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 3280,
+     "x": 1304,
+     "y": 216,
+     "width": 560,
+     "height": 190
+    }
+   ]
+  },
+  {
+   "kind": "checklist",
+   "key": "checklist-acciones",
+   "rank": "didactico",
+   "kicker": "Prevención comunitaria",
+   "title": "Medidas antes de la tormenta:",
+   "from": 3290,
+   "to": 3820,
+   "items": [
+    {
+     "term": "Limpiar desagües y canaletas",
+     "detail": "Facilitar escurrimiento del agua",
+     "at": 3302
+    },
+    {
+     "term": "Retirar objetos sueltos",
+     "detail": "Evitar arrastre de corriente",
+     "at": 3396
+    },
+    {
+     "term": "Definir punto de encuentro",
+     "detail": "Plan de reunión familiar",
+     "at": 3698
+    }
+   ],
+   "side": "opposite",
+   "align": "bottom",
+   "boxes": [
+    {
+     "f": 3290,
+     "x": 964,
+     "y": 458,
+     "width": 900,
+     "height": 380
+    }
+   ]
+  },
+  {
+   "kind": "titular",
+   "key": "cierre-titular",
+   "kicker": "Compromiso",
+   "title": "Conocer, identificar y prepararse",
+   "from": 3870,
+   "to": 4140,
+   "side": "opposite",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 3870,
+     "x": 1304,
+     "y": 216,
+     "width": 560,
+     "height": 190
+    }
+   ]
+  },
+  {
+   "kind": "gif",
+   "key": "atencion-sticker",
+   "rank": "refuerzo",
+   "from": 3900,
+   "to": 4140,
+   "src": "assets/atencion.mov",
+   "label": "Estar prevenidos salva vidas",
+   "side": "opposite",
+   "align": "bottom",
+   "boxes": [
+    {
+     "f": 3900,
+     "x": 1304,
+     "y": 458,
+     "width": 560,
+     "height": 380
+    }
+   ]
+  }
+ ],
+ "captions": [
+  {
+   "from": 496,
+   "to": 664,
+   "text": "¿Qué hago si se inunda la casa? Si tuvieras que salir rápido de tu casa durante una inundación,",
+   "box": {
+    "f": 496,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 496,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    },
+    {
+     "f": 560,
+     "x": 280,
+     "y": 632,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 668,
+   "to": 839,
+   "text": "¿qué llevarías? Probablemente en lo primero que pensamos es en el teléfono, pero ¿qué más podría",
+   "box": {
+    "f": 668,
+    "x": 280,
+    "y": 632,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 668,
+     "x": 280,
+     "y": 632,
+     "width": 1360,
+     "height": 178
+    },
+    {
+     "f": 775,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 839,
+   "to": 1006,
+   "text": "ser útil? Teniendo en cuenta que durante períodos de lluvias extraordinarias, como puede suceder",
+   "box": {
+    "f": 839,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 839,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 1006,
+   "to": 1176,
+   "text": "con el fenómeno del Niño, muchas veces no tenemos tiempo de pensar en qué deberíamos llevar con",
+   "box": {
+    "f": 1006,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 1006,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 1176,
+   "to": 1342,
+   "text": "nosotros ante una inundación repentina, te invito a que armemos una mochila de emergencia",
+   "box": {
+    "f": 1176,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 1176,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 1342,
+   "to": 1446,
+   "text": "para hacer frente a una posible inundación que afecte tu casa.",
+   "box": {
+    "f": 1342,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 1342,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 1446,
+   "to": 1609,
+   "text": "Ante la sorpresiva suba del agua, lo primero que debemos hacer es ponernos a salvo,",
+   "box": {
+    "f": 1446,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 1446,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 1610,
+   "to": 1772,
+   "text": "y eso muchas veces representa abandonar el lugar en el que estamos lo más rápido posible.",
+   "box": {
+    "f": 1610,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 1610,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 1779,
+   "to": 1899,
+   "text": "Por eso es una gran idea tener armada una mochila de emergencia.",
+   "box": {
+    "f": 1779,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 1779,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 1902,
+   "to": 2068,
+   "text": "Además de tu teléfono y una linterna con baterías nuevas, sería recomendable tener agua, alimentos",
+   "box": {
+    "f": 1902,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 1902,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 2068,
+   "to": 2242,
+   "text": "no perecederos y que no necesiten cocción como barras de cereal, galletitas o frutos secos,",
+   "box": {
+    "f": 2068,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 2068,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 2242,
+   "to": 2394,
+   "text": "y elementos básicos de un botiquín como alcohol, gasas y apósitos adhesivos.",
+   "box": {
+    "f": 2242,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 2242,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 2400,
+   "to": 2542,
+   "text": "La documentación importante como tu DNI podrías guardarla en bolsas herméticas.",
+   "box": {
+    "f": 2400,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 2400,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 2548,
+   "to": 2654,
+   "text": "También es necesario tener una muda de ropa y algún abrigo.",
+   "box": {
+    "f": 2548,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 2548,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 2654,
+   "to": 2823,
+   "text": "Para la higiene, jabón, cepillos y pasta dental, toallitas húmedas y papel higiénico,",
+   "box": {
+    "f": 2654,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 2654,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 2824,
+   "to": 2994,
+   "text": "por ejemplo. Que exista un fenómeno climático extraordinario no implica que la emergencia sea",
+   "box": {
+    "f": 2824,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 2824,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 2994,
+   "to": 3160,
+   "text": "inevitable. El riesgo también depende de nuestra vulnerabilidad y de cuánto nos preparamos.",
+   "box": {
+    "f": 2994,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 2994,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 3166,
+   "to": 3280,
+   "text": "Armar una mochila de emergencia no es lo único que podemos hacer.",
+   "box": {
+    "f": 3166,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 3166,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 3286,
+   "to": 3448,
+   "text": "Limpiar desagües y canaletas, o retirar y asegurar objetos que puedan ser arrastrados",
+   "box": {
+    "f": 3286,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 3286,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 3448,
+   "to": 3619,
+   "text": "por la corriente, también ayuda a que un fenómeno climático no se convierta en una emergencia",
+   "box": {
+    "f": 3448,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 3448,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 3619,
+   "to": 3802,
+   "text": "inevitable. Definir previamente dónde reunirse con la familia si deben salir de casa también",
+   "box": {
+    "f": 3619,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 3619,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 3802,
+   "to": 3972,
+   "text": "es una gran idea. Al fenómeno de El Niño no podemos evitarlo, pero sí podemos conocer",
+   "box": {
+    "f": 3802,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 3802,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 3972,
+   "to": 4136,
+   "text": "los riesgos a los que nos enfrentamos, identificar nuestras vulnerabilidades y prepararnos.",
+   "box": {
+    "f": 3972,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 3972,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  }
+ ],
+ "moves": [
+  {
+   "key": "x0",
+   "from": 830,
+   "to": 860
+  },
+  {
+   "key": "x1",
+   "from": 1226,
+   "to": 1255
+  },
+  {
+   "key": "x2",
+   "from": 1741,
+   "to": 1776
+  },
+  {
+   "key": "x3",
+   "from": 2820,
+   "to": 2851
+  },
+  {
+   "key": "x4",
+   "from": 3236,
+   "to": 3282
+  },
+  {
+   "key": "x5",
+   "from": 3850,
+   "to": 3851
+  }
+ ]
+}

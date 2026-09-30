@@ -1,0 +1,325 @@
+{
+  "meta": {
+    "codigo": "LEO26-04",
+    "titulo": "De leer a comprender: ¡explicalo con tus palabras!",
+    "patente": "LEO2604",
+    "objetivo": "Reconocer estrategias para reformular información y producir respuestas con palabras propias, a partir de la comprensión, selección y organización de las ideas principales.",
+    "creditos": null,
+    "enCamara": "Jésica Yanina Romero",
+    "correcciones": [
+      "Escaleta revisada por Jesica Romero Coordinadora 08/09/26",
+      "Samuel (corrector) 15/07 - Escaleta revisada y corregida"
+    ],
+    "fuente": "..\\..\\..\\..\\..\\Videos\\EDUCAPLAY 2026 LOCAL\\SECUNDARIA\\Leo Comprendo y Aprendo\\LEO26-04\\1ESCALETA-LEO026.docx"
+  },
+  "secciones": [
+    {
+      "fila": 1,
+      "guion": "La comprensión lectora es un proceso mediante el cual el lector construye el significado del texto a partir de la interacción entre sus conocimientos previos y la información que proporciona el texto.\nLa comprensión lectora es… un proceso donde… el lector… construye… eh… el significado del texto… a partir de sus conocimientos… previos… y… bueno… la información del texto.\n¿Cómo era?\n¿Nunca te pasó que entendés el tema, pero cuando te piden explicarlo, las palabras no aparecen?",
+      "titulares": [],
+      "recursos": [
+        {
+          "n": 1,
+          "desc": "ESTUDIANTE PENSATIVO.gif",
+          "raw": "1.ESTUDIANTE PENSATIVO.gif",
+          "archivos": [
+            "1-estudiante-pensativo.gif"
+          ]
+        }
+      ],
+      "observaciones": "Aparece el recurso cuando el profesor comienza a formular la pregunta ¿Cómo era? y se mantiene hasta el final de esta fila.",
+      "gatillos": [],
+      "ambiguedades": [
+        "«hasta el final» — ¿de la sección o del video?"
+      ]
+    },
+    {
+      "fila": 2,
+      "guion": "Explicar con tus propias palabras no es copiar. Tampoco es cambiar algunas palabras por sinónimos.",
+      "titulares": [
+        "Explicar",
+        "No es copiar",
+        "No es usar sinónimos"
+      ],
+      "recursos": [
+        {
+          "n": 2,
+          "desc": "NO.gif,",
+          "raw": "2.NO.gif,",
+          "archivos": [
+            "2-no.gif",
+            "2escribiendo.gif"
+          ]
+        }
+      ],
+      "observaciones": "Aparece los titulares Explicar\nNo es copiar\nNo es usar sinónimos al inicio de esta fila y luego Aparece el recurso 2.No cuando dice “no es copiar”. y se mantienen hasta el final de esta fila.",
+      "gatillos": [
+        "no es copiar"
+      ],
+      "ambiguedades": [
+        "«hasta el final» — ¿de la sección o del video?"
+      ]
+    },
+    {
+      "fila": 3,
+      "guion": "Explicar es demostrar que comprendiste una idea y que la  podés comunicar de manera clara.",
+      "titulares": [
+        "Explicar es comprender"
+      ],
+      "recursos": [
+        {
+          "n": 3,
+          "desc": "COMPRENDER.gif",
+          "raw": "3.COMPRENDER.gif",
+          "archivos": [
+            "3-comprender.gif"
+          ]
+        }
+      ],
+      "observaciones": "El titular y recurso 3.COMPRENDER.gif aparecen cuando el profesor dice explicar y permanecen hasta finalizar esta fila.",
+      "gatillos": [],
+      "ambiguedades": [
+        "«hasta el final» — ¿de la sección o del video?"
+      ]
+    },
+    {
+      "fila": 4,
+      "guion": "¿Cómo hacerlo?\nPrimero, comprendé,  leé o escuchá con atención y preguntate: ¿de qué trata?, ¿cuál es la idea principal. Ahora vamos a leer una definición para entender mejor.",
+      "titulares": [],
+      "recursos": [
+        {
+          "n": 4,
+          "desc": "TEXTO Y LUPA GEMINIS.jpg",
+          "raw": "4.TEXTO Y LUPA GEMINIS.jpg",
+          "archivos": [
+            "4-texto-y-lupa-geminis.jpg",
+            "6-geminis-frag.jpg",
+            "7-geminis-resaltado.jpg"
+          ]
+        },
+        {
+          "n": 5,
+          "desc": "REFORMULÁ.webp",
+          "raw": "5.REFORMULÁ.webp",
+          "archivos": [
+            "5-reformula.webp",
+            "8reformula.webp"
+          ]
+        }
+      ],
+      "observaciones": "Aparecen los recursos 4 y 5 cuando el profesor dice comprendé y permanecen hasta finalizar esta fila. Debajo de los recursos aparece el siguiente epígrafe: Imagen generada con Gemini",
+      "gatillos": [],
+      "ambiguedades": [
+        "«hasta el final» — ¿de la sección o del video?"
+      ]
+    },
+    {
+      "fila": 5,
+      "guion": "Por ejemplo, en Biología tenemos esta definición: La fotosíntesis es el proceso mediante el cual las plantas producen su propio alimento. Para realizarla, utilizan agua, dióxido de carbono y energía de la luz solar.\n¿De qué trata? De cómo las plantas producen su alimento.",
+      "titulares": [
+        "En Biología",
+        "¿De qué trata?"
+      ],
+      "recursos": [
+        {
+          "n": 6,
+          "desc": "GEMINIS FRAG..jpg",
+          "raw": "6.GEMINIS FRAG..jpg",
+          "archivos": [
+            "6-geminis-frag.jpg",
+            "4-texto-y-lupa-geminis.jpg",
+            "7-geminis-resaltado.jpg"
+          ]
+        }
+      ],
+      "observaciones": "Voz en off\nAparece el primer titular cuando el orador dice Por ejemplo, en Biología y también aparece el recurso 6.geminis en pantalla completa y se queda hasta el final de esta fila. Debajo del recurso aparece el epígrafe: Imagen generada con Gemini.\nLuego aparece el segundo titular en una parte inferior del recurso cuando el profe dice ¿De qué trata? y permanece hasta el final de esta fila.",
+      "gatillos": [],
+      "ambiguedades": [
+        "«hasta el final» — ¿de la sección o del video?"
+      ]
+    },
+    {
+      "fila": 6,
+      "guion": "Después, seleccioná. No necesitás recordar todo: identificá las ideas principales, conceptos y datos que son importantes para responder, así:",
+      "titulares": [
+        "Ideas principalesConceptosDatos"
+      ],
+      "recursos": [
+        {
+          "n": 7,
+          "desc": "GEMINIS RESALTADO",
+          "raw": "7.GEMINIS RESALTADO",
+          "archivos": [
+            "7-geminis-resaltado.jpg",
+            "4-texto-y-lupa-geminis.jpg",
+            "6-geminis-frag.jpg"
+          ]
+        }
+      ],
+      "observaciones": "Voz en off\nAparece la imagen 7 con su epígrafe debajo: Imagen generada con Gemini.\nLos titulares aparecen progresivamente cuando el profesor menciona cada uno de los titulares y permanecen hasta finalizar esta fila.",
+      "gatillos": [],
+      "ambiguedades": [
+        "«hasta el final» — ¿de la sección o del video?"
+      ]
+    },
+    {
+      "fila": 7,
+      "guion": "Ahora viene la clave: reformulá. Alejate un momento del texto y pensá: ¿cómo se lo explicarías a un compañero?",
+      "titulares": [
+        "ReformuláPensáExplicá"
+      ],
+      "recursos": [
+        {
+          "n": null,
+          "desc": "8REFORMULÁ.webp,",
+          "raw": "8REFORMULÁ.webp,",
+          "archivos": [
+            "8reformula.webp"
+          ]
+        },
+        {
+          "n": 9,
+          "desc": "PENSÁ.webp 10EXPLICÁ.webp",
+          "raw": "9.PENSÁ.webp 10EXPLICÁ.webp",
+          "archivos": [
+            "9-pensa.webp",
+            "1-estudiante-pensativo.gif",
+            "10explica.webp"
+          ]
+        }
+      ],
+      "observaciones": "Aparece el primer titular acompañado del recurso 8 cuando el profe dice   reformulá se mantienen hasta el final de esta fila.\nLuego aparece el segundo titular cuando el profesor dice pensá acompañado del recurso 9. cuando el profe dice  explicá y se mantienen hasta el final de esta fila.\nPor último aparece el tercer titular cuando el profe dice explicarías junto a su recurso 10 y permanecen hasta finalizar esta fila.",
+      "gatillos": [],
+      "ambiguedades": [
+        "«hasta el final» — ¿de la sección o del video?"
+      ]
+    },
+    {
+      "fila": 8,
+      "guion": "No copies la definición. Identificá la idea y explicá con tus propias palabras.",
+      "titulares": [
+        "No copies",
+        "Explicá"
+      ],
+      "recursos": [
+        {
+          "n": null,
+          "desc": ",11.NO X.webp",
+          "raw": ",11.NO X.webp",
+          "archivos": []
+        },
+        {
+          "n": 12,
+          "desc": "TILDE VRDE.gif",
+          "raw": "12.TILDE VRDE.gif",
+          "archivos": [
+            "12-tilde-vrde.gif"
+          ]
+        }
+      ],
+      "observaciones": "El primer titular aparece junto a su recurso 11 cuando el profe dice No copies  y se mantiene en pantalla hasta el final de esta fila.\nLuego aparece el segundo titular cuando el profe dice Explicá junto con su recurso 12.\nLos dos recursos y los dos titulares se van cuando el profe dice propias palabras.",
+      "gatillos": [],
+      "ambiguedades": [
+        "«hasta el final» — ¿de la sección o del video?"
+      ]
+    },
+    {
+      "fila": 9,
+      "guion": "Por ejemplo,  así: “La fotosíntesis es el procedimiento con que las plantas fabrican su alimento mediante el agua, el dióxido de carbono y la luz solar.”",
+      "titulares": [],
+      "recursos": [
+        {
+          "n": 13,
+          "desc": "Gemini.explic.",
+          "raw": "13.Gemini.explic.",
+          "archivos": [
+            "13-gemini-explic.jpg",
+            "10explica.webp",
+            "4-texto-y-lupa-geminis.jpg",
+            "6-geminis-frag.jpg",
+            "7-geminis-resaltado.jpg"
+          ]
+        }
+      ],
+      "observaciones": "Voz en off\nDesde el comienzo de el discurso de esta fila parece la imagen 13 con su epígrafe debajo: Imagen generada con Gemini y se mantiene en pantalla completa hasta finalizar esta fila.",
+      "gatillos": [],
+      "ambiguedades": [
+        "«hasta el final» — ¿de la sección o del video?"
+      ]
+    },
+    {
+      "fila": 10,
+      "guion": "Finalmente, Pensá qué vas a decir, ordená tus ideas y revisá que tu respuesta responda a la consigna, revisá que se entienda y esté expresada con tus propias palabras.",
+      "titulares": [
+        "Pensá que decir",
+        "Ordená tus ideas",
+        "Revisá que se entienda",
+        "Usá tus palabras"
+      ],
+      "recursos": [
+        {
+          "n": 12,
+          "desc": "TILDE VRDE.gif",
+          "raw": "12.TILDE VRDE.gif",
+          "archivos": [
+            "12-tilde-vrde.gif"
+          ]
+        }
+      ],
+      "observaciones": "Aparecen los titulares uno a uno paulatinamente cuando se mencionan junto al recurso 12. TILDE VRDE.gif y se mantienen hasta  finalizar esta fila..",
+      "gatillos": [],
+      "ambiguedades": []
+    },
+    {
+      "fila": 11,
+      "guion": "Entonces, cuando tengas que responder una consigna, recordá: comprendé, seleccioná, reformulá y organizá para demostrar que comprendiste.",
+      "titulares": [
+        "Comprendé Seleccioná Reformulá Organizá"
+      ],
+      "recursos": [
+        {
+          "n": 12,
+          "desc": "TILDE VRDE.gif",
+          "raw": "12.TILDE VRDE.gif",
+          "archivos": [
+            "12-tilde-vrde.gif"
+          ]
+        }
+      ],
+      "observaciones": "Cada uno de los titulares aparecen a  medida que el profesor menciona cada uno acompañados con el recurso 12. TILDE VRDE.gif . Los cuatro permanecen juntos en pantalla y desaparecen al terminar esta fila.",
+      "gatillos": [],
+      "ambiguedades": []
+    },
+    {
+      "fila": 12,
+      "guion": "Y ahora que ya lo sabés, la próxima vez que tengas una consigna, ¿vas a copiar o vas a explicar lo que realmente comprendiste?\n¡Nos vemos en el próximo video!",
+      "titulares": [
+        "¿Copiar o  explicar?"
+      ],
+      "recursos": [
+        {
+          "n": 9,
+          "desc": "PENSÁ.webp",
+          "raw": "9.PENSÁ.webp",
+          "archivos": [
+            "9-pensa.webp",
+            "1-estudiante-pensativo.gif"
+          ]
+        },
+        {
+          "n": 14,
+          "desc": "chau!.webp",
+          "raw": "14.chau!.webp",
+          "archivos": [
+            "14-chau.webp"
+          ]
+        }
+      ],
+      "observaciones": "Aparece el titular cuando el profe dice  ¿vas a copiar o vas a explicar? junto al recurso 9. y desaparece cuando dice comprendiste?\nPor último aparece el recurso 14.chau!.webp cuando el profesor dice Nos vemos en el próximo video! y se queda hasta el final de esta fila.",
+      "gatillos": [],
+      "ambiguedades": [
+        "«hasta el final» — ¿de la sección o del video?"
+      ]
+    }
+  ]
+}

@@ -1005,7 +1005,7 @@ function buildEpisode() {
     var h = inner + mh + (capText ? capH : inner);
 
     card(comp, x, 0, w, h);
-    revealMedia(mediaInCard(comp, b.src, mx, inner, mw, mh, b.fit, 0, kind === 'photo'), mx, inner, mw, mh, sec(4));
+    revealMedia(mediaInCard(comp, b.src, mx, inner, mw, mh, b.fit || (kind === 'gif' ? 'contain' : 'cover'), 0, kind === 'photo'), mx, inner, mw, mh, sec(4));
     if (capText) {
       var cap = text(comp, capText, mx, inner + mh + 16, {
         name: 'PIE', font: FONTS.body, size: 26, color: hex(PAL.ink), maxW: mw,

@@ -1,0 +1,1395 @@
+{
+ "code": "AMB26-02",
+ "generatedBy": "motor/scripts/export-ae.mjs",
+ "episode": {
+  "id": "AMB26-02",
+  "title": "Mitos y verdades sobre las inundaciones",
+  "series": "Educación Ambiental Integral",
+  "objective": "Derribar mitos populares sobre las inundaciones en Corrientes y comprender sus verdaderas causas, riesgos y medidas preventivas.",
+  "master": "videos/AMB26-02.mp4",
+  "voiceGain": 1,
+  "intervention": 2
+ },
+ "fps": 23.976023976023978,
+ "width": 1920,
+ "height": 1080,
+ "duration": 4461,
+ "master": "assets/AMB26-02.mp4",
+ "reserved": [
+  {
+   "key": "watermark",
+   "rect": [
+    1400,
+    56,
+    470,
+    160
+   ],
+   "from": 0,
+   "to": 4461
+  },
+  {
+   "key": "watermark",
+   "rect": [
+    1400,
+    35,
+    420,
+    140
+   ],
+   "from": 0,
+   "to": 4461
+  },
+  {
+   "key": "placa-nombre",
+   "rect": [
+    154,
+    909,
+    445,
+    95
+   ],
+   "from": 312,
+   "to": 460
+  }
+ ],
+ "theme": {
+  "palette": {
+   "stage": "#22BCA2",
+   "stageAlt": "#1EB499",
+   "stageDeep": "#159C82",
+   "stageLine": "#14A48A",
+   "paper": "#FFFFFF",
+   "paperWarm": "#F7FFFC",
+   "ink": "#0C2B24",
+   "inkSoft": "#2F5B4F",
+   "inkMuted": "#5A7D72",
+   "accent": "#10BA1B",
+   "accentDeep": "#06590D",
+   "cyan": "#24CCF0",
+   "cyanDeep": "#0E7F9B",
+   "yellow": "#F0CC24",
+   "yellowWash": "rgba(240, 204, 36, 0.55)",
+   "magenta": "#E40054",
+   "magentaDeep": "#A8003E"
+  },
+  "captions": {
+   "scrimAlpha": 0.55,
+   "fontSize": 34,
+   "maxWidth": 1360,
+   "pill": {
+    "radius": 20,
+    "padX": 34,
+    "padY": 14,
+    "blur": 10,
+    "lineHeight": 1.32,
+    "maxLines": 2
+   }
+  },
+  "rainbow": [
+   "#E41653",
+   "#FAB817",
+   "#35BAD5",
+   "#3CAA34"
+  ],
+  "fonts": {
+   "heading": "MuseoSans-900",
+   "headingLight": "MuseoSans-300",
+   "body": "MuseoSans-700",
+   "bodyBold": "MuseoSans-900",
+   "bodyLight": "MuseoSans-300"
+  }
+ },
+ "blocks": [
+  {
+   "kind": "photo",
+   "key": "rec_chaque",
+   "from": 260,
+   "to": 360,
+   "rank": "refuerzo",
+   "src": "assets/chaque-el-agua.png",
+   "caption": "¡Chaque el agua!",
+   "side": "right",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 260,
+     "x": 1372,
+     "y": 216,
+     "width": 492,
+     "height": 360
+    }
+   ]
+  },
+  {
+   "kind": "gif",
+   "key": "rec_mitos",
+   "from": 415,
+   "to": 484,
+   "rank": "refuerzo",
+   "src": "assets/mitos.mov",
+   "label": "Mitos y verdades",
+   "side": "right",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 415,
+     "x": 1312,
+     "y": 216,
+     "width": 552,
+     "height": 360
+    }
+   ]
+  },
+  {
+   "kind": "titular",
+   "key": "tit_mito1",
+   "from": 500,
+   "to": 620,
+   "kicker": "Mito 1",
+   "title": "«Nos inundamos porque está lloviendo mucho»",
+   "side": "right",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 500,
+     "x": 1244,
+     "y": 216,
+     "width": 620,
+     "height": 360
+    },
+    {
+     "f": 617,
+     "x": 1246,
+     "y": 216,
+     "width": 618,
+     "height": 360
+    },
+    {
+     "f": 618,
+     "x": 1251,
+     "y": 216,
+     "width": 613,
+     "height": 360
+    },
+    {
+     "f": 619,
+     "x": 1259,
+     "y": 216,
+     "width": 605,
+     "height": 360
+    }
+   ]
+  },
+  {
+   "kind": "video",
+   "key": "rec_lluvia",
+   "from": 646,
+   "to": 980,
+   "rank": "didactico",
+   "src": "assets/video-lluvia.mp4",
+   "caption": "Lluvias locales intensas",
+   "side": "right",
+   "align": "center",
+   "boxes": [
+    {
+     "f": 646,
+     "x": 1384,
+     "y": 297,
+     "width": 480,
+     "height": 460
+    }
+   ]
+  },
+  {
+   "kind": "photo",
+   "key": "rec_ciudad",
+   "from": 986,
+   "to": 1200,
+   "rank": "refuerzo",
+   "src": "assets/ciudad.jpg",
+   "caption": "Escurrimiento en la ciudad",
+   "side": "right",
+   "align": "center",
+   "boxes": [
+    {
+     "f": 986,
+     "x": 1384,
+     "y": 297,
+     "width": 480,
+     "height": 460
+    }
+   ]
+  },
+  {
+   "kind": "video",
+   "key": "rec_humedales",
+   "from": 1211,
+   "to": 1395,
+   "rank": "didactico",
+   "src": "assets/humedales.mp4",
+   "caption": "Humedales: esponjas naturales",
+   "side": "right",
+   "align": "center",
+   "boxes": [
+    {
+     "f": 1211,
+     "x": 1368,
+     "y": 267,
+     "width": 496,
+     "height": 520
+    },
+    {
+     "f": 1382,
+     "x": 1365,
+     "y": 267,
+     "width": 499,
+     "height": 520
+    },
+    {
+     "f": 1383,
+     "x": 1362,
+     "y": 267,
+     "width": 502,
+     "height": 520
+    },
+    {
+     "f": 1384,
+     "x": 1358,
+     "y": 267,
+     "width": 506,
+     "height": 520
+    },
+    {
+     "f": 1385,
+     "x": 1353,
+     "y": 267,
+     "width": 511,
+     "height": 520
+    },
+    {
+     "f": 1386,
+     "x": 1348,
+     "y": 267,
+     "width": 516,
+     "height": 520
+    },
+    {
+     "f": 1387,
+     "x": 1342,
+     "y": 267,
+     "width": 522,
+     "height": 520
+    },
+    {
+     "f": 1388,
+     "x": 1336,
+     "y": 267,
+     "width": 528,
+     "height": 520
+    },
+    {
+     "f": 1389,
+     "x": 1330,
+     "y": 267,
+     "width": 534,
+     "height": 520
+    },
+    {
+     "f": 1390,
+     "x": 1324,
+     "y": 267,
+     "width": 540,
+     "height": 520
+    },
+    {
+     "f": 1391,
+     "x": 1319,
+     "y": 267,
+     "width": 545,
+     "height": 520
+    },
+    {
+     "f": 1392,
+     "x": 1314,
+     "y": 267,
+     "width": 550,
+     "height": 520
+    },
+    {
+     "f": 1393,
+     "x": 1310,
+     "y": 267,
+     "width": 554,
+     "height": 520
+    },
+    {
+     "f": 1394,
+     "x": 1307,
+     "y": 267,
+     "width": 557,
+     "height": 520
+    }
+   ]
+  },
+  {
+   "kind": "titular",
+   "key": "tit_mito2",
+   "from": 1400,
+   "to": 1515,
+   "kicker": "Mito 2",
+   "title": "«Si vivo lejos del río, el agua no me llega»",
+   "side": "right",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 1400,
+     "x": 1244,
+     "y": 216,
+     "width": 620,
+     "height": 360
+    },
+    {
+     "f": 1506,
+     "x": 1246,
+     "y": 216,
+     "width": 618,
+     "height": 360
+    },
+    {
+     "f": 1507,
+     "x": 1250,
+     "y": 216,
+     "width": 614,
+     "height": 360
+    },
+    {
+     "f": 1508,
+     "x": 1258,
+     "y": 216,
+     "width": 606,
+     "height": 360
+    },
+    {
+     "f": 1509,
+     "x": 1267,
+     "y": 216,
+     "width": 597,
+     "height": 360
+    },
+    {
+     "f": 1510,
+     "x": 1278,
+     "y": 216,
+     "width": 586,
+     "height": 360
+    },
+    {
+     "f": 1511,
+     "x": 1290,
+     "y": 216,
+     "width": 574,
+     "height": 360
+    },
+    {
+     "f": 1512,
+     "x": 1302,
+     "y": 216,
+     "width": 562,
+     "height": 360
+    },
+    {
+     "f": 1513,
+     "x": 1314,
+     "y": 216,
+     "width": 550,
+     "height": 360
+    },
+    {
+     "f": 1514,
+     "x": 1326,
+     "y": 216,
+     "width": 538,
+     "height": 360
+    }
+   ]
+  },
+  {
+   "kind": "photo",
+   "key": "rec_inundaciones",
+   "from": 1565,
+   "to": 1815,
+   "rank": "didactico",
+   "src": "assets/inundaciones-repentinas.jpg",
+   "caption": "Inundaciones repentinas por colapso pluvial",
+   "side": "right",
+   "align": "center",
+   "boxes": [
+    {
+     "f": 1565,
+     "x": 1384,
+     "y": 297,
+     "width": 480,
+     "height": 460
+    }
+   ]
+  },
+  {
+   "kind": "photo",
+   "key": "rec_basura",
+   "from": 1860,
+   "to": 1945,
+   "rank": "refuerzo",
+   "src": "assets/basura.png",
+   "caption": "Sacar la basura a horario",
+   "side": "right",
+   "align": "center",
+   "boxes": [
+    {
+     "f": 1860,
+     "x": 1384,
+     "y": 297,
+     "width": 480,
+     "height": 460
+    }
+   ]
+  },
+  {
+   "kind": "photo",
+   "key": "rec_plasticos",
+   "from": 1948,
+   "to": 2070,
+   "rank": "refuerzo",
+   "src": "assets/plasticos.png",
+   "caption": "No tirar plásticos en la vía pública",
+   "side": "right",
+   "align": "center",
+   "boxes": [
+    {
+     "f": 1948,
+     "x": 1384,
+     "y": 297,
+     "width": 480,
+     "height": 460
+    }
+   ]
+  },
+  {
+   "kind": "titular",
+   "key": "tit_mito3",
+   "from": 2090,
+   "to": 2220,
+   "kicker": "Mito 3",
+   "title": "«Si la calle está inundada pero el agua bajita, cruzo igual»",
+   "side": "right",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 2090,
+     "x": 1244,
+     "y": 216,
+     "width": 620,
+     "height": 360
+    }
+   ]
+  },
+  {
+   "kind": "gif",
+   "key": "rec_peligro",
+   "from": 2238,
+   "to": 2335,
+   "rank": "refuerzo",
+   "src": "assets/peligro.mov",
+   "label": "¡Peligro! No cruces",
+   "side": "right",
+   "align": "center",
+   "boxes": [
+    {
+     "f": 2238,
+     "x": 1424,
+     "y": 297,
+     "width": 440,
+     "height": 460
+    }
+   ]
+  },
+  {
+   "kind": "photo",
+   "key": "rec_calle",
+   "from": 2408,
+   "to": 2668,
+   "rank": "refuerzo",
+   "src": "assets/calle-inundada.png",
+   "caption": "Trampas ocultas bajo el agua",
+   "side": "right",
+   "align": "center",
+   "boxes": [
+    {
+     "f": 2408,
+     "x": 1424,
+     "y": 297,
+     "width": 440,
+     "height": 460
+    }
+   ]
+  },
+  {
+   "kind": "titular",
+   "key": "tit_mito4",
+   "from": 2684,
+   "to": 2785,
+   "kicker": "Mito 4",
+   "title": "«Si ya dejó de llover, ya pasó el peligro»",
+   "side": "right",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 2684,
+     "x": 1244,
+     "y": 216,
+     "width": 620,
+     "height": 360
+    },
+    {
+     "f": 2782,
+     "x": 1247,
+     "y": 216,
+     "width": 617,
+     "height": 360
+    },
+    {
+     "f": 2783,
+     "x": 1254,
+     "y": 216,
+     "width": 610,
+     "height": 360
+    },
+    {
+     "f": 2784,
+     "x": 1265,
+     "y": 216,
+     "width": 599,
+     "height": 360
+    }
+   ]
+  },
+  {
+   "kind": "photo",
+   "key": "rec_amenazas",
+   "from": 2867,
+   "to": 3400,
+   "rank": "refuerzo",
+   "src": "assets/amenazas.png",
+   "caption": "Amenazas postlluvia: electrocución y dengue",
+   "side": "right",
+   "align": "center",
+   "boxes": [
+    {
+     "f": 2867,
+     "x": 1424,
+     "y": 297,
+     "width": 440,
+     "height": 460
+    }
+   ]
+  },
+  {
+   "kind": "titular",
+   "key": "tit_mito5",
+   "from": 3419,
+   "to": 3566,
+   "kicker": "Mito 5",
+   "title": "«El clima está controlado por antenas gigantes»",
+   "side": "right",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 3419,
+     "x": 1244,
+     "y": 216,
+     "width": 620,
+     "height": 360
+    }
+   ]
+  },
+  {
+   "kind": "gif",
+   "key": "rec_ficcion",
+   "from": 3587,
+   "to": 3715,
+   "rank": "refuerzo",
+   "src": "assets/ficcion-pura.mov",
+   "label": "¡Ficción pura!",
+   "side": "right",
+   "align": "center",
+   "boxes": [
+    {
+     "f": 3587,
+     "x": 1384,
+     "y": 297,
+     "width": 480,
+     "height": 460
+    }
+   ]
+  },
+  {
+   "kind": "photo",
+   "key": "rec_calentamiento",
+   "from": 3800,
+   "to": 3920,
+   "rank": "refuerzo",
+   "src": "assets/calentamiento-global.png",
+   "caption": "Calentamiento global comprobado",
+   "side": "right",
+   "align": "center",
+   "boxes": [
+    {
+     "f": 3800,
+     "x": 1384,
+     "y": 297,
+     "width": 480,
+     "height": 460
+    }
+   ]
+  },
+  {
+   "kind": "video",
+   "key": "rec_impacto",
+   "from": 3920,
+   "to": 4155,
+   "rank": "didactico",
+   "src": "assets/impacto.mp4",
+   "caption": "Fenómeno de El Niño y tormentas extremas",
+   "side": "right",
+   "align": "center",
+   "boxes": [
+    {
+     "f": 3920,
+     "x": 1384,
+     "y": 297,
+     "width": 480,
+     "height": 460
+    }
+   ]
+  },
+  {
+   "kind": "titular",
+   "key": "tit_cierre",
+   "from": 4159,
+   "to": 4270,
+   "kicker": "EducaPlay Secundaria",
+   "title": "¡Compartí este video para ganarle a la desinformación!",
+   "side": "right",
+   "align": "top",
+   "boxes": [
+    {
+     "f": 4159,
+     "x": 1304,
+     "y": 216,
+     "width": 560,
+     "height": 360
+    }
+   ]
+  }
+ ],
+ "captions": [
+  {
+   "from": 258,
+   "to": 353,
+   "text": "¡Chaque el agua! ¿Qué hacemos si Corrientes se inunda?",
+   "box": {
+    "f": 258,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 258,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    },
+    {
+     "f": 300,
+     "x": 280,
+     "y": 672,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 366,
+   "to": 492,
+   "text": "Antes que nada, estar bien informados y para eso vamos a derribar algunos mitos.",
+   "box": {
+    "f": 366,
+    "x": 280,
+    "y": 672,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 366,
+     "x": 280,
+     "y": 672,
+     "width": 1360,
+     "height": 178
+    },
+    {
+     "f": 470,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 505,
+   "to": 610,
+   "text": "Mito 1. Nos inundamos porque está lloviendo mucho.",
+   "box": {
+    "f": 505,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 505,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 627,
+   "to": 727,
+   "text": "Falso, las lluvias locales intensas no son el único detonante.",
+   "box": {
+    "f": 627,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 627,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 740,
+   "to": 902,
+   "text": "Muchas veces sufrimos la crecida de los ríos por tormentas que ocurren a cientos de kilómetros.",
+   "box": {
+    "f": 740,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 740,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 915,
+   "to": 1074,
+   "text": "Por otro lado, cuando la lluvia cae directamente sobre nuestra ciudad, entran en juego el escurrimiento y",
+   "box": {
+    "f": 915,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 915,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 1074,
+   "to": 1238,
+   "text": "la saturación de los suelos. Por eso en nuestra provincia es tan importante la protección de los humedales",
+   "box": {
+    "f": 1074,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 1074,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 1238,
+   "to": 1390,
+   "text": "que actúan como una esponja natural, absorbiendo y reteniendo el exceso de agua.",
+   "box": {
+    "f": 1238,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 1238,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 1401,
+   "to": 1503,
+   "text": "Mito 2. Si vivo lejos del río, el agua no me llega.",
+   "box": {
+    "f": 1401,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 1401,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 1520,
+   "to": 1683,
+   "text": "Error, existen inundaciones repentinas por lluvias torrenciales que pueden pasar en cualquier",
+   "box": {
+    "f": 1520,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 1520,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 1683,
+   "to": 1812,
+   "text": "barrio. Si los desagües están tapados, tu calle se vuelve un río temporal.",
+   "box": {
+    "f": 1683,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 1683,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 1826,
+   "to": 1987,
+   "text": "Acá somos todos protagonistas. Sacar la basura a horario, no tirar plásticos en la vía pública",
+   "box": {
+    "f": 1826,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 1826,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 1987,
+   "to": 2082,
+   "text": "es vital para que el agua escurra rápido y no nos tape.",
+   "box": {
+    "f": 1987,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 1987,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 2096,
+   "to": 2220,
+   "text": "Mito 3. Si la calle está inundada pero el agua está bajita, cruzo igual.",
+   "box": {
+    "f": 2096,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 2096,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 2236,
+   "to": 2333,
+   "text": "Peligro, intentar cruzar es una pésima idea.",
+   "box": {
+    "f": 2236,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 2236,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 2341,
+   "to": 2521,
+   "text": "Ese charco gigante y turbio esconde trampas, alcantarillas destapadas, pozos",
+   "box": {
+    "f": 2341,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 2341,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 2521,
+   "to": 2596,
+   "text": "o desniveles que no se ven a simple vista.",
+   "box": {
+    "f": 2521,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 2521,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 2606,
+   "to": 2706,
+   "text": "Buscá nomás un camino alternativo y no te arriesgues. Mito 4.",
+   "box": {
+    "f": 2606,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 2606,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 2720,
+   "to": 2810,
+   "text": "Si ya dejó de llover, ya pasó el peligro. Falso.",
+   "box": {
+    "f": 2720,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 2720,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 2818,
+   "to": 2894,
+   "text": "La postlluvia esconde otras amenazas.",
+   "box": {
+    "f": 2818,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 2818,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 2906,
+   "to": 3012,
+   "text": "Si ingresó agua dentro de casa, el riesgo eléctrico es altísimo.",
+   "box": {
+    "f": 2906,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 2906,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 3022,
+   "to": 3160,
+   "text": "Nunca deben tocar electrodomésticos ni paredes húmedas sin cortar la corriente antes.",
+   "box": {
+    "f": 3022,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 3022,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 3176,
+   "to": 3306,
+   "text": "Y afuera el agua estancada puede estar contaminada y es el criadero VIP del mosquito del dengue.",
+   "box": {
+    "f": 3176,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 3176,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 3316,
+   "to": 3409,
+   "text": "No debemos bajar la guardia. Y este sí que ya es un montón.",
+   "box": {
+    "f": 3316,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 3316,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 3422,
+   "to": 3564,
+   "text": "Mito 5. El clima está controlado por corporaciones secretas y antenas gigantes.",
+   "box": {
+    "f": 3422,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 3422,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 3581,
+   "to": 3712,
+   "text": "Ficción pura. Las teorías conspirativas no tienen ningún sustento científico.",
+   "box": {
+    "f": 3581,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 3581,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 3720,
+   "to": 3877,
+   "text": "Lo que sí es real y está comprobado por la ciencia es que la actividad humana está acelerando el",
+   "box": {
+    "f": 3720,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 3720,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 3877,
+   "to": 4043,
+   "text": "calentamiento global. Nuestro impacto en el planeta, combinado con ciclos naturales como el fenómeno de El Niño, es",
+   "box": {
+    "f": 3877,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 3877,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 4043,
+   "to": 4160,
+   "text": "lo que provoca que las lluvias y tormentas sean cada vez más intensas y extremas.",
+   "box": {
+    "f": 4043,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 4043,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  },
+  {
+   "from": 4163,
+   "to": 4270,
+   "text": "Compartí este video para ganarle a la desinformación y al agua.",
+   "box": {
+    "f": 4163,
+    "x": 280,
+    "y": 838,
+    "width": 1360,
+    "height": 178
+   },
+   "boxes": [
+    {
+     "f": 4163,
+     "x": 280,
+     "y": 838,
+     "width": 1360,
+     "height": 178
+    }
+   ]
+  }
+ ],
+ "moves": [
+  {
+   "key": "x0",
+   "from": 484,
+   "to": 500
+  },
+  {
+   "key": "x1",
+   "from": 616,
+   "to": 630
+  },
+  {
+   "key": "x2",
+   "from": 1380,
+   "to": 1396
+  },
+  {
+   "key": "x3",
+   "from": 1505,
+   "to": 1519
+  },
+  {
+   "key": "x4",
+   "from": 2074,
+   "to": 2090
+  },
+  {
+   "key": "x5",
+   "from": 2223,
+   "to": 2237
+  },
+  {
+   "key": "x6",
+   "from": 2668,
+   "to": 2684
+  },
+  {
+   "key": "x7",
+   "from": 2781,
+   "to": 2795
+  },
+  {
+   "key": "x8",
+   "from": 3403,
+   "to": 3419
+  },
+  {
+   "key": "x9",
+   "from": 3570,
+   "to": 3585
+  },
+  {
+   "key": "x10",
+   "from": 4288,
+   "to": 4335
+  }
+ ]
+}

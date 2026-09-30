@@ -1,67 +1,86 @@
 # EducaPlay After Effects
 
-Capítulos de **EducaPlay Secundaria (Corrientes)** armados en Adobe After Effects a partir del
-máster grabado y su escaleta. El motor de medición ubica cada gráfico en la banda libre que deja la
-docente, y un constructor en ExtendScript arma un `.aep` editable con la estética de la
-plataforma EducaPlay.
+Capítulos de **EducaPlay Secundaria (Corrientes)** armados en Adobe After Effects a partir del máster grabado y su escaleta. El motor de medición ubica cada gráfico en la banda libre que deja la docente, y un constructor en ExtendScript arma un `.aep` editable con la estética oficial de la plataforma EducaPlay.
 
-Capítulo de referencia: **AMB26-04 · Plan B: protocolo para una inundación**.
+Repositorio oficial: [https://github.com/isaacdinamo-debug/EducaPlay-After-Effects.git](https://github.com/isaacdinamo-debug/EducaPlay-After-Effects.git)
 
-## Instalación (una vez por máquina)
+---
 
-Requisitos:
-- **Adobe After Effects 2026**, en macOS o Windows;
-- **Node ≥ 22.6**, `ffmpeg`/`ffprobe` en el PATH;
-- `whisper-cli` (whisper.cpp), sólo para medir episodios nuevos;
-- las 7 fuentes **Museo** y **Museo Sans Rounded**: `Museo-300`, `Museo-700` y
-  `MuseoSansRounded-300/500/700/900/1000`.
+## Requisitos del Sistema
+- **Sistemas Operativos**: Windows 10/11 o macOS.
+- **Adobe After Effects**: versiones 2024, 2025 o 2026.
+  * *Habilitación indispensable*: En Preferencias > **Scripting y expresiones** → activar **"Permitir que los scripts escriban archivos y tengan acceso a la red"**.
+- **Node.js**: versión ≥ 22.6.
+- **Python**: versión ≥ 3.10.
+- **FFmpeg / FFprobe**: en el PATH del sistema.
+- **Tipografías Oficiales**: *Museo* (700 Bold) y *Museo Sans Rounded* (300/500/700/900/1000). En Windows, instalalas con clic derecho → **"Instalar para todos los usuarios"** y reiniciá After Effects.
 
-  **No vienen en el repo, porque tienen licencia.** Sin ellas, After Effects las reemplaza, el texto
-  mide distinto y el cuadro pierde el equilibrio. Por eso el armado se niega a correr si falta
-  alguna. En **Windows**, instalalas con clic derecho → **"Instalar para todos los usuarios"** y
-  reiniciá After Effects.
+---
+
+## Instalación desde 0 en cualquier PC
 
 ```bash
+# 1. Clonar el repositorio
+git clone https://github.com/isaacdinamo-debug/EducaPlay-After-Effects.git
+cd EducaPlay-After-Effects
+
+# 2. Instalar dependencias del motor
 cd motor
 npm install
 npm run doctor                                   # auditoría de la máquina: tiene que dar 0 problemas
+cd ..
 ```
 
-Para armar un episodio que ya fue medido en otra máquina, traé sus medios (máster, recursos y
-fuentes para el verificador) **sin volver a medirlo**:
+---
 
-```bash
-npm run medios -- AMB26-04 --desde "<carpeta con public/videos/AMB26-04.mp4>"
-npm run doctor -- AMB26-04                       # máster idéntico al aprobado, medición sin cambios
-```
+## Flujo Operativo por Capítulo
 
-⚠ **No corras `npm run nuevo` sobre un episodio ya aprobado.** Vuelve a medir el encuadre y a
-transcribir con el ffmpeg y el Whisper de esa máquina, y el resultado cambia. Si pasó,
-`npm run doctor` lo detecta, y se vuelve atrás con `git checkout -- motor/src/episodes/<CODE>/`.
+### 0. Estructura de insumos del episodio
+Cada entrega del montajista debe ubicarse en su carpeta correspondiente con:
+- `RENDER/[CODIGO]-PRIMERCORTE.mp4` (Máster grabado a 1080p, 25 fps).
+- `[CODIGO] ESCALETA.docx` (Guion pautado con columnas de escena, titulares, locución y recursos).
+- `RECURSOS/` (Imágenes, videos B-roll, audios y animaciones).
 
-Las entregas del montajista (`<CODE>/` con el máster, la escaleta `.docx` y `RECURSOS/`) se leen de
-`EDUCAPLAY_EPISODES`. Por defecto es `~/Documents/EducaPlay/Secundaria /Ambiente`. En Windows,
-definila con una ruta sin carpetas que terminen en espacio.
-
-## Flujo de un capítulo
-
+### 1. Medición y Transcripción
 ```bash
 cd motor
-npm run nuevo      -- AMB26-05                    # 1. medir, transcribir, gatillos, borrador
-#                                                 # 2. escribir src/episodes/AMB26-05/data.ts
-npm run check      -- AMB26-05                    # 3. tipos, layout, contraste
-npm run export:ae  -- AMB26-05                    # 4. manifiesto para AE
-npm run ae         -- AMB26-05                    # 5. armar en AE + stills + chequeo
-#                                                 # 6. mirar episodios/AMB26-05/revision/contacto.jpg
-npm run publicar   -- AMB26-05                    # 7. si todo pasa: commit, push y PR
+npm run track -- <CODE> --master "ruta/al/video.mp4"
+npm run transcribe -- <CODE>
 ```
 
-En **Antigravity**, todo esto es el workflow **`/episodio-ae`**. Gemini lo sigue paso a paso con la
-skill `educaplay-after-effects` y las reglas de `.agents/rules/`.
+### 2. Tablero de Sincronización Pre-Edición (Fase 0)
+- Abrir `TABLA_SINCRONIZACION_PRE_EDICION_<CODE>.html` en el navegador.
+- Iniciar el servidor local Bridge para comunicación bidireccional:
+```bash
+python tools/local_bridge_server.py <CODE> --dir "ruta/al/episodio"
+```
+- **Revisión en el tablero**:
+  * Cotejo palabra por palabra de Whisper vs. Escaleta (discrepancias en rojo 🔴).
+  * Selección de subtítulos: Guion original, Real grabado o Corrección manual.
+  * Auditoría de recursos físicos y configuración de In/Out frames y posición (slots).
 
-## Documentación
+### 3. Validación y Exportación del Manifiesto
+```bash
+cd motor
+npm run check -- <CODE>
+npm run export:ae -- <CODE>
+```
 
-- [`AGENTS.md`](AGENTS.md): mapa del repo y reglas duras (lo lee cualquier agente).
-- [`docs/ESTETICA.md`](docs/ESTETICA.md): la estética de la plataforma y los controles de la capa `CONTROL`.
-- [`docs/SUBTITULOS.md`](docs/SUBTITULOS.md): estándar de subtitulado de EducaPlay (§1.4).
-- [`docs/MIGRACION.md`](docs/MIGRACION.md): qué se trajo del flujo Remotion y qué se retiró.
+### 4. Armado del Proyecto After Effects (.aep)
+- Directamente desde el tablero web presionando `🚀 Aceptar y Generar Proyecto After Effects`.
+- O mediante el runner automatizado:
+```bash
+python tools/build_ae_project.py <CODE> --dir "ruta/al/episodio"
+```
+- O en After Effects: **Archivo > Scripts > Ejecutar archivo de script...** seleccionando `ae/build-<CODE>.jsx`.
+
+### 5. Revisión y Aprobación
+Revisar la hoja de contactos generada en `episodios/<CODE>/revision/contacto.jpg` y las capas del proyecto `.aep`.
+
+---
+
+## Documentación Técnica
+- [`SKILL.md`](SKILL.md): Protocolo completo, reglas críticas, trampas de After Effects y guía paso a paso.
+- [`AGENTS.md`](AGENTS.md): Reglas operativas para agentes de IA.
+- [`docs/ESTETICA.md`](docs/ESTETICA.md): Guía cromática cuatricolor, componentes y controles de capa `CONTROL`.
+- [`docs/SUBTITULOS.md`](docs/SUBTITULOS.md): Estándar de subtitulado con pastilla translúcida esmerilada.
