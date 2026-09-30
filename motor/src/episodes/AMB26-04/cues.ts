@@ -37,6 +37,11 @@ export const CUES: Record<string, Cue | null> = {
     "matched": "alertas",
     "score": 1
   },
+  "comunicados": {
+    "f": 1239,
+    "matched": "comunicados",
+    "score": 1
+  },
   "celular": {
     "f": 1311,
     "matched": "celular",
@@ -65,6 +70,16 @@ export const CUES: Record<string, Cue | null> = {
   "svcLuz": {
     "f": 1563,
     "matched": "electricidad.",
+    "score": 1
+  },
+  "puertas": {
+    "f": 1782,
+    "matched": "puertas",
+    "score": 1
+  },
+  "ventanas": {
+    "f": 1800,
+    "matched": "ventanas.",
     "score": 1
   },
   "levanta": {
@@ -122,6 +137,16 @@ export const CUES: Record<string, Cue | null> = {
     "matched": "comunícate",
     "score": 1
   },
+  "ubicacion": {
+    "f": 2840,
+    "matched": "ubicación.",
+    "score": 1
+  },
+  "atencionEspecial": {
+    "f": 2907,
+    "matched": "personas",
+    "score": 1
+  },
   "quinto": {
     "f": 3001,
     "matched": "Quinto,",
@@ -140,6 +165,26 @@ export const CUES: Record<string, Cue | null> = {
   "noCamines": {
     "f": 3361,
     "matched": "camines,",
+    "score": 1
+  },
+  "pozos": {
+    "f": 3525,
+    "matched": "pozos,",
+    "score": 1
+  },
+  "objetosPeligrosos": {
+    "f": 3541,
+    "matched": "objetos",
+    "score": 1
+  },
+  "alcantarillas": {
+    "f": 3586,
+    "matched": "alcantarillas",
+    "score": 1
+  },
+  "cables": {
+    "f": 3638,
+    "matched": "cables",
     "score": 1
   },
   "centroEvacuacion": {

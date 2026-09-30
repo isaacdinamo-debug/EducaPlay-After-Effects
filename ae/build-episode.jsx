@@ -693,17 +693,34 @@ function buildEpisode() {
   }
 
   /** Tarjeta oscura de los listados, con la franja arriba recortada a sus esquinas. */
-  function darkCard(comp, x, y, w, h, fromH) {
+  /**
+   * Tarjeta oscura. En modo vivo `o` la anima con el borde de arriba y el
+   * EXTERIOR fijos:
+   *   fromH/fromW  viene del titular anterior (transformación): acomoda alto y ancho;
+   *   right        el borde exterior es el derecho;
+   *   grow         [{t, h}]: crece cuando entra una fila de pastillas.
+   */
+  function darkCard(comp, x, y, w, h, o) {
+    o = o || {};
     var l = newShapeLayer(comp, 'TARJETA · oscura');
     linkFill(addRect(l, x, y, w, h, RADIUS, hex(WEB.oscuro), 'oscuro'), 'Acento oscuro');
-    // Transformación (modo vivo): la tarjeta viene del titular anterior y
-    // sólo acomoda su alto, con el borde de arriba fijo.
-    if (fromH) soft('alto de la transformación', function () {
+    var ts = [], ss = [];
+    if (o.fromH) { ts.push(0, sec(10)); ss.push([o.fromW || w, o.fromH], [w, h]); }
+    for (var gi = 0; o.grow && gi < o.grow.length; gi++) {
+      var last = ss.length ? ss[ss.length - 1][1] : h;
+      if (!ts.length) { ts.push(0); ss.push([w, h]); }
+      var g0 = Math.max(o.grow[gi].t, ts[ts.length - 1] + sec(1));
+      ts.push(g0, g0 + sec(8));
+      ss.push([w, last], [w, o.grow[gi].h]);
+    }
+    if (ts.length) soft('forma de la tarjeta', function () {
       var rc = l.property('ADBE Root Vectors Group').property(1).property('ADBE Vectors Group').property('ADBE Vector Shape - Rect');
-      keys(rc.property('ADBE Vector Rect Size'), [0, sec(10)], [[w, fromH], [w, h]]);
-      keys(rc.property('ADBE Vector Rect Position'), [0, sec(10)], [[x + w / 2, y + fromH / 2], [x + w / 2, y + h / 2]]);
+      var ps = [];
+      for (var k = 0; k < ss.length; k++) ps.push([o.right ? x + w - ss[k][0] / 2 : x + ss[k][0] / 2, y + ss[k][1] / 2]);
+      keys(rc.property('ADBE Vector Rect Size'), ts, ss);
+      keys(rc.property('ADBE Vector Rect Position'), ts, ps);
     });
-    var strip = bandStrip(comp, x, y, w, 8, fromH ? null : sec(2));
+    var strip = bandStrip(comp, x, y, w, 8, o.fromH ? null : sec(2));
     l.moveToEnd();
     strip.moveBefore(l);
     soft('recorte de franja', function () {
@@ -829,16 +846,59 @@ function buildEpisode() {
     y += title.h + 18;
     var under = mintUnderline(comp, x0, box.width - P - 50, y, sec(14), true);
     if (V.nudges && V.nudges.length) arrowNudge(under, V.nudges);
-    y += 14 + P;
-    var h = Math.max(y, hasStep ? top + S + P : 0);
-    darkCard(comp, 0, 0, box.width, h, V.hin ? Math.min(V.fromH, box.height) : 0);
-    if (hasStep) soft('bandas de paso', function () {
-      var bs = diagonalBands(comp, 'BANDAS PASO', 0, sec(14), 0, 0, box.width, h);
+    V.arrow = [box.width - P - 50 + 22, y - 12];
+    var h0 = Math.max(y + 14 + P, hasStep ? top + S + P : 0);
+    var grow = VIVO && b.chips && b.chips.length ? chipRows(comp, b, box, hasStep ? P : x0,
+      hasStep ? Math.max(y + 18, top + S + 12) : y + 18, P) : [];
+    var h = grow.length ? grow[grow.length - 1].h : h0;
+    darkCard(comp, 0, 0, box.width, h0, {
+      fromH: V.hin ? Math.min(V.fromH, box.height) : 0, fromW: V.fromW,
+      right: box.x + box.width / 2 > W / 2, grow: grow,
+    });
+    // El titular que llega de un traslado ya pasó bajo las bandas del cuadro.
+    if (hasStep && !V.travelIn) soft('bandas de paso', function () {
+      var bs = diagonalBands(comp, 'BANDAS PASO', 0, sec(14), 0, 0, box.width, h0);
       for (var q = bs.length - 1; q >= 0; q--) bs[q].moveToBeginning();
     });
     if (V.hout) contentExit(comp, V.nextStep && hasStep);
     return h;
   };
+
+  /**
+   * Modo vivo: pastillas con lo que la docente enumera y no está en pantalla
+   * (`chips` del titular en data.ts). Cada una entra sobre su palabra; cuando
+   * arranca una fila nueva, la tarjeta crece para hacerle lugar. Devuelve los
+   * crecimientos [{t, h}] para darkCard.
+   */
+  function chipRows(comp, b, box, x0, y0, P) {
+    var maxX = box.width - P, gap = 10, padX = 16, padY = 8;
+    var x = x0, y = y0, rowH = 0, grow = [];
+    for (var i = 0; i < b.chips.length; i++) {
+      var ch = b.chips[i];
+      var t = Math.max(sec(8), sec(ch.at - b.from - 2));
+      var tx = text(comp, ch.text, 0, 0, {name: 'PASTILLA · ' + ch.text, font: FONTS.body, size: 26, color: [1, 1, 1]});
+      var cw = tx.w + padX * 2, chh = tx.h + padY * 2;
+      if (x > x0 && x + cw > maxX) { x = x0; y += rowH + 8; rowH = 0; }
+      if (x === x0) grow.push({t: t, h: y + chh + P});
+      rowH = Math.max(rowH, chh);
+      tx.layer.property('ADBE Transform Group').property('ADBE Position').setValue([x + padX, y + padY]);
+      var pl = newShapeLayer(comp, 'PASTILLA · borde');
+      var g = addRect(pl, x, y, cw, chh, 999, null, 'pastilla');
+      mintStroke(g, 2);
+      pl.moveAfter(tx.layer);
+      var c = [x + cw / 2, y + chh / 2], parts = [pl, tx.layer];
+      for (var q = 0; q < parts.length; q++) {
+        var tr = parts[q].property('ADBE Transform Group');
+        var a = tr.property('ADBE Anchor Point').value, p = tr.property('ADBE Position').value;
+        tr.property('ADBE Anchor Point').setValue([a[0] + (c[0] - p[0]), a[1] + (c[1] - p[1])]);
+        tr.property('ADBE Position').setValue(c);
+        keys(tr.property('ADBE Scale'), [t, t + sec(7)], [[88, 88], [100, 100]]);
+        keys(tr.property('ADBE Opacity'), [t, t + sec(5)], [0, 100]);
+      }
+      x += cw + gap;
+    }
+    return grow;
+  }
 
   /**
    * Modo vivo: la flecha ↓ del subrayado cabecea una vez (baja 10 px y
@@ -1148,7 +1208,16 @@ function buildEpisode() {
   // su flecha. Un titular pasa al siguiente si éste empieza a ≤ 20 cuadros,
   // en la misma caja (lado y ancho) y sin traslado de cámara en el medio: ahí
   // la tarjeta queda y sólo cambia lo de adentro.
-  var VINFO = [], VB = null, CARD_H = [];
+  var VINFO = [], VB = null, CARD_H = [], LAYER = [], TOP = [];
+  /** Encadena el titular i con el j (el j llega transformado desde el i). */
+  function linkTitulars(i, j) {
+    var a = M.blocks[i], z = M.blocks[j];
+    VINFO[i].next = j; VINFO[i].nextStep = z.step !== undefined;
+    VINFO[j].hin = true; VINFO[j].prev = i; VINFO[j].prevStep = a.step !== undefined;
+    // Si la caja nueva es más ancha, la tarjeta se estira hacia adentro.
+    if (a.boxes[0].width < z.boxes[0].width) VINFO[j].fromW = a.boxes[0].width;
+    return 1;
+  }
   for (var vi = 0; vi < M.blocks.length; vi++) VINFO.push({});
   if (VIVO) {
     var chains = 0;
@@ -1159,15 +1228,29 @@ function buildEpisode() {
       for (var vj = vi + 1; vj < M.blocks.length; vj++) if (M.blocks[vj].kind === 'titular') { nx = vj; break; }
       if (nx < 0) continue;
       var nb = M.blocks[nx], b0 = vb.boxes[vb.boxes.length - 1], b1 = nb.boxes[0];
-      var cut = false;
+      var mv = null;
       for (var vm = 0; vm < (M.moves || []).length; vm++) {
-        if (M.moves[vm].from < nb.from && M.moves[vm].to > vb.to) cut = true;
+        if (M.moves[vm].from < nb.from && M.moves[vm].to > vb.to) mv = M.moves[vm];
       }
-      if (nb.from - vb.to <= 20 && nb.from >= vb.to && b0.x === b1.x && b0.width === b1.width &&
-        vb.align === nb.align && vb.boxes.length === 1 && nb.boxes.length === 1 && !cut) {
-        VINFO[vi].hout = true; VINFO[vi].next = nx; VINFO[vi].nextStep = nb.step !== undefined;
-        VINFO[nx].hin = true; VINFO[nx].prev = vi; VINFO[nx].prevStep = vb.step !== undefined;
-        chains++;
+      if (nb.from < vb.to || vb.align !== nb.align || vb.boxes.length !== 1 || nb.boxes.length !== 1) continue;
+      var rightEdge0 = b0.x + b0.width, rightEdge1 = b1.x + b1.width;
+      var sameEdge = b0.x + b0.width / 2 > W / 2 ? rightEdge0 === rightEdge1 : b0.x === b1.x;
+      var sameSide = (b0.x + b0.width / 2 > W / 2) === (b1.x + b1.width / 2 > W / 2);
+      if (!mv && nb.from - vb.to <= 20 && sameEdge && b0.width === b1.width) {
+        VINFO[vi].hout = true; chains += linkTitulars(vi, nx);
+      } else if (mv && nb.from - vb.to <= 50 && sameSide && sameEdge) {
+        // Traslado sin cambiar de lado: la tarjeta espera bajo las bandas y
+        // se estira a la caja nueva.
+        VINFO[vi].hout = true; chains += linkTitulars(vi, nx);
+      } else if (mv && nb.from - vb.to <= 50 && !sameSide) {
+        // Traslado de lado: la tarjeta VIAJA con el barrido de bandas. Sale
+        // hacia el lado nuevo hasta que las bandas la tapan (mitad del
+        // barrido) y la nueva llega desde el mismo rumbo.
+        var dx = (b1.x + b1.width / 2) - (b0.x + b0.width / 2);
+        VINFO[vi].travelOut = {until: Math.round((mv.from - 4 + mv.to + 2) / 2) + 3, dx: dx};
+        chains += linkTitulars(vi, nx);
+        VINFO[nx].travelIn = dx > 0 ? -140 : 140;
+        VINFO[nx].fromW = 0;
       }
     }
     // La flecha ↓ avisa: cuando entra un recurso mientras está el titular y
@@ -1175,7 +1258,9 @@ function buildEpisode() {
     for (vi = 0; vi < M.blocks.length; vi++) {
       var tb = M.blocks[vi];
       if (tb.kind !== 'titular') continue;
-      var end = VINFO[vi].hout ? M.blocks[VINFO[vi].next].from : tb.to;
+      var end = tb.to;
+      if (VINFO[vi].hout) end = M.blocks[VINFO[vi].next].from;
+      else if (VINFO[vi].travelOut) end = VINFO[vi].travelOut.until;
       var ns = [];
       for (vj = 0; vj < M.blocks.length; vj++) {
         var ob = M.blocks[vj];
@@ -1197,7 +1282,10 @@ function buildEpisode() {
     VB = VINFO[bi];
     if (VB.hin) VB.fromH = CARD_H[VB.prev];
     // Un titular que se transforma sigue en pantalla hasta que entra el siguiente.
-    var dur = sec((VB.hout ? M.blocks[VB.next].from : b.to) - b.from);
+    var endF = b.to;
+    if (VB.hout) endF = M.blocks[VB.next].from;
+    else if (VB.travelOut) endF = VB.travelOut.until;
+    var dur = sec(endF - b.from);
     var pre = proj.items.addComp(b.kind + '_' + b.key, box.width, box.height, 1, dur, FPS);
     pre.parentFolder = F.graficos;
     pre.bgColor = hex(PAL.stage);
@@ -1205,6 +1293,9 @@ function buildEpisode() {
 
     var contentH = soft(b.kind + ':' + b.key, function () { return builder(pre, b, box); });
     if (!contentH) { log('✗ ' + b.kind + ':' + b.key + ' quedó incompleto'); contentH = box.height; }
+    if (VIVO && Math.ceil(contentH) > box.height) {
+      log('⚠ ' + b.key + ': la tarjeta mide ' + Math.ceil(contentH) + ' px y su caja ' + box.height + ': se recorta (subí el maxHeight de su slot en data.ts)');
+    }
     contentH = Math.min(Math.ceil(contentH), box.height);
     CARD_H[bi] = contentH;
 
@@ -1219,7 +1310,9 @@ function buildEpisode() {
       L.startTime = sec(b.from + OPEN_HOLD);
       L.outPoint = sec(b.to);
     }
-    if (VB.hout) L.outPoint = sec(M.blocks[VB.next].from);
+    if (VB.hout || VB.travelOut) L.outPoint = sec(endF);
+    LAYER[bi] = L;
+    TOP[bi] = box.y + offY;
     L.motionBlur = true;
     L.label = b.kind === 'titular' ? 11 : b.kind === 'checklist' ? 14 : 13;
     var tr = L.property('ADBE Transform Group');
@@ -1255,7 +1348,16 @@ function buildEpisode() {
       'var t=' + (VB.hin ? '1' : 'Math.min(1,Math.max(0,(time-inPoint)/fi))') + ';' +
       'var s=1.70158*c.effect("Rebote (%)")(1)/8;' +
       'var e=1+(s+1)*Math.pow(t-1,3)+s*Math.pow(t-1,2);' +
-      'var x=' + (VB.hout ? '1' : 'ease(outPoint-time,0,fo,0,1)') + ';';
+      'var x=' + (VB.hout || VB.travelOut ? '1' : 'ease(outPoint-time,0,fo,0,1)') + ';';
+    // Viaje: la que se va acelera hacia el lado nuevo y se funde bajo las
+    // bandas; la que llega entra desde ese mismo rumbo.
+    var travel = '';
+    if (VB.travelOut) {
+      var ta = sec(b.to - 4 - b.from) + L.startTime, tb2 = sec(VB.travelOut.until) - sec(1);
+      travel = '+' + VB.travelOut.dx + '*Math.pow(Math.min(1,Math.max(0,(time-' + ta + ')/' + (tb2 - ta) + ')),3)';
+      common += 'x=x*(1-Math.min(1,Math.max(0,(time-' + (tb2 - sec(5)) + ')/' + sec(5) + ')));';
+    }
+    if (VB.travelIn) travel = '+' + VB.travelIn + '*(1-ease(time,inPoint,inPoint+' + sec(12) + ',0,1))';
     var settle = !VIVO || VB.hin ? '' :
       '+c.effect("Asentamiento (px)")(1)*Math.pow(1-Math.min(1,Math.max(0,(time-inPoint-fi)/' +
       '(Math.max(1,c.effect("Asentamiento (frames)")(1))*thisComp.frameDuration))),3)';
@@ -1263,7 +1365,7 @@ function buildEpisode() {
     soft('expresiones de tarjeta', function () {
       tr.property('ADBE Opacity').expression = common + 'Math.min(Math.min(1,t*2.5),x)*100;';
       tr.property('ADBE Position').expression = common +
-        'var d=c.effect("Deslizamiento (px)")(1);value+[' + dir + '*((1-e)*d' + settle + '+(1-x)*d*0.35),0];';
+        'var d=c.effect("Deslizamiento (px)")(1);value+[' + dir + '*((1-e)*d' + settle + '+(1-x)*d*0.35)' + travel + ',0];';
     });
     soft('sombra', function () {
       var ds = L.property('ADBE Effect Parade').addProperty('ADBE Drop Shadow');
@@ -1276,6 +1378,39 @@ function buildEpisode() {
     built++;
   }
   log('· ' + built + ' tarjetas armadas');
+
+  // Modo vivo: hilo menta de la flecha ↓ del titular al recurso que lo
+  // ilustra. Va DEBAJO del titular: asoma por el borde inferior de la tarjeta
+  // justo bajo la flecha y baja hasta el recurso cuando éste termina de entrar.
+  if (VIVO) soft('hilos flecha → recurso', function () {
+    var nThreads = 0;
+    for (var ti = 0; ti < M.blocks.length; ti++) {
+      var tb = M.blocks[ti], tv = VINFO[ti];
+      if (tb.kind !== 'titular' || !LAYER[ti] || !tv.arrow) continue;
+      var tbox = tb.boxes[0], tEnd = LAYER[ti].outPoint;
+      var ax = tbox.x + tv.arrow[0], ay = tbox.y + tv.arrow[1];
+      for (var ri = 0; ri < M.blocks.length; ri++) {
+        var rb = M.blocks[ri];
+        if (ri === ti || rb.kind === 'titular' || !LAYER[ri] || rb.align !== 'bottom') continue;
+        if (rb.from <= tb.from + 30 || sec(rb.from) >= tEnd) continue;
+        var rbox = rb.boxes[0];
+        if (ax < rbox.x + 30 || ax > rbox.x + rbox.width - 30 || TOP[ri] - ay < 40) continue;
+        var hl = newShapeLayer(main, 'HILO · ' + tb.key + ' → ' + rb.key);
+        var hg = addPath(hl, [[ax, ay], [ax, TOP[ri] - 4]], false, 'hilo');
+        mintStroke(hg, 3);
+        var t0 = LAYER[ri].inPoint + sec(6);
+        drawOn(hg, t0, t0 + sec(12));
+        hl.inPoint = LAYER[ri].inPoint;
+        hl.outPoint = Math.min(LAYER[ri].outPoint, tEnd);
+        hl.property('ADBE Transform Group').property('ADBE Opacity').expression =
+          'Math.min(thisComp.layer("' + LAYER[ti].name + '").transform.opacity,thisComp.layer("' + LAYER[ri].name + '").transform.opacity);';
+        hl.moveAfter(LAYER[ti]);
+        hl.label = 8;
+        nThreads++;
+      }
+    }
+    log('· ' + nThreads + ' hilos flecha → recurso');
+  });
 
   // ───────────────────────────────────────────────────────────── subtítulos
   // Estándar de subtitulado EducaPlay (subtitulos/EDUCAPLAY_MOTION_GRAPHICS_

@@ -196,12 +196,15 @@ export const M = {
   protocolo: cueFrame('protocolo'),
   primero: cueFrame('primero'),
   alertas: cueFrame('alertas'),
+  comunicados: cueFrame('comunicados'),
   celular: cueFrame('celular'),
   segundo: cueFrame('segundo'),
   corta: cueFrame('corta'),
   svcAgua: cueFrame('svcAgua'),
   svcGas: cueFrame('svcGas'),
   svcLuz: cueFrame('svcLuz'),
+  puertas: cueFrame('puertas'),
+  ventanas: cueFrame('ventanas'),
   levanta: cueFrame('levanta'),
   tercero: cueFrame('tercero'),
   reunir: cueFrame('reunir'),
@@ -213,10 +216,16 @@ export const M = {
   vehBici: cueFrame('vehBici'),
   propiosMedios: cueFrame('propiosMedios'),
   comunicate: cueFrame('comunicate'),
+  ubicacion: cueFrame('ubicacion'),
+  atencionEspecial: cueFrame('atencionEspecial'),
   quinto: cueFrame('quinto'),
   mochila: cueFrame('mochila'),
   sexto: cueFrame('sexto'),
   noCamines: cueFrame('noCamines'),
+  pozos: cueFrame('pozos'),
+  objetosPeligrosos: cueFrame('objetosPeligrosos'),
+  alcantarillas: cueFrame('alcantarillas'),
+  cables: cueFrame('cables'),
   centroEvacuacion: cueFrame('centroEvacuacion'),
   cierre: cueFrame('cierre'),
   recapAntes: cueFrame('recapAntes'),
@@ -270,8 +279,16 @@ export const MARKS = M;
  * Entre los dos quedan 12 px de aire: con las cajas pegadas el canto rasgado
  * del titular tocaba la barra del recurso y se leían como una sola tarjeta.
  */
-const L2_TITULAR: Partial<SlotSpec> = {align: 'top', maxHeight: 210};
-const L2_RECURSO: Partial<SlotSpec> = {align: 'bottom', maxHeight: 356};
+const L2_TITULAR: Partial<SlotSpec> = {align: 'top', maxHeight: 218};
+const L2_RECURSO: Partial<SlotSpec> = {align: 'bottom', maxHeight: 348};
+/**
+ * Paso 2 con pastillas (modo vivo): "puertas / ventanas cerradas" suma una
+ * fila y la tarjeta mide 265 px en AE. Hasta el 30/9 el titular de UNA línea
+ * medía 218 en una caja de 210 y AE le recortaba el borde inferior: la caja
+ * de los pasos 2 y 3 sube a 218, y la del paso 2 a 266 para las pastillas.
+ */
+const L2_TITULAR_PASTILLAS: Partial<SlotSpec> = {align: 'top', maxHeight: 266};
+const L2_RECURSO_PASTILLAS: Partial<SlotSpec> = {align: 'bottom', maxHeight: 300};
 const L2_TITULAR_2L: Partial<SlotSpec> = {align: 'top', maxHeight: 270};
 const L2_RECURSO_BAJO: Partial<SlotSpec> = {align: 'bottom', maxHeight: 296};
 
@@ -286,6 +303,12 @@ const C1_BLOQUE: Partial<SlotSpec> = {align: 'top'};
 
 /** Tramos centrados: banda útil y 139–838 (la corta la esquina de papel). */
 const C_TITULAR: Partial<SlotSpec> = {align: 'top', maxHeight: 230};
+/**
+ * Titulares centrados con pastillas (modo vivo): emergencias mide 276 px y
+ * el paso 6, 268. El paso 6 convive con el video (C_RECURSO, 400 abajo):
+ * 139 + 268 termina en 407, a 31 px del video.
+ */
+const C_TITULAR_PASTILLAS: Partial<SlotSpec> = {align: 'top', maxHeight: 276};
 const C_RECURSO: Partial<SlotSpec> = {align: 'bottom', maxHeight: 400};
 
 export const BLOCK_SLOT: Partial<SlotSpec> = {side: 'opposite', align: 'center'};
@@ -392,6 +415,10 @@ export const BLOCKS: readonly Block[] = [
     step: 1,
     kicker: 'PASO',
     title: 'Mantené la calma e informate',
+    chips: [
+      {text: 'Alertas', at: M.alertas},
+      {text: 'Comunicados oficiales', at: M.comunicados},
+    ],
   },
   {
     kind: 'gif',
@@ -420,10 +447,14 @@ export const BLOCKS: readonly Block[] = [
     key: 'paso-2-titular',
     from: M.segundo,
     to: M.tercero - 10,
-    slot: L2_TITULAR,
+    slot: L2_TITULAR_PASTILLAS,
     step: 2,
     kicker: 'PASO',
     title: 'Cortá los servicios',
+    chips: [
+      {text: 'Puertas cerradas', at: M.puertas},
+      {text: 'Ventanas cerradas', at: M.ventanas},
+    ],
   },
   {
     // Recompuesto: el PNG del cliente traía esto como texto de ~10 px.
@@ -435,7 +466,7 @@ export const BLOCKS: readonly Block[] = [
     rank: 'didactico',
     from: M.corta,
     to: M.levanta - 10,
-    slot: L2_RECURSO,
+    slot: L2_RECURSO_PASTILLAS,
     items: [
       {icon: 'agua', term: 'AGUA', detail: 'Cerrá la llave de paso', at: M.svcAgua},
       {icon: 'gas', term: 'GAS', detail: 'Cerrá la llave de paso', at: M.svcGas},
@@ -449,7 +480,7 @@ export const BLOCKS: readonly Block[] = [
     rank: 'refuerzo',
     from: M.levanta,
     to: M.tercero - 10,
-    slot: L2_RECURSO,
+    slot: L2_RECURSO_PASTILLAS,
     src: 'AMB26-04/levantar-cosas.jpg',
     caption: 'Levantá objetos a lugares altos',
     credit: 'Recreado con Inteligencia Artificial',
@@ -527,9 +558,13 @@ export const BLOCKS: readonly Block[] = [
     key: 'servicios-emergencia',
     from: M.comunicate,
     to: M.quinto - 10,
-    slot: C_TITULAR,
+    slot: C_TITULAR_PASTILLAS,
     kicker: 'COMUNICACIÓN',
     title: 'Llamá a emergencias e informá tu ubicación',
+    chips: [
+      {text: 'Tu ubicación', at: M.ubicacion},
+      {text: 'Personas con atención especial', at: M.atencionEspecial},
+    ],
   },
 
   // ── PASO 5 ──────────────────────────────────────────────────────────────
@@ -560,10 +595,16 @@ export const BLOCKS: readonly Block[] = [
     key: 'paso-6-titular',
     from: M.sexto,
     to: M.centroEvacuacion - 10,
-    slot: C_TITULAR,
+    slot: C_TITULAR_PASTILLAS,
     step: 6,
     kicker: 'PASO',
     title: 'No atravieses el agua',
+    chips: [
+      {text: 'Pozos', at: M.pozos},
+      {text: 'Objetos peligrosos', at: M.objetosPeligrosos},
+      {text: 'Alcantarillas', at: M.alcantarillas},
+      {text: 'Cables eléctricos', at: M.cables},
+    ],
   },
   {
     // El único registro real de la inundación además del recurso 1, y con

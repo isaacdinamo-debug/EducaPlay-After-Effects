@@ -272,6 +272,16 @@
    "step": 1,
    "kicker": "PASO",
    "title": "Mantené la calma e informate",
+   "chips": [
+    {
+     "text": "Alertas",
+     "at": 1220
+    },
+    {
+     "text": "Comunicados oficiales",
+     "at": 1239
+    }
+   ],
    "side": "opposite",
    "align": "top",
    "boxes": [
@@ -332,6 +342,16 @@
    "step": 2,
    "kicker": "PASO",
    "title": "Cortá los servicios",
+   "chips": [
+    {
+     "text": "Puertas cerradas",
+     "at": 1782
+    },
+    {
+     "text": "Ventanas cerradas",
+     "at": 1800
+    }
+   ],
    "side": "opposite",
    "align": "top",
    "boxes": [
@@ -340,7 +360,7 @@
      "x": 964,
      "y": 260,
      "width": 900,
-     "height": 210
+     "height": 266
     }
    ]
   },
@@ -377,9 +397,9 @@
     {
      "f": 1502,
      "x": 964,
-     "y": 482,
+     "y": 538,
      "width": 900,
-     "height": 356
+     "height": 300
     }
    ]
   },
@@ -398,9 +418,9 @@
     {
      "f": 1841,
      "x": 964,
-     "y": 482,
+     "y": 538,
      "width": 900,
-     "height": 356
+     "height": 300
     }
    ]
   },
@@ -420,7 +440,7 @@
      "x": 964,
      "y": 260,
      "width": 900,
-     "height": 210
+     "height": 218
     }
    ]
   },
@@ -439,9 +459,9 @@
     {
      "f": 2032,
      "x": 964,
-     "y": 482,
+     "y": 490,
      "width": 900,
-     "height": 356
+     "height": 348
     }
    ]
   },
@@ -460,9 +480,9 @@
     {
      "f": 2290,
      "x": 964,
-     "y": 482,
+     "y": 490,
      "width": 900,
-     "height": 356
+     "height": 348
     }
    ]
   },
@@ -532,6 +552,16 @@
    "to": 2991,
    "kicker": "COMUNICACIÓN",
    "title": "Llamá a emergencias e informá tu ubicación",
+   "chips": [
+    {
+     "text": "Tu ubicación",
+     "at": 2840
+    },
+    {
+     "text": "Personas con atención especial",
+     "at": 2907
+    }
+   ],
    "side": "opposite",
    "align": "top",
    "boxes": [
@@ -540,7 +570,7 @@
      "x": 56,
      "y": 139,
      "width": 560,
-     "height": 230
+     "height": 276
     }
    ]
   },
@@ -592,6 +622,24 @@
    "step": 6,
    "kicker": "PASO",
    "title": "No atravieses el agua",
+   "chips": [
+    {
+     "text": "Pozos",
+     "at": 3525
+    },
+    {
+     "text": "Objetos peligrosos",
+     "at": 3541
+    },
+    {
+     "text": "Alcantarillas",
+     "at": 3586
+    },
+    {
+     "text": "Cables eléctricos",
+     "at": 3638
+    }
+   ],
    "side": "opposite",
    "align": "top",
    "boxes": [
@@ -600,7 +648,7 @@
      "x": 56,
      "y": 139,
      "width": 560,
-     "height": 230
+     "height": 276
     }
    ]
   },
