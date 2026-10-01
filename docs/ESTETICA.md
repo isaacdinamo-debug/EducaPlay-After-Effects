@@ -32,6 +32,12 @@ títulos.
   miniatura redondeada, título y, si tiene, el crédito con su ícono ("Recreado con IA"). **Nunca**
   la numeración de la escaleta ("RECURSO 10", "ANIMACIÓN 7"): es interna y al estudiante no le dice
   nada.
+
+  **Variante en prueba, «recursos grandes»** (`npm run ae -- <CODE> --recursos grandes`): la misma
+  fila, pero la imagen ocupa ~60 % del ancho de la tarjeta (50 % con la docente al centro) y todo el
+  alto que da la caja; el título crece a 36 px (28 en la caja angosta). Se compara con
+  `npm run preview -- <CODE> --recursos grandes --comparar`. No pisa el armado por defecto: sale a
+  `<CODE>-grandes.aep` y `revision-grandes/`.
 - **Recursos didácticos** (videos documentales): baldosa gris grande con el medio, el pie y el
   crédito en una pastilla oscura.
 - **Checklists:** baldosa gris. Cada ítem lleva un pictograma blanco sobre un disco de color de

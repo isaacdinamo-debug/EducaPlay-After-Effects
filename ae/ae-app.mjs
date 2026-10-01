@@ -41,3 +41,11 @@ export const aerenderPath = () => {
   if (!fs.existsSync(p)) throw new Error(`No encontré aerender en ${p} (definí AERENDER en motor/.env).`);
   return p;
 };
+
+/**
+ * Sufijo de una variante de armado, el mismo que usa build-episode.jsx para el
+ * .aep: <CODE><sufijo>.aep y revision<sufijo>/. Así una variante nunca pisa el
+ * armado por defecto ni su evidencia.
+ */
+export const sufijo = ({clasico = false, grandes = false} = {}) =>
+  (clasico ? '-clasico' : '') + (grandes ? '-grandes' : '');

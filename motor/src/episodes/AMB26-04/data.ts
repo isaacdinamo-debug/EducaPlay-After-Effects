@@ -640,7 +640,8 @@ export const BLOCKS: readonly Block[] = [
     from: M.cierre,
     to: M.finDocente,
     slot: C_RECURSO,
-    kicker: 'EDUCAPLAY AMBIENTAL',
+    // La marca no va en un kicker (se muestra en mayúsculas): ver AGENTS.md.
+    kicker: 'EN RESUMEN',
     items: [
       {term: 'Antes', detail: 'Cómo prepararte', at: M.recapAntes},
       {term: 'Durante', detail: 'Este protocolo de acción', at: M.recapDurante},
@@ -659,6 +660,7 @@ export const BLOCKS: readonly Block[] = [
  * render.
  */
 export const CAPTION_FIX: CaptionFix[] = [
+  {find: 'EducaPlay', replace: 'Educaplay', why: 'f3172 — la marca se escribe «Educaplay» (Whisper la transcribe EducaPlay).'},
   {find: 'haces?', replace: 'hacés?', why: 'Voseo auténtico del docente en cámara.'},
   {
     find: '¿Te quedas esperando que baje, salís caminando o buscas',

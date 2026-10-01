@@ -6,6 +6,8 @@
  *   npm run ae -- <CODE> --forzar                 (cierra aunque haya otro proyecto)
  *   npm run ae -- <CODE> --clasico                (sin modo vivo: <CODE>-clasico.aep y
  *                                                  revision-clasico/; el defecto es el modo vivo)
+ *   npm run ae -- <CODE> --recursos grandes       (variante en prueba: <CODE>-grandes.aep y
+ *                                                  revision-grandes/)
  *
  *   1. abre After Effects si no está corriendo y espera a que acepte scripts;
  *   2. cierra el proyecto abierto SIN guardar sólo si lo generó este flujo
@@ -29,7 +31,7 @@ import os from 'node:os';
 import path from 'node:path';
 import {execFileSync, spawn} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
-import {aeApp, WIN} from './ae-app.mjs';
+import {aeApp, sufijo, WIN} from './ae-app.mjs';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const AE_DIR = path.join(REPO, 'ae');
@@ -197,9 +199,9 @@ const contactSheet = (pngs, out) => {
   execFileSync('ffmpeg', ['-y', '-loglevel', 'error', ...inputs, '-filter_complex', filter, '-frames:v', '1', '-q:v', '4', out]);
 };
 
-const build = async (app, code, M, frames, revDir, tmpDir, force, clasico) => {
+const build = async (app, code, M, frames, revDir, tmpDir, force, clasico, grandes) => {
   const problems = [];
-  const aep = path.join(REPO, 'episodios', code, `${code}${clasico ? '-clasico' : ''}.aep`);
+  const aep = path.join(REPO, 'episodios', code, `${code}${sufijo({clasico, grandes})}.aep`);
   const words = path.join(REPO, 'motor', 'src', 'episodes', code, 'words.json');
   const logFile = path.join(tmpDir, 'log.txt');
   const stillDir = path.join(revDir, 'stills');
@@ -213,6 +215,7 @@ const build = async (app, code, M, frames, revDir, tmpDir, force, clasico) => {
   await runJsx(app, `
     $.global.EDUCAPLAY_MANIFEST = ${js(path.join(REPO, 'episodios', code, 'manifest.json'))};
     ${clasico ? '$.global.EDUCAPLAY_CLASICO = true;' : `$.global.EDUCAPLAY_WORDS = ${js(words)};`}
+    ${grandes ? "$.global.EDUCAPLAY_RECURSOS = 'grandes';" : ''}
     try {
       $.evalFile(File(${js(path.join(AE_DIR, 'build-episode.jsx'))}));
     } catch(err) {
@@ -272,15 +275,17 @@ const build = async (app, code, M, frames, revDir, tmpDir, force, clasico) => {
 
 const main = async () => {
   const {code, flags} = args;
-  if (!code) throw new Error('Uso: npm run ae -- <CODE> [--clasico] [--frames 420,1620] [--forzar]');
+  if (!code) throw new Error('Uso: npm run ae -- <CODE> [--clasico] [--recursos grandes] [--frames 420,1620] [--forzar]');
   // El modo vivo es el defecto desde el 30/9/2026; --vivo queda aceptado como sinónimo.
   const clasico = !!flags.clasico;
+  if (flags.recursos && flags.recursos !== 'grandes') throw new Error(`--recursos ${flags.recursos}: la única variante es "grandes"`);
+  const grandes = flags.recursos === 'grandes';
 
   const manifestPath = path.join(REPO, 'episodios', code, 'manifest.json');
   if (!fs.existsSync(manifestPath)) throw new Error(`Falta ${path.relative(REPO, manifestPath)}: corré npm run export:ae -- ${code}`);
   const M = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
   const frames = flags.frames ? String(flags.frames).split(',').map(Number) : defaultFrames(M);
-  const revDir = path.join(REPO, 'episodios', code, clasico ? 'revision-clasico' : 'revision');
+  const revDir = path.join(REPO, 'episodios', code, `revision${sufijo({clasico, grandes})}`);
   fs.mkdirSync(revDir, {recursive: true});
 
   const app = aeApp();
@@ -288,13 +293,13 @@ const main = async () => {
   let problems;
   try {
     await ensureAE(app, tmpDir);
-    problems = await build(app, code, M, frames, revDir, tmpDir, !!flags.forzar, clasico);
+    problems = await build(app, code, M, frames, revDir, tmpDir, !!flags.forzar, clasico, grandes);
   } finally {
     try { fs.rmSync(tmpDir, {recursive: true, force: true}); } catch (_) {}
   }
 
   fs.writeFileSync(path.join(revDir, 'estado.json'), JSON.stringify({
-    code, modo: clasico ? 'clasico' : 'vivo', fecha: new Date().toISOString(), frames,
+    code, modo: clasico ? 'clasico' : 'vivo', recursos: grandes ? 'grandes' : 'fila', fecha: new Date().toISOString(), frames,
     ok: problems.length === 0, problemas: problems,
   }, null, 1));
   if (problems.length) {

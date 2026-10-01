@@ -108,8 +108,12 @@ function buildEpisode() {
   // La misma estética con más vida dentro del Motion Design System §6. Ver
   // docs/ESTETICA.md, «Modo vivo».
   var VIVO = !$.global.EDUCAPLAY_CLASICO;
+  // Variante en prueba (npm run ae -- <CODE> --recursos grandes): los recursos
+  // de refuerzo como fila grande, la imagen a ~60 % del ancho.
+  var GRANDES = $.global.EDUCAPLAY_RECURSOS === 'grandes';
   var wordsFile = $.global.EDUCAPLAY_WORDS ? File($.global.EDUCAPLAY_WORDS) : null;
   $.global.EDUCAPLAY_CLASICO = undefined;
+  $.global.EDUCAPLAY_RECURSOS = undefined;
   $.global.EDUCAPLAY_WORDS = undefined;
 
   var M = readJSON(manifestFile);
@@ -144,7 +148,7 @@ function buildEpisode() {
   F3.heading = 'MuseoSansRounded-900';
   F3.headingLight = 'MuseoSansRounded-300';
   FONTS = F3;
-  log('▶ ' + MAIN + ' · ' + M.blocks.length + ' bloques · ' + M.captions.length + ' subtítulos' + (VIVO ? ' · modo vivo' : ''));
+  log('▶ ' + MAIN + ' · ' + M.blocks.length + ' bloques · ' + M.captions.length + ' subtítulos' + (VIVO ? ' · modo vivo' : '') + (GRANDES ? ' · recursos grandes' : ''));
 
   /** Minúsculas, sin tildes ni signos: para comparar lo escrito con lo dicho. */
   function norm(s) {
@@ -967,16 +971,25 @@ function buildEpisode() {
   function resourceRow(comp, b, box, kind) {
     var wide = box.width >= 800;
     var P = 18;
-    var T = wide ? 200 : 150;
     var w = box.width;
-    var h = T + P * 2;
+    // Miniatura cuadrada (la fila de la web) o, con GRANDES, la imagen a ~60 %
+    // del ancho (50 % en la caja angosta, para que el título no quede en una
+    // columna de menos de ~170 px) y todo el alto que da la caja del motor.
+    var TW = wide ? 200 : 150, TH = TW;
+    if (GRANDES) {
+      TW = Math.round(w * (wide ? 0.6 : 0.5));
+      TH = Math.min(box.height - P * 2, Math.round(TW * 0.8));
+    }
+    var h = TH + P * 2;
     card(comp, 0, 0, w, h);
-    var thumb = mediaInCard(comp, b.src, P, P, T, T, kind === 'gif' ? 'contain' : 'cover', 0, kind === 'photo');
+    var thumb = mediaInCard(comp, b.src, P, P, TW, TH, kind === 'gif' ? 'contain' : 'cover', 0, kind === 'photo');
     // Modo vivo: por partes. Tarjeta, miniatura, título y metadatos.
-    revealMedia(thumb, P, P, T, T, sec(4));
-    var tx = P + T + 24, tw = w - tx - P;
+    revealMedia(thumb, P, P, TW, TH, sec(4));
+    var tx = P + TW + 24, tw = w - tx - P;
     var ty = P + 6;
-    var ttl = text(comp, b.caption || b.label || '', tx, ty, {name: 'TÍTULO', font: FONTS.heading, size: wide ? 32 : 26, leading: wide ? 38 : 31, color: hex(WEB.tinta), maxW: tw});
+    var tSize = GRANDES ? (wide ? 36 : 28) : (wide ? 32 : 26);
+    var tLead = GRANDES ? (wide ? 42 : 33) : (wide ? 38 : 31);
+    var ttl = text(comp, b.caption || b.label || '', tx, ty, {name: 'TÍTULO', font: FONTS.heading, size: tSize, leading: tLead, color: hex(WEB.tinta), maxW: tw});
     revealChars(ttl.layer, sec(VIVO ? 10 : 6), sec(14), true);
     ty += ttl.h + 16;
     // Sin «RECURSO 10» ni «ANIMACIÓN 7»: es la numeración interna de la
@@ -1678,7 +1691,7 @@ function buildEpisode() {
   masterLayer.locked = true;
 
   // ─────────────────────────────────────────────────────────────── guardar
-  var out = File(ROOTDIR.fsName + '/' + MAIN + (VIVO ? '' : '-clasico') + '.aep');
+  var out = File(ROOTDIR.fsName + '/' + MAIN + (VIVO ? '' : '-clasico') + (GRANDES ? '-grandes' : '') + '.aep');
   proj.save(out);
   main.openInViewer();
   app.endUndoGroup();

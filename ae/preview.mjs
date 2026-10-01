@@ -4,6 +4,9 @@
  *   npm run preview -- <CODE>              (desde motor/) → episodios/<CODE>/preview/<CODE>.mp4
  *   npm run preview -- <CODE> --clasico    el <CODE>-clasico.aep → <CODE>-clasico.mp4
  *   npm run preview -- <CODE> --comparar   además, <CODE>-comparativo.mp4: clásico | vivo
+ *   npm run preview -- <CODE> --recursos grandes [--comparar]
+ *                                          la variante; con --comparar, <CODE>-grandes-comparativo.mp4:
+ *                                          filas actuales | recursos grandes
  *   --tramo 500  --timeout 240             cuadros por tramo y segundos máximos por tramo
  *
  * Renderiza con aerender (no hace falta tener AE abierto) POR TRAMOS y los une
@@ -20,7 +23,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {spawn, spawnSync, execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
-import {aerenderPath, WIN} from './ae-app.mjs';
+import {aerenderPath, sufijo, WIN} from './ae-app.mjs';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -71,11 +74,14 @@ const recursosEn = (M, s, e) => M.blocks
   .filter((b) => b.from <= e && b.to >= s)
   .flatMap((b) => [b.src, ...(b.items ?? []).map((i) => i.src)].filter(Boolean).map((src) => `${b.key} (${src})`));
 
-const preview = async (code, clasico, M, tramo, timeoutS) => {
+const preview = async (code, variante, M, tramo, timeoutS) => {
   const dir = path.join(REPO, 'episodios', code);
-  const name = `${code}${clasico ? '-clasico' : ''}`;
+  const name = `${code}${sufijo(variante)}`;
   const aep = path.join(dir, `${name}.aep`);
-  if (!fs.existsSync(aep)) throw new Error(`No existe ${path.relative(REPO, aep)}: corré npm run ae -- ${code}${clasico ? ' --clasico' : ''}`);
+  if (!fs.existsSync(aep)) {
+    throw new Error(`No existe ${path.relative(REPO, aep)}: corré npm run ae -- ${code}` +
+      `${variante.clasico ? ' --clasico' : ''}${variante.grandes ? ' --recursos grandes' : ''}`);
+  }
   const outDir = path.join(dir, 'preview');
   const work = path.join(outDir, `${name}.tramos`);
   fs.rmSync(work, {recursive: true, force: true});
@@ -109,18 +115,23 @@ const preview = async (code, clasico, M, tramo, timeoutS) => {
 
 const main = async () => {
   const {code, flags} = args;
-  if (!code) throw new Error('Uso: npm run preview -- <CODE> [--clasico] [--comparar] [--tramo 500] [--timeout 240]');
+  if (!code) throw new Error('Uso: npm run preview -- <CODE> [--clasico] [--recursos grandes] [--comparar] [--tramo 500] [--timeout 240]');
   const M = JSON.parse(fs.readFileSync(path.join(REPO, 'episodios', code, 'manifest.json'), 'utf8'));
   const tramo = Number(flags.tramo ?? 500), timeoutS = Number(flags.timeout ?? 240);
 
-  const hecho = await preview(code, !!flags.clasico, M, tramo, timeoutS);
-  if (flags.comparar && !flags.clasico) {
-    const otro = await preview(code, true, M, tramo, timeoutS);
-    const cmp = path.join(REPO, 'episodios', code, 'preview', `${code}-comparativo.mp4`);
+  const variante = {clasico: !!flags.clasico, grandes: flags.recursos === 'grandes'};
+  const hecho = await preview(code, variante, M, tramo, timeoutS);
+  // --comparar: con --recursos grandes, contra las filas actuales del mismo
+  // modo; si no, clásico | vivo.
+  if (flags.comparar && (variante.grandes || !variante.clasico)) {
+    const base = variante.grandes ? {clasico: variante.clasico, grandes: false} : {clasico: true, grandes: false};
+    const otro = await preview(code, base, M, tramo, timeoutS);
+    const cmp = path.join(REPO, 'episodios', code, 'preview', `${code}${variante.grandes ? sufijo(variante) : ''}-comparativo.mp4`);
     execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', otro, '-i', hecho, '-filter_complex',
       '[0:v]scale=960:540[a];[1:v]scale=960:540[b];[a][b]hstack[v]', '-map', '[v]', '-map', '1:a?',
       '-c:v', 'libx264', '-crf', '20', '-preset', 'fast', '-c:a', 'aac', cmp]);
-    console.log(`✓ ${path.relative(REPO, cmp)} (izquierda: clásico · derecha: vivo)`);
+    console.log(`✓ ${path.relative(REPO, cmp)} (izquierda: ${variante.grandes ? 'filas actuales' : 'clásico'} · ` +
+      `derecha: ${variante.grandes ? 'recursos grandes' : 'vivo'})`);
   }
 };
 

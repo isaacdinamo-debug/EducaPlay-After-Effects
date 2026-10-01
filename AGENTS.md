@@ -38,11 +38,16 @@ npm run publicar -- <CODE>                    # todo lo anterior y, sólo si pas
 
 Banderas de `npm run ae`:
 - `--clasico` arma sin modo vivo (`<CODE>-clasico.aep`, `revision-clasico/`);
+- `--recursos grandes` arma la variante en prueba con los recursos de refuerzo más grandes
+  (`<CODE>-grandes.aep`, `revision-grandes/`; ver `docs/ESTETICA.md`);
 - `--frames 420,1620` elige los stills de la hoja de contacto;
 - `--forzar` cierra sin guardar un proyecto abierto que no es de este flujo (sólo si sabés que no
   es trabajo de nadie).
 
-`npm run preview -- <CODE> --comparar` suma un lado a lado con la versión `--clasico`.
+`npm run preview -- <CODE> --comparar` suma un lado a lado con la versión `--clasico`; con
+`--recursos grandes --comparar`, el lado a lado es filas actuales | recursos grandes.
+
+`npm run check` también verifica que la marca esté bien escrita en subtítulos y tarjetas.
 ```
 
 ## Reglas duras
