@@ -13,7 +13,7 @@
  */
 import path from 'node:path';
 import {pathToFileURL} from 'node:url';
-import {parseArgs, ROOT} from './lib/common.mjs';
+import {parseArgs, ROOT, trackerOpts} from './lib/common.mjs';
 
 const lin = (c) => {
   const v = c / 255;
@@ -230,9 +230,11 @@ const main = async () => {
   }
 
   // Prueba de regresión: lo que hacía la versión anterior debe seguir fallando.
-  const bad = ratio('#FFFFFF', c.stage);
+  const {estudioDe} = await import(pathToFileURL(path.join(ROOT, 'src/brand/estudios.ts')).href);
+  const est = code ? estudioDe(code, trackerOpts(code).studio) : null;
+  const bad = ratio('#FFFFFF', est?.stage ?? c.stage);
   console.log(
-    `\n  (referencia: blanco sobre el plató = ${bad.toFixed(2)}:1 — por eso el texto nunca va suelto sobre el fondo)`,
+    `\n  (referencia: blanco sobre el ${est?.stage ? est.nombre : 'plató'} = ${bad.toFixed(2)}:1 — por eso el texto nunca va suelto sobre el fondo)`,
   );
 
   const failed = [...rows, ...rbRows, ...motionRows, ...accentRows].filter((x) => !x.ok);

@@ -14,7 +14,7 @@ tocó**: sigue siendo el archivo del flujo Remotion y de los capítulos ya rende
 | `src/episodes/{types,blocks,captionFix}.ts` | `motor/src/episodes/` | `PictoName` pasó de `components/Pictogram.tsx` a `pictos.ts`. |
 | `src/components/captionPages.ts` | `motor/src/captions/` | Ninguno. |
 | `src/episodes/AMB26-04/*` | `motor/src/episodes/AMB26-04/` | Ninguno. |
-| `scripts/{prep,track-presenter,transcribe,escaleta,align-cues,check-layout,check-contrast,export-ae}.mjs`, `lib/*` | `motor/scripts/` | `export-ae` escribe en `episodios/<CODE>/`. `EDUCAPLAY_EPISODES` apunta por defecto a `~/Documents/EducaPlay/Secundaria /Ambiente`. |
+| `scripts/{prep,track-presenter,transcribe,escaleta,align-cues,check-layout,check-contrast,export-ae}.mjs`, `lib/*` | `motor/scripts/` | `export-ae` escribe en `episodios/<CODE>/`. `EDUCAPLAY_EPISODES` se declara en `motor/.env` (sin valor por defecto desde el 30/9). |
 | `scripts/nuevo.mjs` | `motor/scripts/nuevo.mjs` | Ya no registra el episodio en `Root.tsx` ni agrega `build:*`. |
 | `scripts/check.mjs` | `motor/scripts/check.mjs` | `tsc` + `check-layout` + `check-contrast`. Sin `check-overlay` ni `check-social` (renderizaban con Remotion). |
 | `Ambiente/AE/*.jsx` | `ae/` | El manifiesto llega por `$.global.EDUCAPLAY_MANIFEST`. |

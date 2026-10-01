@@ -25,7 +25,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {execFileSync} from 'node:child_process';
-import {EPISODES_ROOT, episodeDir, parseArgs, ROOT} from './lib/common.mjs';
+import {episodesRoot, episodeDir, parseArgs, ROOT} from './lib/common.mjs';
 
 const run = (args, opts = {}) => {
   console.log(`\n$ node ${args.join(' ')}`);
@@ -49,7 +49,7 @@ const slugFile = (name) => {
 /** El máster: --master, o el .mp4 más nuevo de la carpeta del episodio. */
 const findMaster = (code, override) => {
   if (override) return path.resolve(override);
-  const dir = path.join(EPISODES_ROOT, code);
+  const dir = path.join(episodesRoot(), code);
   if (!fs.existsSync(dir)) throw new Error(`No existe la carpeta del episodio: ${dir}`);
   const found = [];
   // RENDER/ primero: es donde el montajista deja el corte.
@@ -98,7 +98,7 @@ const main = () => {
   }
 
   // ── 2 · recursos del cliente, con nombres predecibles ─────────────────────
-  const src = path.join(EPISODES_ROOT, code, 'RECURSOS');
+  const src = path.join(episodesRoot(), code, 'RECURSOS');
   const pub = path.join(ROOT, 'public', code);
   const renombres = [];
   if (fs.existsSync(src)) {
@@ -164,4 +164,9 @@ const main = () => {
 `);
 };
 
-main();
+try {
+  await main();
+} catch (e) {
+  console.error(`\n✗ ${e.message}`);
+  process.exit(1);
+}

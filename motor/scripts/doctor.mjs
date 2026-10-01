@@ -13,7 +13,9 @@
  *   · los ARCHIVOS GENERADOS: si `npm run nuevo` vuelve a medir en otra
  *     máquina (otro ffmpeg, otro Whisper), el encuadre y los subtítulos
  *     cambian respecto de lo aprobado;
- *   · las HERRAMIENTAS (ffmpeg, whisper-cli, After Effects) y las rutas.
+ *   · las HERRAMIENTAS (ffmpeg, whisper-cli, After Effects) y las rutas de
+ *     motor/.env;
+ *   · el PLATÓ: sin él, el tracker no sabe qué es fondo y qué es docente.
  *
  * Sale con código 1 si hay algún ✗.
  */
@@ -22,7 +24,8 @@ import os from 'node:os';
 import path from 'node:path';
 import {spawnSync} from 'node:child_process';
 import {createRequire} from 'node:module';
-import {EPISODES_ROOT, parseArgs, ROOT} from './lib/common.mjs';
+import {pathToFileURL} from 'node:url';
+import {ENV_FILE, EPISODES_ROOT, parseArgs, ROOT, trackerOpts} from './lib/common.mjs';
 
 const REPO = path.resolve(ROOT, '..');
 const WIN = process.platform === 'win32';
@@ -109,7 +112,7 @@ const DEFAULT_FONTS = ['Museo-300', 'Museo-700', 'MuseoSansRounded-300', 'MuseoS
 
 const git = (...a) => spawnSync('git', a, {cwd: REPO, encoding: 'utf8'});
 
-const main = () => {
+const main = async () => {
   const {code} = parseArgs();
   const manifestPath = code ? path.join(REPO, 'episodios', code, 'manifest.json') : null;
   const M = manifestPath && fs.existsSync(manifestPath) ? JSON.parse(fs.readFileSync(manifestPath, 'utf8')) : null;
@@ -117,8 +120,9 @@ const main = () => {
   // ── máquina ──
   ok('sistema', `${os.type()} ${os.release()} (${process.platform}/${process.arch})`);
   const [maj, min] = process.versions.node.split('.').map(Number);
-  if (maj > 22 || (maj === 22 && min >= 6)) ok('node', process.versions.node);
-  else fail('node', `${process.versions.node}: hace falta ≥ 22.6 (--experimental-strip-types)`);
+  // ≥ 23.6: importa .ts sin bandera, que es lo que hacen los scripts (.nvmrc: 24 LTS).
+  if (maj > 23 || (maj === 23 && min >= 6)) ok('node', process.versions.node);
+  else fail('node', `${process.versions.node}: hace falta Node 24 LTS (≥ 23.6; ver .nvmrc)`);
 
   for (const [cmd, need, flag] of [['ffmpeg', 'export y medición', '-version'], ['ffprobe', 'export y medición', '-version'], ['git', 'publicar', '--version']]) {
     const v = has(cmd, [flag]);
@@ -168,9 +172,14 @@ const main = () => {
   }
 
   // Rutas
-  if (fs.existsSync(EPISODES_ROOT)) ok('entregas', `EDUCAPLAY_EPISODES = ${EPISODES_ROOT}`);
-  else warn('entregas', `no existe ${EPISODES_ROOT}: definí EDUCAPLAY_EPISODES (sólo hace falta para npm run nuevo)`);
-  if (WIN && /\s[\\/]|\s$/.test(EPISODES_ROOT)) fail('entregas', 'la ruta tiene una carpeta que termina en espacio: Windows no la admite; renombrala y definí EDUCAPLAY_EPISODES');
+  if (!fs.existsSync(ENV_FILE)) warn('.env', 'no existe motor/.env: copiá motor/.env.example y completá las rutas de esta PC');
+  for (const [v, para] of [['EDUCAPLAY_EPISODES', 'npm run nuevo'], ['EDUCAPLAY_MEDIOS', 'npm run medios']]) {
+    const val = process.env[v];
+    if (!val) warn('rutas', `falta ${v} en motor/.env (sólo hace falta para ${para})`);
+    else if (!fs.existsSync(val)) fail('rutas', `${v} = ${val}: no existe`);
+    else if (WIN && /\s[\\/]|\s$/.test(val)) fail('rutas', `${v}: una carpeta termina en espacio y Windows no la admite; renombrala`);
+    else ok('rutas', `${v} = ${val}`);
+  }
   const model = path.join(ROOT, 'models', 'ggml-large-v3-turbo.bin');
   if (fs.existsSync(model)) ok('modelo Whisper', path.relative(REPO, model));
   else warn('modelo Whisper', 'no está en motor/models: sólo hace falta para npm run nuevo');
@@ -195,10 +204,37 @@ const main = () => {
         `\n    Volvé a lo aprobado con: git checkout -- motor/src/episodes/${code}/ (y npm run export:ae)`);
     } else if (fs.existsSync(epDir)) ok(code, 'encuadre, gatillos y subtítulos son los aprobados (sin cambios contra git)');
 
+    // Plató
+    const {estudioDe} = await import(pathToFileURL(path.join(ROOT, 'src/brand/estudios.ts')).href);
+    try {
+      const est = estudioDe(code, trackerOpts(code).studio);
+      if (est) ok(code, `plató: ${est.nombre}`);
+      else fail(code, `plató sin declarar: ni la materia (src/brand/estudios.ts) ni src/episodes/${code}/tracker.json ` +
+        `dicen dónde se grabó. npm run track -- ${code} lo frena y muestra el color de fondo medido.`);
+    } catch (e) {
+      fail(code, e.message);
+    }
+
+    // Recursos que usa check-layout (public/<CODE>/) y sus fuentes (public/fonts/)
+    try {
+      const data = await import(pathToFileURL(path.join(epDir, 'data.ts')).href);
+      const srcs = [...new Set((data.BLOCKS ?? []).flatMap((b) => [b.src, ...(b.items ?? []).map((i) => i.src)]).filter(Boolean))];
+      const faltan = srcs.filter((s) => !fs.existsSync(path.join(ROOT, 'public', s)));
+      if (faltan.length) fail(code, `faltan ${faltan.length} recursos en motor/public/: ${faltan.slice(0, 4).join(', ')}` +
+        `${faltan.length > 4 ? '…' : ''} (npm run medios -- ${code}, o nuevo si es un capítulo nuevo)`);
+      else ok(code, `los ${srcs.length} recursos del data.ts están en motor/public/`);
+    } catch (e) {
+      warn(code, `no pude leer el data.ts para revisar los recursos: ${e.message.split('\n')[0]}`);
+    }
+    const fontsDir = path.join(ROOT, 'public', 'fonts');
+    if (!fs.existsSync(fontsDir) || !fs.readdirSync(fontsDir).length) {
+      fail(code, `falta motor/public/fonts/ (check-layout mide con esas fuentes): npm run medios -- ${code}`);
+    }
+
     // Máster
     const master = path.join(ROOT, 'public', 'videos', `${code}.mp4`);
     if (!fs.existsSync(master)) {
-      fail(code, `falta el máster motor/public/videos/${code}.mp4 (npm run medios -- ${code} --desde "<carpeta>")`);
+      fail(code, `falta el máster motor/public/videos/${code}.mp4 (npm run medios -- ${code})`);
     } else {
       const r = spawnSync('ffprobe', ['-v', 'error', '-select_streams', 'v:0', '-show_entries',
         'stream=width,height,r_frame_rate,nb_frames', '-of', 'json', master], {encoding: 'utf8'});
@@ -241,4 +277,4 @@ const main = () => {
   if (bad) process.exit(1);
 };
 
-main();
+main().catch((e) => { console.error(`✗ ${e.message}`); process.exit(1); });

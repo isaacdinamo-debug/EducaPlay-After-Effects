@@ -2,10 +2,12 @@
  * medios — trae a este repo los medios pesados de un episodio que ya existe en
  * otra carpeta de trabajo, sin duplicarlos (enlace duro; copia si es otro disco).
  *
+ *   npm run medios -- AMB26-04                     (desde EDUCAPLAY_MEDIOS de motor/.env)
  *   npm run medios -- AMB26-04 --desde "<carpeta con public/>"
  *   npm run medios -- --modelo                     (sólo el modelo de Whisper)
  *
- * Por defecto `--desde` es el motor viejo de Ambiente en EducaPlay Secundaria.
+ * Por defecto `--desde` es EDUCAPLAY_MEDIOS (motor/.env): la carpeta de ESTA PC
+ * que tiene `public/videos/<CODE>.mp4`, `public/<CODE>/` y `public/fonts/`.
  * Enlaza, dentro de motor/:
  *
  *   public/videos/<CODE>.mp4   el máster que miden los scripts y usa AE
@@ -17,11 +19,10 @@
  * NUEVO no pasa por acá: `npm run nuevo` lo toma de la carpeta de entrega.
  */
 import fs from 'node:fs';
-import os from 'node:os';
 import path from 'node:path';
 import {parseArgs, ROOT} from './lib/common.mjs';
 
-const DEFAULT_FROM = path.join(os.homedir(), 'Documents', 'EducaPlay', 'Secundaria ', 'Ambiente', 'remotion');
+const DEFAULT_FROM = process.env.EDUCAPLAY_MEDIOS || null;
 
 const link = (src, dst) => {
   if (!fs.existsSync(src)) throw new Error(`No existe ${src}`);
@@ -51,6 +52,10 @@ const linkDir = (src, dst) => {
 
 const main = () => {
   const {code, flags} = parseArgs();
+  if (!flags.desde && !DEFAULT_FROM) {
+    throw new Error('¿De dónde traigo los medios? Poné EDUCAPLAY_MEDIOS en motor/.env (ver .env.example) ' +
+      'o pasá --desde "<carpeta con public/>".');
+  }
   const from = path.resolve(String(flags.desde ?? DEFAULT_FROM));
   const rel = (p) => path.relative(ROOT, p);
 
@@ -62,7 +67,9 @@ const main = () => {
     ];
     const found = candidates.find((c) => fs.existsSync(c));
     if (found) console.log(`✓ ${rel(modelDst)} · ${link(found, modelDst)}`);
-    else console.log(`⚠ No encontré el modelo de Whisper en ${from}. Ver motor/README o transcribe.mjs.`);
+    else console.log(`⚠ No encontré el modelo de Whisper en ${from} (sólo hace falta para npm run nuevo). ` +
+      'Bajalo desde motor/ con:\n    curl -L -o models/ggml-large-v3-turbo.bin ' +
+      'https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-large-v3-turbo.bin');
   }
   if (!code) {
     if (!flags.modelo) throw new Error('Uso: npm run medios -- <CODE> [--desde <ruta>]');

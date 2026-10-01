@@ -21,7 +21,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {createRequire} from 'node:module';
-import {episodeDir, fmtFrame, parseArgs, ROOT} from './lib/common.mjs';
+import {episodeDir, fmtFrame, parseArgs, ROOT, trackerOpts} from './lib/common.mjs';
 
 const MARGIN = 24;      // aire mínimo exigido contra la silueta
 const MIN_WIDTH = 380;  // por debajo de esto una tarjeta no es legible
@@ -54,7 +54,10 @@ const main = async () => {
   const data = await load(`src/episodes/${code}/data.ts`);
 
   const vertical = String(flags.format ?? 'h').toLowerCase().startsWith('v');
-  const fmt = vertical ? formatTokens(1080, 1920) : formatTokens(1920, 1080);
+  const {estudioDe} = await load('src/brand/estudios.ts');
+  const est = estudioDe(code, trackerOpts(code).studio);
+  if (!est) throw new Error(`Falta declarar el plató de ${code} (npm run doctor -- ${code} dice cómo).`);
+  const fmt = vertical ? formatTokens(1080, 1920) : formatTokens(1920, 1080, est);
 
   // El bbox crudo por frame vive fuera del bundle; lo levantamos sólo acá,
   // porque el verificador debe ser MÁS estricto que lo que ve el render.

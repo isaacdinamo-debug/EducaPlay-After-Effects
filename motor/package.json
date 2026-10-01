@@ -19,7 +19,8 @@
     "check:contrast": "node scripts/check-contrast.mjs",
     "export:ae": "node --experimental-strip-types scripts/export-ae.mjs",
     "ae": "node ../ae/run.mjs",
-    "publicar": "node scripts/publicar.mjs"
+    "publicar": "node scripts/publicar.mjs",
+    "preview": "node ../ae/preview.mjs"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
@@ -27,6 +28,6 @@
     "typescript": "5.8.2"
   },
   "engines": {
-    "node": ">=22.6"
+    "node": ">=23.6"
   }
 }

@@ -27,14 +27,18 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import {execFileSync} from 'node:child_process';
+import {pathToFileURL} from 'node:url';
 import {
-  episodeDir, ffmpegStream, ffprobeInfo, fmtFrame, masterFor, parseArgs, writeJson,
+  episodeDir, ffmpegStream, ffprobeInfo, fmtFrame, masterFor, parseArgs, ROOT, trackerOpts, writeJson,
 } from './lib/common.mjs';
 
-// --- Umbrales de segmentación (atados al plató verde de esta materia) ---
-// Medidos sobre AMB24-01: con GREEN_MARGIN = 18 segmentaron bien 796 de 856
-// cuadros muestreados. El polo azul del profesor separa limpio del verde.
-const GREEN_MARGIN = 18;     // G - max(R,B) por encima de esto es fondo
+// Materias y platós: qué es fondo y dónde está la marca de agua (src/brand/estudios.ts).
+const {estudioDe, esFondo} = await import(pathToFileURL(path.join(ROOT, 'src/brand/estudios.ts')).href);
+
+// --- Umbrales de segmentación ---
+// Qué es fondo lo decide el plató (src/brand/estudios.ts: el verde usa
+// G - max(R,B) > 18, medido sobre AMB24-01). Acá queda el papel.
 // Más flojos que en Leo a propósito: este máster es un proxy muy comprimido
 // (17,7 MB para 171 s), y con 215/22 los bordes del papel rasgado se colaban
 // como sujeto.
@@ -93,11 +97,7 @@ const BANDS = 6;
 // ancho en la mediana, 70 % en el p90). Ver la nota en src/layout/presenter.ts.
 const MAX_PERSON_W = 1500;
 
-// Marca de agua "Educaplay / ED. AMBIENTAL" quemada arriba a la derecha: se
-// anula antes de medir. En coordenadas de COMPOSICIÓN (1920×1080). El ícono de
-// reciclaje se midió en x 766-855, y 39-103 del máster (1024×576) promediando
-// 38 cuadros; el rect suma la palabra, el bajotítulo y aire alrededor.
-const WATERMARK = [1400, 56, 470, 160];
+// La marca de agua quemada (se anula antes de medir) también la da el plató.
 
 // --- Espacio de composición ---
 // El track se emite acá, no en píxeles del máster. Ver la nota de la cabecera.
@@ -125,20 +125,15 @@ const decodeFrames = async (master, onFrame) => {
   return idx;
 };
 
-const isBgPixel = (r, g, b, isLila) => {
-  if (isLila) {
-    if (Math.min(r, b) - g > 30) return true;                    // fondo lila (Leo)
-  } else {
-    const mx = r > b ? r : b;
-    if (g - mx > GREEN_MARGIN) return true;                     // fondo verde (Ambiente)
-  }
+const isBgPixel = (r, g, b, fondo) => {
+  if (esFondo(fondo, r, g, b)) return true;                     // fondo del plató
   const lo = Math.min(r, g, b), hi = Math.max(r, g, b);
   if (lo > WHITE_MIN && hi - lo < WHITE_SPREAD) return true;    // papel
   return false;
 };
 
 /** Histograma de columnas de píxeles "sujeto" en un frame RGB crudo. */
-const columnHistogram = (px, wmRect, isLila) => {
+const columnHistogram = (px, wmRect, fondo) => {
   const cols = new Int32Array(AW);
   for (let y = 0; y < AH; y++) {
     const rowOff = y * AW * 3;
@@ -146,7 +141,7 @@ const columnHistogram = (px, wmRect, isLila) => {
     for (let x = 0; x < AW; x++) {
       if (inWmRows && x >= wmRect[0] && x < wmRect[0] + wmRect[2]) continue;
       const i = rowOff + x * 3;
-      if (isBgPixel(px[i], px[i + 1], px[i + 2], isLila)) continue;
+      if (isBgPixel(px[i], px[i + 1], px[i + 2], fondo)) continue;
       cols[x]++;
     }
   }
@@ -191,6 +186,31 @@ const smooth = (series) => {
 const framingOf = (cx) =>
   cx < LEFT_MAX ? 'left' : cx > CENTER_MAX ? 'right' : 'center';
 
+/**
+ * Color de fondo del plató, para declarar uno que no se conoce: mediana de las
+ * franjas laterales (un 8 % de cada borde) de cuatro cuadros repartidos en el
+ * capítulo, sin el papel blanco ni el negro. Un solo cuadro al principio mentía:
+ * suele ser la intro o una placa.
+ */
+const medirFondo = (master, durationS) => {
+  const W = 192, H = 108, edge = Math.round(W * 0.08);
+  const ch = [[], [], []];
+  for (const f of [0.2, 0.4, 0.6, 0.8]) {
+    const px = execFileSync('ffmpeg', ['-v', 'error', '-ss', String((durationS * f).toFixed(2)), '-i', master,
+      '-frames:v', '1', '-vf', `scale=${W}:${H}`, '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-'], {maxBuffer: W * H * 3 + 1024});
+    for (let y = 0; y < H; y++) {
+      for (let x = 0; x < W; x++) {
+        if (x >= edge && x < W - edge) continue;
+        const i = (y * W + x) * 3, r = px[i], g = px[i + 1], b = px[i + 2];
+        const lo = Math.min(r, g, b), hi = Math.max(r, g, b);
+        if ((lo > WHITE_MIN && hi - lo < WHITE_SPREAD) || hi < 30) continue; // papel o negro
+        ch[0].push(r); ch[1].push(g); ch[2].push(b);
+      }
+    }
+  }
+  return ch[0].length ? ch.map((v) => median(v)) : [0, 0, 0];
+};
+
 const main = async () => {
   const {flags, code} = parseArgs();
   if (!code) throw new Error('Uso: node scripts/track-presenter.mjs <CODE> [--master ruta]');
@@ -209,13 +229,19 @@ const main = async () => {
    * con techo de 900. Es un archivo y no un flag para que re-correr `nuevo`
    * mida igual.
    */
-  const optsFile = path.join(episodeDir(code), 'tracker.json');
-  const epOpts = fs.existsSync(optsFile) ? JSON.parse(fs.readFileSync(optsFile, 'utf8')) : {};
-  const isLila = code.startsWith('LEO') || epOpts.studio === 'lila' || flags.lila;
-  const defaultWm = isLila ? [1400, 35, 420, 140] : WATERMARK;
-  const WM = epOpts.watermark ?? defaultWm;
+  const epOpts = trackerOpts(code);
+  const est = estudioDe(code, flags.lila ? 'lila' : epOpts.studio);
+  if (!est) {
+    const rgb = medirFondo(master, info.duration);
+    throw new Error(`No sé en qué plató se grabó ${code}: su materia no lo declara en src/brand/estudios.ts ` +
+      `ni hay "studio" en src/episodes/${code}/tracker.json.\n` +
+      `  Color de fondo medido en el máster: rgb(${rgb.join(', ')}).\n` +
+      `  Si es el plató verde o el lila: {"studio": "verde"} o {"studio": "lila"}.\n` +
+      `  Si es otro: {"studio": {"fondo": [${rgb.join(', ')}], "tolerancia": 40}}.`);
+  }
+  const WM = epOpts.watermark ?? est.watermark;
   if (epOpts.watermark) console.log(`marca de agua del episodio: [${WM.join(', ')}]`);
-  if (isLila) console.log(`plató: lila (serie Leo)`);
+  console.log(`plató: ${est.nombre}`);
   const wmRect = [
     Math.floor(WM[0] / sx), Math.floor(WM[1] / sy),
     Math.ceil(WM[2] / sx), Math.ceil(WM[3] / sy),
@@ -232,7 +258,7 @@ const main = async () => {
   const probeOut = [];
 
   await decodeFrames(master, (px, i) => {
-    const cols = columnHistogram(px, wmRect, isLila);
+    const cols = columnHistogram(px, wmRect, est.fondo);
     const thr = AH * COL_MIN_RATIO;
     const occ = openColumns(cols.map ? Array.from(cols, (c) => (c >= thr ? 1 : 0)) : []);
 
@@ -265,7 +291,7 @@ const main = async () => {
       let n = 0;
       for (let x = first; x <= last; x++) {
         const idx = y * AW * 3 + x * 3;
-        if (isBgPixel(px[idx], px[idx + 1], px[idx + 2], isLila)) continue;
+        if (isBgPixel(px[idx], px[idx + 1], px[idx + 2], est.fondo)) continue;
         n++;
       }
       if (n > (last - first) * 0.10) { y0 = y; break; }
@@ -285,7 +311,7 @@ const main = async () => {
           // y la banda libre derecha se vuelve negativa.
           if (wmX(x) && y >= wmRect[1] && y < wmRect[1] + wmRect[3]) continue;
           const idx = y * AW * 3 + x * 3;
-          if (isBgPixel(px[idx], px[idx + 1], px[idx + 2], isLila)) continue;
+          if (isBgPixel(px[idx], px[idx + 1], px[idx + 2], est.fondo)) continue;
           n++;
         }
         if (n > (yB - yA) * 0.12) { if (bf < 0) bf = x; bl = x; }
@@ -379,7 +405,7 @@ const main = async () => {
 
     // Un "sujeto" más ancho que MAX_PERSON_W no es una persona: es una PLACA a
     // cuadro completo. Todos los cortes de la serie abren con el bumper de
-    // EducaPlay y cierran con la del Gobierno de Corrientes, y ahí el cuadro
+    // Educaplay y cierran con la del Gobierno de Corrientes, y ahí el cuadro
     // entero deja de ser plató, así que el umbral de color marca todo.
     //
     // Se declara como encuadre 'none' —sin sujeto, sin perfil y sin banda

@@ -1,6 +1,6 @@
 /**
  * AMB26-02 — Mitos y verdades sobre las inundaciones
- * Educación Ambiental Integral · EducaPlay Secundaria (Corrientes)
+ * Educación Ambiental Integral · Educaplay Secundaria (Corrientes)
  *
  * ─────────────────────────────────────────────────────────────────────────────
  * 1. COREOGRAFÍA DEL MÁSTER (medido con track-presenter @ 23.976 fps, 4461 frames)
@@ -302,7 +302,8 @@ export const BLOCKS: readonly Block[] = [
     key: 'tit_cierre',
     from: cueFrame('comparti', 4163) - 4,
     to: 4270,
-    kicker: 'EducaPlay Secundaria',
+    // La marca no va en un kicker (se muestra en mayúsculas): ver AGENTS.md.
+    kicker: 'Nivel Secundario',
     title: '¡Compartí este video para ganarle a la desinformación!',
     slot: L_TOP,
   },

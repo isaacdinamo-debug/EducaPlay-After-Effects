@@ -1,0 +1,340 @@
+{
+  "meta": {
+    "codigo": "AMB26-04",
+    "titulo": "Plan B: protocolo para una inundación",
+    "patente": "AMB26_04",
+    "objetivo": "Fomentar una cultura de prevención y cuidado, incorporando conocimientos y prácticas para reducir riesgos y actuar responsablemente ante una inundación.",
+    "creditos": "Daniel Espinola Ocampo, Amparo Pérez Rueda, Paola Suárez",
+    "enCamara": "Paola Suárez",
+    "correcciones": [
+      "Escaleta corregida- Lourdes Correctora- 28/08/26",
+      "1° Corte- Lourdes Correctora- 02/’9/26",
+      "Video controlado con guion: sin observación.. Se puede copiar y pegar."
+    ],
+    "fuente": "1ESCALETA AMB26_04.docx"
+  },
+  "secciones": [
+    {
+      "fila": 1,
+      "guion": "",
+      "titulares": [
+        "¿Qué hacés?",
+        "¿A dónde vas?",
+        "Cada decisión cuenta"
+      ],
+      "recursos": [
+        {
+          "n": 1,
+          "desc": "inundación",
+          "raw": "1_inundación",
+          "archivos": [
+            "RECURSO 1.mp4",
+            "icono1.png",
+            "sticker1.gif",
+            "alerta-1.png",
+            "recurso-1.mp4"
+          ]
+        },
+        {
+          "n": 2,
+          "desc": "alerta1",
+          "raw": "2_alerta1",
+          "archivos": [
+            "icono2.png",
+            "alerta-2.png"
+          ]
+        },
+        {
+          "n": 3,
+          "desc": "alerta2",
+          "raw": "3_alerta2",
+          "archivos": [
+            "icono3.png",
+            "alerta-3.png"
+          ]
+        }
+      ],
+      "observaciones": "El recurso 1 aparece desde el inicio. De min 0.11 a 0.16. Luego sonido de alarmas que comienzan a sonar. Los titulares y recursos 2 y 3 van apareciendo sin superponerse, a modo de alerta.",
+      "gatillos": [],
+      "ambiguedades": [
+        "«min 0.11 a 0.16» — ¿es tiempo de la LÍNEA DE TIEMPO o entrada/salida del CLIP fuente?",
+        "«desde el inicio» — ¿de qué? hace falta un frame"
+      ]
+    },
+    {
+      "fila": 2,
+      "guion": "Tu calle está inundada. El agua empezó a entrar en la  casa. Y ahora, ¿qué hacés?",
+      "titulares": [],
+      "recursos": [
+        {
+          "n": 4,
+          "desc": "desespero",
+          "raw": "4_ desespero",
+          "archivos": [
+            "desespero.jpg"
+          ]
+        }
+      ],
+      "observaciones": "Aparece el recurso 4 cuando se menciona “el agua empezó a entrar”",
+      "gatillos": [
+        "el agua empezó a entrar"
+      ],
+      "ambiguedades": []
+    },
+    {
+      "fila": 3,
+      "guion": "¿Te quedás esperando que baje?, ¿salís caminando?, ¿o buscás un lugar seguro?",
+      "titulares": [],
+      "recursos": [],
+      "observaciones": "El titular aparece desde el inicio de la  sección y queda hasta el final.",
+      "gatillos": [],
+      "ambiguedades": [
+        "«desde el inicio» — ¿de qué? hace falta un frame",
+        "«hasta el final» — ¿de la sección o del video?"
+      ]
+    },
+    {
+      "fila": 4,
+      "guion": "Si alguna vez tenés que enfrentar una inundación que afecte tu hogar, saber qué hacer puede ayudarte a protegerte y a proteger a los demás.",
+      "titulares": [],
+      "recursos": [
+        {
+          "n": 5,
+          "desc": "familia.",
+          "raw": "5_familia.",
+          "archivos": [
+            "Reunir a la familia (creado con Gemini).png",
+            "familia.png",
+            "reunir-a-la-familia-creado-con-gemini.png",
+            "reunir-familia.png"
+          ]
+        }
+      ],
+      "observaciones": "El Recurso 5 aparece cuando se menciona “hogar” y queda hasta el final de la sección.",
+      "gatillos": [
+        "hogar"
+      ],
+      "ambiguedades": [
+        "«hasta el final» — ¿de la sección o del video?"
+      ]
+    },
+    {
+      "fila": 5,
+      "guion": "¿Qué te parece si repasamos un protocolo de acción que te ayude a actuar mejor en una situación de emergencia hídrica?",
+      "titulares": [
+        "Protocolo de acción"
+      ],
+      "recursos": [],
+      "observaciones": "El titular aparece desde el inicio de la sección y queda hasta el final.",
+      "gatillos": [],
+      "ambiguedades": [
+        "«desde el inicio» — ¿de qué? hace falta un frame",
+        "«hasta el final» — ¿de la sección o del video?"
+      ]
+    },
+    {
+      "fila": 6,
+      "guion": "Primero mantené la calma e informate. Escuchá las alertas y comunicados oficiales.Tené el celular cargado y la mochila de emergencia a mano.",
+      "titulares": [
+        "Mantené la calma e informate"
+      ],
+      "recursos": [
+        {
+          "n": 6,
+          "desc": "tele",
+          "raw": "6_tele",
+          "archivos": []
+        },
+        {
+          "n": 7,
+          "desc": "teléfono",
+          "raw": "7_teléfono",
+          "archivos": [
+            "telefono.gif"
+          ]
+        }
+      ],
+      "observaciones": "El titular aparece cuando se menciona “mantené”  y queda hasta final.\nRecursos 6 aparece cuando se menciona “escuchá”. El Recurso 7 aparece cuando se menciona “celular”. Los recursos quedan hasta final.",
+      "gatillos": [
+        "mantené",
+        "escuchá",
+        "celular"
+      ],
+      "ambiguedades": [
+        "«hasta el final» — ¿de la sección o del video?"
+      ]
+    },
+    {
+      "fila": 7,
+      "guion": "Segundo: si el agua comienza a entrar en tu hogar, cortá los servicios de agua, gas y electricidad, solo si podés hacerlo sin entrar en contacto con ella ni exponerte a un riesgo. Mantené cerradas puertas y ventanas.\nLevantá objetos importantes y sustancias peligrosas a lugares altos.",
+      "titulares": [
+        "Cortá los servicios"
+      ],
+      "recursos": [
+        {
+          "n": 8,
+          "desc": "servicios luz, gas, agua",
+          "raw": "8_servicios luz, gas, agua",
+          "archivos": [
+            "corta servicios.png",
+            "corta-servicios.png"
+          ]
+        },
+        {
+          "n": 9,
+          "desc": "levantar cosas",
+          "raw": "9_levantar cosas",
+          "archivos": [
+            "levantar cosas (creado con Gemini).jpg",
+            "levantar-cosas-creado-con-gemini.jpg",
+            "levantar-cosas.jpg"
+          ]
+        }
+      ],
+      "observaciones": "El titular aparece cuando se menciona “segundo”  y queda hasta final.\nEl Recurso 8 aparece cuando se menciona “cortá”  y queda hasta final. Imagen generada con ChatGPT.\nEl Recurso 9 aparece cuando se menciona “levantá”. Imagen generada con GEMINI.",
+      "gatillos": [
+        "segundo",
+        "cortá",
+        "levantá"
+      ],
+      "ambiguedades": [
+        "«hasta el final» — ¿de la sección o del video?"
+      ]
+    },
+    {
+      "fila": 8,
+      "guion": "Tercero: protegé a tu familia. Reuní a quienes estén en la vivienda, prestando especial atención a los niños y personas mayores o con movilidad reducida; y si la misma tiene una planta superior, trasladate allí mientras esperás indicaciones.",
+      "titulares": [
+        "Protegé tu familia"
+      ],
+      "recursos": [
+        {
+          "n": 10,
+          "desc": "reunir la familia",
+          "raw": "10_reunir la familia",
+          "archivos": [
+            "Reunir a la familia (creado con Gemini).png",
+            "familia.png",
+            "reunir-a-la-familia-creado-con-gemini.png",
+            "reunir-familia.png"
+          ]
+        },
+        {
+          "n": 11,
+          "desc": "subir a partes altas",
+          "raw": "11_subir a partes altas",
+          "archivos": [
+            "subir a planta superior (creado con Gemini).jpg",
+            "subir-a-planta-superior-creado-con-gemini.jpg",
+            "subir-planta-superior.jpg"
+          ]
+        }
+      ],
+      "observaciones": "El titular aparece cuando se menciona “protegé”  y queda hasta final.\nEl Recurso 10 aparece cuando se menciona “reunir”  y queda hasta final. Imagen generada con GEMINI. El Recurso 11 aparece cuando se menciona “planta superior”  y queda hasta el final. Imagen generada con GEMINI.",
+      "gatillos": [
+        "protegé",
+        "reunir",
+        "planta superior"
+      ],
+      "ambiguedades": [
+        "«hasta el final» — ¿de la sección o del video?"
+      ]
+    },
+    {
+      "fila": 9,
+      "guion": "Cuarto: si las autoridades indican evacuar, evacuá. Pero no uses ningún tipo de vehículo como auto, moto o bicicleta. Y si no podés salir por tus propios medios, comunicate con los servicios de emergencia e informá tu ubicación como así también  si hay personas que necesiten atención especial.",
+      "titulares": [
+        "Evacuá"
+      ],
+      "recursos": [
+        {
+          "n": 12,
+          "desc": "Imagen de bici, auto y moto",
+          "raw": "12_Imagen de bici, auto y moto",
+          "archivos": []
+        }
+      ],
+      "observaciones": "Titular “4. Evacuá” aparece cuando se menciona “cuarto”  y queda hasta final.\nEl Recurso 12 aparece cuando se menciona “no uses vehículos”. Desaparecen cuando se menciona “Y si no podés…” Imagen generada con ChatGPT.",
+      "gatillos": [
+        "4. Evacuá",
+        "cuarto",
+        "no uses vehículos",
+        "Y si no podés…"
+      ],
+      "ambiguedades": [
+        "«hasta el final» — ¿de la sección o del video?"
+      ]
+    },
+    {
+      "fila": 10,
+      "guion": "Quinto: si evacúas, llevá solo lo esencial en una mochila de emergencia. En otro video de Educaplay te contamos cómo prepararla.",
+      "titulares": [
+        "Mochila de emergencia"
+      ],
+      "recursos": [
+        {
+          "n": 13,
+          "desc": "mochila de emergencia",
+          "raw": "13_ mochila de emergencia",
+          "archivos": [
+            "mochila.gif"
+          ]
+        }
+      ],
+      "observaciones": "Titular y recurso 13 aparecen cuando se menciona “mochila de emergencia” y quedan hasta el final de la sección.",
+      "gatillos": [
+        "mochila de emergencia"
+      ],
+      "ambiguedades": [
+        "«hasta el final» — ¿de la sección o del video?"
+      ]
+    },
+    {
+      "fila": 11,
+      "guion": "Sexto: durante la evacuación no atravieses el agua.\nNo camines, nades ni conduzcas por calles o zonas inundadas. Esta puede ocultar pozos, objetos peligrosos, alcantarillas abiertas y cables eléctricos.",
+      "titulares": [
+        "No atravieses el agua."
+      ],
+      "recursos": [
+        {
+          "n": 14,
+          "desc": "gente cayendo durante inundación",
+          "raw": "14_ gente cayendo durante inundación",
+          "archivos": [
+            "RECURSO 14.mp4",
+            "recurso-14.mp4"
+          ]
+        }
+      ],
+      "observaciones": "El titular aparece cuando se menciona ”evacuación”.\nEl Recurso 14 aparece cuando se menciona “no camines..” del min 0.34 a 0.45.\nYoutube - Canal de la Ciudad - Corrientes: un fuerte temporal provocó inundaciones │N20:30│ 22-12-25",
+      "gatillos": [
+        "no camines.."
+      ],
+      "ambiguedades": [
+        "«min 0.34 a 0.45» — ¿es tiempo de la LÍNEA DE TIEMPO o entrada/salida del CLIP fuente?"
+      ]
+    },
+    {
+      "fila": 12,
+      "guion": "Dirigite al centro de evacuación o zona segura indicada por las autoridades.",
+      "titulares": [
+        "Centros de evacuación"
+      ],
+      "recursos": [],
+      "observaciones": "El titular aparece cuando se menciona “centro de evacuación”.",
+      "gatillos": [
+        "centro de evacuación"
+      ],
+      "ambiguedades": []
+    },
+    {
+      "fila": 13,
+      "guion": "Ya te contamos en otro video, cómo estar preparados para una situación de emergencia, ahora el protocolo de acción si el agua entra a tu vivienda. No te pierdas el video de Educa donde te explicamos qué hacer luego de la inundación.",
+      "titulares": [],
+      "recursos": [],
+      "observaciones": "",
+      "gatillos": [],
+      "ambiguedades": []
+    }
+  ]
+}

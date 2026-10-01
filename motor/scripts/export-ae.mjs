@@ -19,7 +19,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {execFileSync} from 'node:child_process';
 import {pathToFileURL} from 'node:url';
-import {episodeDir, parseArgs, ROOT} from './lib/common.mjs';
+import {episodeDir, parseArgs, ROOT, trackerOpts} from './lib/common.mjs';
 
 const load = (rel) => import(pathToFileURL(path.join(ROOT, rel)).href);
 
@@ -48,6 +48,24 @@ const masterInfo = (file) => {
   };
 };
 
+/** Segmentos de un JPEG hasta el comienzo de los datos (SOS). */
+const jpegSegments = (d) => {
+  const out = [];
+  let i = 2;
+  while (i + 4 < d.length && d[i] === 0xff && d[i + 1] !== 0xda) {
+    const len = d.readUInt16BE(i + 2);
+    out.push({marker: d[i + 1], start: i, end: i + 2 + len});
+    i += 2 + len;
+  }
+  return {segments: out, scan: i};
+};
+const hasApp11 = (file) => jpegSegments(fs.readFileSync(file)).segments.some((s) => s.marker === 0xeb);
+const stripApp11 = (d) => {
+  const {segments, scan} = jpegSegments(d);
+  return Buffer.concat([d.subarray(0, 2),
+    ...segments.filter((s) => s.marker !== 0xeb).map((s) => d.subarray(s.start, s.end)), d.subarray(scan)]);
+};
+
 const main = async () => {
   const {flags, code} = parseArgs();
   if (!code) throw new Error('Uso: npm run export:ae -- <CODE> [--out <dir>]');
@@ -59,7 +77,10 @@ const main = async () => {
   const {slotOf, isFullFrame} = await load('src/episodes/blocks.ts');
   const data = await load(`src/episodes/${code}/data.ts`);
 
-  const fmt = formatTokens(1920, 1080);
+  const {estudioDe} = await load('src/brand/estudios.ts');
+  const est = estudioDe(code, trackerOpts(code).studio);
+  if (!est) throw new Error(`Falta declarar el plató de ${code} (npm run doctor -- ${code} dice cómo).`);
+  const fmt = formatTokens(1920, 1080, est);
   const sized = adaptTrack(data.TRACK, fmt.width, fmt.height);
   const track = {
     ...sized,
@@ -93,6 +114,16 @@ const main = async () => {
           '-y', '-loglevel', 'error', '-i', src,
           '-r', String(data.FPS), '-c:v', 'qtrle', '-pix_fmt', 'argb', dst,
         ]);
+      }
+    } else if (/\.jpe?g$/i.test(base) && hasApp11(src)) {
+      // Credenciales de contenido (C2PA/JUMBF, segmentos APP11) que agregan los
+      // generadores de IA: AE muestra la imagen, pero `aerender` se cuelga sin
+      // error al llegar a ese cuadro (subir-planta-superior.jpg de AMB26-04
+      // traía 2,6 MB). La copia para AE va sin esos segmentos: mismos píxeles,
+      // el original en public/ no se toca y el crédito en pantalla sigue.
+      const dst = path.join(assetsDir, name);
+      if (!fs.existsSync(dst) || fs.statSync(dst).mtimeMs < fs.statSync(src).mtimeMs) {
+        fs.writeFileSync(dst, stripApp11(fs.readFileSync(src)));
       }
     } else {
       const dst = path.join(assetsDir, name);
@@ -173,7 +204,9 @@ const main = async () => {
     return {from: c.from, to: c.to, text: c.text, box: boxes[0], boxes};
   });
 
-  const P = THEME.colors;
+  // El color del plató (fondo de la comp) sale del estudio; el resto del
+  // tema es el de la plataforma, común a todas las materias.
+  const P = {...THEME.colors, stage: est.stage ?? THEME.colors.stage};
   const manifest = {
     code,
     generatedBy: 'motor/scripts/export-ae.mjs',
@@ -195,11 +228,11 @@ const main = async () => {
       },
       rainbow: THEME.rainbow ?? ['#E41653', '#FAB817', '#35BAD5', '#3CAA34'],
       fonts: {
-        heading: 'MuseoSans-900',
-        headingLight: 'MuseoSans-300',
-        body: 'MuseoSans-700',
-        bodyBold: 'MuseoSans-900',
-        bodyLight: 'MuseoSans-300',
+        heading: 'Museo-700',
+        headingLight: 'Museo-300',
+        body: 'MuseoSansRounded-700',
+        bodyBold: 'MuseoSansRounded-900',
+        bodyLight: 'MuseoSansRounded-300',
       },
     },
     blocks,

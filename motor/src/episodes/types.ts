@@ -104,6 +104,14 @@ export type Block =
        * leer: lo que hay que leer lo dice el kicker, que sí cumple contraste.
        */
       step?: number;
+      /**
+       * Pastillas (modo vivo de AE): lo que la docente ENUMERA mientras está
+       * el titular y no aparece en pantalla. Cada una entra en su `at` (frame
+       * absoluto, resuelto contra cues.ts) y la tarjeta crece para hacerles
+       * lugar, así que el slot del titular tiene que declarar el alto final.
+       * Texto corto: es un recordatorio, no un subtítulo.
+       */
+      chips?: readonly {text: string; at: number}[];
     }
   | {
       kind: 'photo';

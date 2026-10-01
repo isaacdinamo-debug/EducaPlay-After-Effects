@@ -23,8 +23,9 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import {pathToFileURL} from 'node:url';
 import {readDocx} from './lib/docx.mjs';
-import {episodeDir, EPISODES_ROOT, fmtFrame, masterFps, parseArgs, ROOT} from './lib/common.mjs';
+import {episodeDir, episodesRoot, fmtFrame, masterFps, parseArgs, ROOT} from './lib/common.mjs';
 import {findWord, resolveCues, tokenize} from './lib/cues.mjs';
 
 /** Palabras que no anclan nada: aparecen cien veces en cualquier locución. */
@@ -52,7 +53,7 @@ const camel = (s) => {
 /** Busca el .docx de la escaleta en la carpeta del episodio. */
 const findDocx = (code, override) => {
   if (override) return path.resolve(override);
-  const dir = path.join(EPISODES_ROOT, code);
+  const dir = path.join(episodesRoot(), code);
   if (!fs.existsSync(dir)) throw new Error(`No existe la carpeta del episodio: ${dir}`);
   const cands = fs
     .readdirSync(dir)
@@ -105,7 +106,7 @@ const parseRecursos = (cell) => {
 /** Archivos que entregó el cliente + los ya normalizados en public/. */
 const inventory = (code) => {
   const dirs = [
-    path.join(EPISODES_ROOT, code, 'RECURSOS'),
+    path.join(episodesRoot(), code, 'RECURSOS'),
     path.join(ROOT, 'public', code),
   ];
   const files = [];
@@ -132,6 +133,10 @@ const matchRecurso = (rec, files) => {
   for (const f of files) for (const w of words) if (f.key.includes(w)) hits.add(f.file);
   return [...hits];
 };
+
+/** Serie del capítulo: la de su materia (src/brand/estudios.ts) o la que diga la escaleta. */
+const {materiaDe} = await import(pathToFileURL(path.join(ROOT, 'src/brand/estudios.ts')).href);
+const serieDe = (code, meta) => materiaDe(code)?.series ?? meta.serie ?? 'TODO: serie (agregá la materia a src/brand/estudios.ts)';
 
 const main = async () => {
   const {code, flags} = parseArgs();
@@ -160,7 +165,9 @@ const main = async () => {
     enCamara: field('En cámara'),
     correcciones: paras.slice(paras.findIndex((t) => /^CORRECCIONES/i.test(t)) + 1)
       .filter((t) => t && !/^Esta escaleta fue realizada/i.test(t)),
-    fuente: path.relative(ROOT, docx),
+    // Sólo el nombre: una ruta dependería de la PC que corrió el script y el
+    // escaleta.json versionado cambiaría en cada máquina.
+    fuente: path.basename(docx),
   };
 
   // Las dos primeras filas son el encabezado de la tabla (GUION | EN PANTALLA |
@@ -316,7 +323,7 @@ const main = async () => {
   seccion('⚠ ARCHIVOS ENTREGADOS QUE LA ESCALETA NO PIDE', huerfanos);
   seccion('⚠ NOTAS DE TIEMPO AMBIGUAS', amb);
   seccion('⚠ CONFIRMAR CONTRA EL MÁSTER, NUNCA CONTRA LA ESCALETA', [
-    `En cámara: «${meta.enCamara ?? '—'}» — extraé el frame de la placa quemada y confirmalo con Isaac.`,
+    `En cámara: «${meta.enCamara ?? '—'}» — extraé el frame de la placa quemada y confirmalo con el responsable del capítulo.`,
     'Las escaletas se escriben antes de grabar: hay un caso verificado por materia en que erraron el nombre, y uno en que erraron cuántas personas hay.',
   ]);
   if (meta.correcciones.length)
@@ -361,7 +368,7 @@ const draft = (code, meta, secciones, cues) => {
 
   return `/**
  * ${code} — ${meta.titulo ?? 'TODO'}
- * ${meta.serie ?? 'Educación Ambiental Integral'} · EducaPlay Secundaria (Corrientes)
+ * ${serieDe(code, meta)} · Educaplay Secundaria (Corrientes)
  *
  * ╔══════════════════════════════════════════════════════════════════════════╗
  * ║  ESQUELETO GENERADO POR \`npm run escaleta -- ${code}\`.                   ║
@@ -408,7 +415,7 @@ export const DURATION = TRACK.durationInFrames;
 export const EPISODE = {
   id: '${code}',
   title: ${JSON.stringify(meta.titulo ?? 'TODO')},
-  series: 'Educación Ambiental Integral',
+  series: ${JSON.stringify(serieDe(code, meta))},
   objective: ${JSON.stringify((meta.objetivo ?? 'TODO').replace(/\n/g, ' '))},
   master: 'videos/${code}.mp4',
   /** Medir sobre el render COMPLETO con ffmpeg ebur128. Objetivo −18 a −19 LUFS. */
