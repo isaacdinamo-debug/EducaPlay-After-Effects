@@ -95,6 +95,10 @@ aprobado antes del modo vivo. Dos criterios que no están en el código:
 
 **La marca se escribe «Educaplay»** (nunca EducaPlay/EDUCAPLAY). Ver `AGENTS.md`.
 
+**Los recursos no se recortan:** el recuadro toma la proporción de la imagen (`fitFrame`) y la
+muestra entera, sin Ken Burns. Una cabeza cortada o un detalle perdido en el borde es un error, no
+una decisión de encuadre. `fit: 'cover'` sólo con el OK del responsable.
+
 **En pantalla no va la numeración de la escaleta** («RECURSO 10», «ANIMACIÓN 7»): es para el
 equipo. Las filas de recursos llevan título y, si hay, el crédito («Recreado con IA»).
 

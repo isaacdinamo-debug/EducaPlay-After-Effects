@@ -33,6 +33,12 @@ títulos.
   la numeración de la escaleta ("RECURSO 10", "ANIMACIÓN 7"): es interna y al estudiante no le dice
   nada.
 
+  **Los recursos no se recortan.** El recuadro de la imagen toma la proporción de cada foto,
+  ilustración o video y la muestra entera: no se corta la cabeza de nadie ni un detalle del borde.
+  En la fila, el alto es el de siempre y una imagen apaisada se ensancha hasta 1,6 veces ese alto.
+  No hay Ken Burns (el zoom se come los bordes). `fit: 'cover'` en el `data.ts` recorta a
+  propósito, y sólo se usa si el borde no tiene nada relevante y con el OK del responsable.
+
   **Variante en prueba, «recursos grandes»** (`npm run ae -- <CODE> --recursos grandes`): la misma
   fila, pero la imagen ocupa ~60 % del ancho de la tarjeta (50 % con la docente al centro) y todo el
   alto que da la caja; el título crece a 36 px (28 en la caja angosta). Se compara con

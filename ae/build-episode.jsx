@@ -637,7 +637,25 @@ function buildEpisode() {
   }
 
   /** Medio (foto/video/gif) recortado en un rect redondeado con track matte. */
-  function mediaInCard(comp, rel, x, y, w, h, fit, t0, kenBurns) {
+  /**
+   * Recuadro con la proporción del medio, lo más grande posible dentro de
+   * maxW × maxH. Los recursos NO se recortan (pedido de Isaac, 30/9/2026): no se
+   * corta la cabeza de nadie ni un detalle del borde. La tarjeta se adapta a la
+   * imagen, no la imagen a la tarjeta.
+   */
+  function fitFrame(rel, maxW, maxH) {
+    var item = footage(rel);
+    var k = Math.min(maxW / item.width, maxH / item.height);
+    return {w: Math.round(item.width * k), h: Math.round(item.height * k)};
+  }
+
+  /**
+   * Medio recortado al rect redondeado con un track matte. Por defecto entra
+   * COMPLETO (contain): el que llama ya le da un recuadro con su proporción
+   * (fitFrame). `cover` sólo si el data.ts lo declara a propósito. Sin Ken
+   * Burns: el zoom siempre se come los bordes.
+   */
+  function mediaInCard(comp, rel, x, y, w, h, fit) {
     var item = footage(rel);
     var l = comp.layers.add(item);
     l.name = 'MEDIO · ' + rel.replace('assets/', '');
@@ -649,12 +667,10 @@ function buildEpisode() {
     }
     var cover = Math.max(w / item.width, h / item.height) * 100;
     var contain = Math.min(w / item.width, h / item.height) * 100;
-    var s = fit === 'contain' ? contain : cover;
+    var s = fit === 'cover' ? cover : contain;
     var t = l.property('ADBE Transform Group');
     t.property('ADBE Position').setValue([x + w / 2, y + h / 2]);
-    var kb0 = 1.02, kb1 = 1.08;
-    if (kenBurns) keys(t.property('ADBE Scale'), [t0, comp.duration], [[s * kb0, s * kb0], [s * kb1, s * kb1]]);
-    else t.property('ADBE Scale').setValue([s, s]);
+    t.property('ADBE Scale').setValue([s, s]);
 
     var matte = newShapeLayer(comp, 'MATTE · ' + l.name);
     addRect(matte, x, y, w, h, RADIUS - 6, [1, 1, 1]);
@@ -972,20 +988,19 @@ function buildEpisode() {
     var wide = box.width >= 800;
     var P = 18;
     var w = box.width;
-    // Miniatura cuadrada (la fila de la web) o, con GRANDES, la imagen a ~60 %
-    // del ancho (50 % en la caja angosta, para que el título no quede en una
-    // columna de menos de ~170 px) y todo el alto que da la caja del motor.
-    var TW = wide ? 200 : 150, TH = TW;
+    // Espacio para la imagen: el cuadrado de la fila de la web o, con GRANDES,
+    // ~60 % del ancho (50 % en la caja angosta, para que el título no quede en
+    // una columna de menos de ~170 px) y todo el alto que da la caja del motor.
+    // Dentro de ese espacio la imagen entra ENTERA, con su proporción.
+    // En la fila normal el alto es el de siempre (200/150) y una imagen
+    // apaisada puede ensancharse hasta 1,6 veces ese alto: entera y sin achicarse.
+    var maxH = wide ? 200 : 150, maxW = Math.round(maxH * 1.6);
     if (GRANDES) {
-      TW = Math.round(w * (wide ? 0.6 : 0.5));
-      TH = Math.min(box.height - P * 2, Math.round(TW * 0.8));
+      maxW = Math.round(w * (wide ? 0.6 : 0.5));
+      maxH = box.height - P * 2;
     }
-    var h = TH + P * 2;
-    card(comp, 0, 0, w, h);
-    var thumb = mediaInCard(comp, b.src, P, P, TW, TH, kind === 'gif' ? 'contain' : 'cover', 0, kind === 'photo');
-    // Modo vivo: por partes. Tarjeta, miniatura, título y metadatos.
-    revealMedia(thumb, P, P, TW, TH, sec(4));
-    var tx = P + TW + 24, tw = w - tx - P;
+    var f = b.fit === 'cover' ? {w: maxW, h: maxH} : fitFrame(b.src, maxW, maxH);
+    var tx = P + f.w + 24, tw = w - tx - P;
     var ty = P + 6;
     var tSize = GRANDES ? (wide ? 36 : 28) : (wide ? 32 : 26);
     var tLead = GRANDES ? (wide ? 42 : 33) : (wide ? 38 : 31);
@@ -1005,6 +1020,15 @@ function buildEpisode() {
       fadeIn(mt.layer, mt0, sec(10), 10);
       ty += mt.h + 10;
     }
+    // La fila normal conserva su alto (236 px); la grande mide lo que la imagen
+    // o el texto, lo que sea más alto. La imagen va centrada en vertical.
+    var inner = GRANDES ? Math.max(f.h, ty - P) : maxH;
+    var h = inner + P * 2;
+    var iy = P + Math.round((inner - f.h) / 2);
+    card(comp, 0, 0, w, h);
+    var thumb = mediaInCard(comp, b.src, P, iy, f.w, f.h, b.fit);
+    // Modo vivo: por partes. Tarjeta, imagen, título y metadatos.
+    revealMedia(thumb, P, iy, f.w, f.h, sec(4));
     return Math.max(h, ty + P);
   }
 
@@ -1023,18 +1047,23 @@ function buildEpisode() {
     var inner = 14;
     var mw = w - inner * 2;
     var mx = x + inner;
-    var mh = Math.min(box.height - inner * 2 - capH, Math.round(mw * 0.62));
+    // El medio entra entero: el recuadro toma su proporción dentro del espacio
+    // de la tarjeta y se centra a lo ancho. La tarjeta mide lo que mide él.
+    var maxMh = box.height - inner * 2 - capH;
+    var f = b.fit === 'cover' ? {w: mw, h: Math.min(maxMh, Math.round(mw * 0.62))} : fitFrame(b.src, mw, maxMh);
+    var fx = mx + Math.round((mw - f.w) / 2);
+    var mh = f.h;
     var h = inner + mh + (capText ? capH : inner);
 
     card(comp, x, 0, w, h);
-    revealMedia(mediaInCard(comp, b.src, mx, inner, mw, mh, b.fit || (kind === 'gif' ? 'contain' : 'cover'), 0, kind === 'photo'), mx, inner, mw, mh, sec(4));
+    revealMedia(mediaInCard(comp, b.src, fx, inner, f.w, mh, b.fit), fx, inner, f.w, mh, sec(4));
     if (capText) {
       var cap = text(comp, capText, mx, inner + mh + 16, {
         name: 'PIE', font: FONTS.body, size: 26, color: hex(PAL.ink), maxW: mw,
       });
       revealChars(cap.layer, sec(VIVO ? 14 : 10), sec(14), true);
     }
-    if (b.credit) creditPill(comp, b.credit, mx + mw, inner + mh, sec(VIVO ? 20 : 14));
+    if (b.credit) creditPill(comp, b.credit, fx + f.w, inner + mh, sec(VIVO ? 20 : 14));
     return {h: h, x: x, w: w};
   }
 
